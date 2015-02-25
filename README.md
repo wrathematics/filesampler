@@ -3,12 +3,13 @@
 This is a simple R package to reasonably quickly read a random sample
 of a csv file into R.
 
-Idea inspired by [Eduardo Arino de la Rubia's](https://github.com/earino/fast_sample).
-
+Idea inspired by Eduardo Arino de la Rubia's [fast_sample](https://github.com/earino/fast_sample).
 
 
 ## Package Use
 
+The idea is to quickly randomly select a subset of a large-ish flat text
+file.
 
 ```r
 library(lineSampler)
