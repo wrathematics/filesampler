@@ -3,6 +3,7 @@
 // that can be found in the LICENSE file.
 
 #include "lineSampler.h"
+#include <R_ext/Utils.h>
 
 
 int wc(const char *file, uint64_t *nletters, uint64_t *nwords, uint64_t *nlines)
@@ -19,6 +20,8 @@ int wc(const char *file, uint64_t *nletters, uint64_t *nwords, uint64_t *nlines)
   
   while ((c = getc(fp)) != EOF)
   {
+    R_CheckUserInterrupt();
+    
     if (c == '\n')
     {
       (*nwords)++;
