@@ -16,7 +16,7 @@ library(lineSampler)
 
 file <- "/tmp/big.csv"
 wc(file)
-# file:   /home/mschmid3/tmp/csv/big.csv 
+# file:   /tmp/big.csv 
 # Nletters: 766639674
 # Nwords:   12174948
 # Nlines:   12174948 
