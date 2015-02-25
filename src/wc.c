@@ -8,8 +8,10 @@
 
 int wc(const char *file, uint64_t *nletters, uint64_t *nwords, uint64_t *nlines)
 {
+  int i;
   FILE *fp;
-  char c;
+  char *buf;
+  size_t readlen;
   
   *nletters = 0;
   *nwords = 0;
@@ -18,24 +20,34 @@ int wc(const char *file, uint64_t *nletters, uint64_t *nwords, uint64_t *nlines)
   fp = fopen(file, "r");
   if (!fp) return READ_FAIL;
   
-  while ((c = getc(fp)) != EOF)
+  buf = malloc(BUFLEN * sizeof(char));
+  
+  while (true)
   {
     R_CheckUserInterrupt();
     
-    if (c == '\n')
+    readlen = fread(buf, sizeof(char), BUFLEN, fp);
+    
+    for (i=0; i<readlen; i++)
     {
-      (*nwords)++;
-      (*nlines)++;
-    }
-    else
-    {
-      if (c == ' ')
+      if (buf[i] == '\n')
+      {
         (*nwords)++;
-      
-      (*nletters)++;
+        (*nlines)++;
+      }
+      else
+      {
+        if (buf[i] == ' ')
+          (*nwords)++;
+        
+        (*nletters)++;
+      }
     }
+    
+    if (readlen < BUFLEN) break;
   }
   
+  free(buf);
   
   return 0;
 }
