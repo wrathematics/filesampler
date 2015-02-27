@@ -1,5 +1,6 @@
-file_sampler <- function(header, p, infile)
+file_sampler <- function(verbose, header, p, infile)
 {
+  must_be(verbose, "logical")
   must_be(header, "logical")
   must_be(p, "numeric")
   must_be(infile, "character")
@@ -10,7 +11,7 @@ file_sampler <- function(header, p, infile)
   infile <- tools::file_path_as_absolute(infile)
   
   outfile <- tempfile()
-  ret <- .Call(R_file_sampler, as.logical(header), as.double(p), infile, outfile)
+  ret <- .Call(R_file_sampler, verbose, header, as.double(p), infile, outfile)
   
   if (ret < 0)
   {
@@ -58,9 +59,9 @@ file_sampler <- function(header, p, infile)
 #' }
 #'
 #' @export
-read_csv_sampled <- function(file, p=.1, header=TRUE)
+read_csv_sampled <- function(file, p=.1, header=TRUE, verbose=FALSE)
 {
-  outfile <- file_sampler(header=header, p=p, infile=file)
+  outfile <- file_sampler(verbose=verbose, header=header, p=p, infile=file)
   
   data <- read.csv(file=outfile, header=header)
   unlink(outfile)
@@ -97,9 +98,9 @@ read_csv_sampled <- function(file, p=.1, header=TRUE)
 #' }
 #'
 #' @export
-readLines_sampled <- function(file, p=.1)
+readLines_sampled <- function(file, p=.1, verbose=FALSE)
 {
-  outfile <- file_sampler(header=FALSE, p=p, infile=file)
+  outfile <- file_sampler(verbose=verbose, header=FALSE, p=p, infile=file)
   
   data <- readLines(outfile)
   unlink(outfile)
