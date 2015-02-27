@@ -43,9 +43,38 @@ file_sampler <- function(verbose, header, p, infile)
 #' Proportion to retain; should be a numeric value between 0 and 1.
 #' @param header
 #' Logical; indicates whether or not there is a header on the csv file.
+#' @param sep
+#' Separator character.
+#' @param quote
+#' Quote character for delimiting columns read as strings.
+#' @param dec
+#' "Decimal point" character.
+#' @param fill
+#' Logical; standardizes rows of unequal length to have implicit blanks added.
+#' @param comment.char
+#' Comments character.
+#' @param verbose
+#' Logical; indicates whether or not linecounts of the input file and the number
+#' of lines sampled should be printed.
+#' @param ...
+#' Additional arguments to be passed to \code{read.csv()}.
 #' 
 #' @details
-#' TODO
+#' This function scans over the test of the input file and at each step, randomly
+#' chooses whether or not to include the current line into a downsampled file.
+#' Each selected line is placed in a temporary file, before being read into R
+#' via \code{read.csv()}.  Additional arguments to this function (those other
+#' than \code{file}, \code{p}, and \code{verbose}) are passed to \code{read.csv()},
+#' and so if their behavior is unclear, you should examine the \code{read.csv()}
+#' help file.
+#' 
+#' If \code{verbose=TRUE}, then something like:
+#' 
+#' \code{Read 12207 lines (0.001\%) of 12174948 line file.}
+#' 
+#' will be printed to the terminal.  This counts the header (if there is one)
+#' as one of the lines read and as one of the lines possible.
+#' 
 #' 
 #' @return
 #' A dataframe, as with \code{read.csv()}.
@@ -59,11 +88,11 @@ file_sampler <- function(verbose, header, p, infile)
 #' }
 #'
 #' @export
-read_csv_sampled <- function(file, p=.1, header=TRUE, verbose=FALSE)
+read_csv_sampled <- function(file, p=.1, header=TRUE, sep=",", quote="\"", dec=".", fill=TRUE, comment.char="", verbose=FALSE, ...)
 {
   outfile <- file_sampler(verbose=verbose, header=header, p=p, infile=file)
   
-  data <- read.csv(file=outfile, header=header)
+  data <- read.csv(file=outfile, header=header, sep=sep, quote=quote, dec=dec, fill=fill, comment.char=comment.char, ...)
   unlink(outfile)
   
   return(data)
@@ -82,12 +111,41 @@ read_csv_sampled <- function(file, p=.1, header=TRUE, verbose=FALSE)
 #' Location of the file (as a string) to be subsampled.
 #' @param p
 #' Proportion to retain; should be a numeric value between 0 and 1.
+#' @param n
+#' The max number of lines to read. Negative value means read everything.
+#' @param ok
+#' Logical; Ok to reach end of connection before \code{n} lines are read? Only
+#' relevant when \code{n>0}.
+#' @param warn
+#' Logical; warn if file is missing EOL.
+#' @param encoding
+#' Character encoding for strings.
+#' @param skipNul
+#' Logical; should \code{nul}'s be skipped?
+#' @param verbose
+#' Logical; indicates whether or not linecounts of the input file and the number
+#' of lines sampled should be printed.
+#' 
 #' 
 #' @details
-#' TODO
+#' This function scans over the test of the input file and at each step, randomly
+#' chooses whether or not to include the current line into a downsampled file.
+#' Each selected line is placed in a temporary file, before being read into R
+#' via \code{readLines()}.  Additional arguments to this function (those other
+#' than \code{file}, \code{p}, and \code{verbose}) are passed to \code{readLines()},
+#' and so if their behavior is unclear, you should examine the \code{readLines()}
+#' help file.
+#' 
+#' If \code{verbose=TRUE}, then something like:
+#' 
+#' \code{Read 12207 lines (0.001\%) of 12174948 line file.}
+#' 
+#' will be printed to the terminal.  This counts the header (if there is one)
+#' as one of the lines read and as one of the lines possible.
+#' 
 #' 
 #' @return
-#' A character vector \code{readLines()}.
+#' A character vector, as with \code{readLines()}.
 #' 
 #' @seealso \code{\link{read_csv_sampled}, \link{wc}}
 #' 
@@ -98,11 +156,11 @@ read_csv_sampled <- function(file, p=.1, header=TRUE, verbose=FALSE)
 #' }
 #'
 #' @export
-readLines_sampled <- function(file, p=.1, verbose=FALSE)
+readLines_sampled <- function(file, p=.1, n=-1L, ok=TRUE, warn=TRUE, encoding="unknown", skipNul=FALSE, verbose=FALSE)
 {
   outfile <- file_sampler(verbose=verbose, header=FALSE, p=p, infile=file)
   
-  data <- readLines(outfile)
+  data <- readLines(outfile, n=n, ok=ok, warn=warn, encoding=encoding, skipNul=skipNul)
   unlink(outfile)
   
   return(data)

@@ -3,15 +3,30 @@
 \alias{readLines_sampled}
 \title{Read Sample Lines of Text File}
 \usage{
-readLines_sampled(file, p = 0.1)
+readLines_sampled(file, p = 0.1, n = -1L, ok = TRUE, warn = TRUE,
+  encoding = "unknown", skipNul = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{file}{Location of the file (as a string) to be subsampled.}
 
 \item{p}{Proportion to retain; should be a numeric value between 0 and 1.}
+
+\item{n}{The max number of lines to read. Negative value means read everything.}
+
+\item{ok}{Logical; Ok to reach end of connection before \code{n} lines are read? Only
+relevant when \code{n>0}.}
+
+\item{warn}{Logical; warn if file is missing EOL.}
+
+\item{encoding}{Character encoding for strings.}
+
+\item{skipNul}{Logical; should \code{nul}'s be skipped?}
+
+\item{verbose}{Logical; indicates whether or not linecounts of the input file and the number
+of lines sampled should be printed.}
 }
 \value{
-A character vector \code{readLines()}.
+A character vector, as with \code{readLines()}.
 }
 \description{
 The function will read approximately p*nlines lines of a flat text
@@ -19,7 +34,20 @@ file. So if \code{p=.1}, then we will get roughly (probably not exactly)
 10% of the data.
 }
 \details{
-TODO
+This function scans over the test of the input file and at each step, randomly
+chooses whether or not to include the current line into a downsampled file.
+Each selected line is placed in a temporary file, before being read into R
+via \code{readLines()}.  Additional arguments to this function (those other
+than \code{file}, \code{p}, and \code{verbose}) are passed to \code{readLines()},
+and so if their behavior is unclear, you should examine the \code{readLines()}
+help file.
+
+If \code{verbose=TRUE}, then something like:
+
+\code{Read 12207 lines (0.001\%) of 12174948 line file.}
+
+will be printed to the terminal.  This counts the header (if there is one)
+as one of the lines read and as one of the lines possible.
 }
 \examples{
 \dontrun{
