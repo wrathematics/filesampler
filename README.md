@@ -3,7 +3,7 @@
 This is a simple R package to reasonably quickly read a random sample
 of a flat text file (such as a csv) into R.  We do so by scanning through
 the input text file once and "flipping a coin" (probability controlled by
-the user) to determine if the current line should be read in or not.  
+the user) to determine if the current line should be read in or not.
 Such lines are stored in a temporary text file, and then that downsampled
 file is read into R via R's `read.csv()` or `readLines()`.
 
