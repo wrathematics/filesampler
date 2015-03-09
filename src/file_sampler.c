@@ -115,3 +115,33 @@ int file_sampler(bool verbose, bool header, int nskip, const double p, const cha
 }
 
 
+
+
+static inline int unif_rand_int(const int low, const int high)
+{
+  return (int) low + (high + 1 - low)*unif_rand() ;
+}
+
+
+static uint64_t *res_sampler(const int nlines_in, const int nlines_out)
+{
+  int i;
+  int ret = malloc(nlines_out * sizeof(int));
+  
+  for (i=0; i<nlines_out; i++)
+    ret[i] = i+1;
+  
+  GetRNGstate();
+  
+  for (i=0; i<nlines_out; i++)
+  {
+    j = unif_rand_int(1, i);
+    if (j <= nlines_out)
+      ret[j] = i+1;
+  }
+  
+  PutRNGState();
+  
+  return ret;
+}
+
