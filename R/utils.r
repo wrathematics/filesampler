@@ -1,6 +1,15 @@
+is.int <- function(x)
+{
+  epsilon <- 1e-8
+  
+  return(abs(x - round(x)) < epsilon)
+}
+
+
+
 must_be <- function(x, type)
 {
-  Rstuff <- c("character", "numeric", "integer", "double", "logical", "matrix", "data.frame", "vector")
+  Rstuff <- c("character", "numeric", "int", "integer", "double", "logical", "matrix", "data.frame", "vector")
   type <- match.arg(type, Rstuff)
   
   nm <- deparse(substitute(x))
