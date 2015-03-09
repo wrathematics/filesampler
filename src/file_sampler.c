@@ -11,8 +11,11 @@ double unif_rand();       // also remove the Get/PutRNGstate()'s'
 #define PRINTFUN Rprintf
 
 
+
+#define HAS_NEWLINE ((readlen > 0) && (buf[readlen-1] == '\n'))
+
 // very un-thread safe
-int file_sampler(bool verbose, bool header, const double p, const char *input, const char *output)
+int file_sampler(bool verbose, bool header, int nskip, const double p, const char *input, const char *output)
 {
   FILE *fp_read, *fp_write;
   char *buf;
@@ -39,13 +42,22 @@ int file_sampler(bool verbose, bool header, const double p, const char *input, c
       
       readlen = strnlen(buf, BUFLEN);
       
-      if ((readlen > 0) && (buf[readlen-1] == '\n')) // has newline
+      if (HAS_NEWLINE)
       {
         nlines_in++;
         nlines_out++;
         break;
       }
     }
+  }
+  
+  
+  if (p == 0.)
+  {
+    if (verbose)
+      PRINTFUN("Read 0 lines (p == 0) of unknown length file.\n");
+    
+    goto cleanup;
   }
   
   
@@ -61,7 +73,9 @@ int file_sampler(bool verbose, bool header, const double p, const char *input, c
         should_write = false;
     }
     
-    if (should_write)
+    if (nskip)
+      nskip--;
+    else if (should_write)
     {
       nlines_out++;
       fprintf(fp_write, "%s", buf);
@@ -69,7 +83,7 @@ int file_sampler(bool verbose, bool header, const double p, const char *input, c
     
     readlen = strnlen(buf, BUFLEN);
     
-    if ((readlen > 0) && (buf[readlen-1] == '\n')) // has newline
+    if (HAS_NEWLINE)
     {
       nlines_in++;
       should_write = false;
@@ -85,9 +99,10 @@ int file_sampler(bool verbose, bool header, const double p, const char *input, c
   if (verbose)
     PRINTFUN("Read %llu lines (%.3f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
   
-  fclose(fp_read);
-  fclose(fp_write);
-  free(buf);
+  cleanup:
+    fclose(fp_read);
+    fclose(fp_write);
+    free(buf);
   
   return 0;
 }
