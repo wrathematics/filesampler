@@ -14,6 +14,27 @@ double unif_rand();       // also remove the Get/PutRNGstate()'s'
 
 #define HAS_NEWLINE ((readlen > 0) && (buf[readlen-1] == '\n'))
 
+
+static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_t *nlines_in, uint64_t *nlines_out)
+{
+  int readlen;
+  
+  while (fgets(buf, BUFLEN, fp_read) != NULL)
+  {
+    fprintf(fp_write, "%s", buf);
+    
+    readlen = strnlen(buf, BUFLEN);
+    
+    if (HAS_NEWLINE)
+    {
+      (*nlines_in)++;
+      (*nlines_out)++;
+      break;
+    }
+  }
+}
+
+
 // very un-thread safe
 int file_sampler(bool verbose, bool header, int nskip, const double p, const char *input, const char *output)
 {
@@ -34,23 +55,9 @@ int file_sampler(bool verbose, bool header, int nskip, const double p, const cha
   buf = malloc(BUFLEN * sizeof(char));
   
   
-  if (header)
-  {
-    while (fgets(buf, BUFLEN, fp_read) != NULL)
-    {
-      fprintf(fp_write, "%s", buf);
-      
-      readlen = strnlen(buf, BUFLEN);
-      
-      if (HAS_NEWLINE)
-      {
-        nlines_in++;
-        nlines_out++;
-        break;
-      }
-    }
-  }
   
+  if (header)
+    read_header(buf, fp_read, fp_write, &nlines_in, &nlines_out);
   
   if (p == 0.)
   {
@@ -106,4 +113,5 @@ int file_sampler(bool verbose, bool header, int nskip, const double p, const cha
   
   return 0;
 }
+
 
