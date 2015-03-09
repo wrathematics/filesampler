@@ -3,7 +3,7 @@
 \alias{read_csv_sampled}
 \title{Read Sample of CSV}
 \usage{
-read_csv_sampled(file, p = 0.1, header = TRUE, sep = ",",
+read_csv_sampled(file, p = 0.1, header = TRUE, nskip = 0, sep = ",",
   quote = "\\"", dec = ".", fill = TRUE, comment.char = "", verbose = FALSE, ...)
 }
 \arguments{
@@ -12,6 +12,9 @@ read_csv_sampled(file, p = 0.1, header = TRUE, sep = ",",
 \item{p}{Proportion to retain; should be a numeric value between 0 and 1.}
 
 \item{header}{Logical; indicates whether or not there is a header on the csv file.}
+
+\item{nskip}{Number of lines to skip.  If \code{header=TRUE}, then this only
+applies to lines after the header.}
 
 \item{sep}{Separator character.}
 

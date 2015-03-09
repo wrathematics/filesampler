@@ -3,13 +3,15 @@
 \alias{readLines_sampled}
 \title{Read Sample Lines of Text File}
 \usage{
-readLines_sampled(file, p = 0.1, n = -1L, ok = TRUE, warn = TRUE,
-  encoding = "unknown", skipNul = FALSE, verbose = FALSE)
+readLines_sampled(file, p = 0.1, nskip = 0, n = -1L, ok = TRUE,
+  warn = TRUE, encoding = "unknown", skipNul = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{file}{Location of the file (as a string) to be subsampled.}
 
 \item{p}{Proportion to retain; should be a numeric value between 0 and 1.}
+
+\item{nskip}{Number of lines to skip.}
 
 \item{n}{The max number of lines to read. Negative value means read everything.}
 
