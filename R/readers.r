@@ -1,7 +1,8 @@
-file_sampler <- function(verbose, header, p, infile)
+file_sampler <- function(verbose, header, nskip, p, infile)
 {
   must_be(verbose, "logical")
   must_be(header, "logical")
+  must_be(nskip, "int")
   must_be(p, "numeric")
   must_be(infile, "character")
   
@@ -11,7 +12,7 @@ file_sampler <- function(verbose, header, p, infile)
   infile <- tools::file_path_as_absolute(infile)
   
   outfile <- tempfile()
-  ret <- .Call(R_file_sampler, verbose, header, as.double(p), infile, outfile)
+  ret <- .Call(R_file_sampler, verbose, header, as.integer(nskip), as.double(p), infile, outfile)
   
   if (ret < 0)
   {
@@ -43,6 +44,9 @@ file_sampler <- function(verbose, header, p, infile)
 #' Proportion to retain; should be a numeric value between 0 and 1.
 #' @param header
 #' Logical; indicates whether or not there is a header on the csv file.
+#' @param nskip
+#' Number of lines to skip.  If \code{header=TRUE}, then this only
+#' applies to lines after the header.
 #' @param sep
 #' Separator character.
 #' @param quote
@@ -88,9 +92,12 @@ file_sampler <- function(verbose, header, p, infile)
 #' }
 #'
 #' @export
-read_csv_sampled <- function(file, p=.1, header=TRUE, sep=",", quote="\"", dec=".", fill=TRUE, comment.char="", verbose=FALSE, ...)
+read_csv_sampled <- function(file, p=.1, header=TRUE, nskip=0, sep=",", quote="\"", dec=".", fill=TRUE, comment.char="", verbose=FALSE, ...)
 {
-  outfile <- file_sampler(verbose=verbose, header=header, p=p, infile=file)
+  if (p == 0)
+    stop("no lines available for input")
+  
+  outfile <- file_sampler(verbose=verbose, header=header, nskip=nskip, p=p, infile=file)
   
   data <- read.csv(file=outfile, header=header, sep=sep, quote=quote, dec=dec, fill=fill, comment.char=comment.char, ...)
   unlink(outfile)
@@ -111,6 +118,8 @@ read_csv_sampled <- function(file, p=.1, header=TRUE, sep=",", quote="\"", dec="
 #' Location of the file (as a string) to be subsampled.
 #' @param p
 #' Proportion to retain; should be a numeric value between 0 and 1.
+#' @param nskip
+#' Number of lines to skip.
 #' @param n
 #' The max number of lines to read. Negative value means read everything.
 #' @param ok
@@ -156,9 +165,15 @@ read_csv_sampled <- function(file, p=.1, header=TRUE, sep=",", quote="\"", dec="
 #' }
 #'
 #' @export
-readLines_sampled <- function(file, p=.1, n=-1L, ok=TRUE, warn=TRUE, encoding="unknown", skipNul=FALSE, verbose=FALSE)
+readLines_sampled <- function(file, p=.1, nskip=0, n=-1L, ok=TRUE, warn=TRUE, encoding="unknown", skipNul=FALSE, verbose=FALSE)
 {
-  outfile <- file_sampler(verbose=verbose, header=FALSE, p=p, infile=file)
+  if (p == 0)
+    return(character(0))
+  
+  if (n > 0 && n < nskip)
+    return(character(0))
+  
+  outfile <- file_sampler(verbose=verbose, header=FALSE, nskip=nskip, p=p, infile=file)
   
   data <- readLines(outfile, n=n, ok=ok, warn=warn, encoding=encoding, skipNul=skipNul)
   unlink(outfile)

@@ -2,16 +2,16 @@
 #include <Rinternals.h>
 #include "lineSampler.h"
 
-#define CHARPT(x,i)     ((char*)CHAR(STRING_ELT(x,i)))
+#define CHARPT(x,i) ((char*)CHAR(STRING_ELT(x,i)))
 #define INT(x) INTEGER(x)[0]
 #define DBL(x) REAL(x)[0]
 
-SEXP R_file_sampler(SEXP verbose, SEXP header, SEXP p, SEXP input, SEXP output)
+SEXP R_file_sampler(SEXP verbose, SEXP header, SEXP nskip, SEXP p, SEXP input, SEXP output)
 {
   SEXP ret;
   PROTECT(ret = allocVector(INTSXP, 1));
   
-  INT(ret) = file_sampler(INT(verbose), INT(header), DBL(p), CHARPT(input, 0), CHARPT(output, 0));
+  INT(ret) = file_sampler(INT(verbose), INT(header), INT(nskip), DBL(p), CHARPT(input, 0), CHARPT(output, 0));
   
   UNPROTECT(1);
   return ret;
