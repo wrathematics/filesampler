@@ -39,7 +39,39 @@ static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_
 }
 
 
-// very un-thread safe
+
+/**
+ * @file
+ * @brief 
+ * File Sampler
+ *
+ * @details
+ * TODO
+ *
+ * @param verbose
+ * Input.  Indicates whether character/word/line counts of the input
+ * file (discovered while filling the output) should be printed.
+ * @param header
+ * Input.  Indicates whether or not there is a header line (as in a
+ * csv).
+ * @param nskip
+ * Input.  Number of lines to skip.  If header=true and nskip>0, then
+ * the number of lines skipped applies to post-header lines only.
+ * @param p
+ * Input.  Proportion of lines from input file to (randomly) retain.
+ * The proportion retained is not guaranteed to be exactly p, but 
+ * will be very close for large files.
+ * @param input
+ * Input.  Absolute path to input file.
+ * @param output
+ * Input.  Absolute path to output file.
+ *
+ * @note
+ * Due to R's RNG, this call (as written) is very un-threadsafe.
+ * 
+ * @return
+ * The return value indicates the status of the function.
+ */
 int file_sampler(bool verbose, bool header, int nskip, const double p, const char *input, const char *output)
 {
   FILE *fp_read, *fp_write;
@@ -161,6 +193,37 @@ static int comp(const void *a, const void *b)
 }
 
 
+
+/**
+ * @file
+ * @brief 
+ * File Sampler (Exact)
+ *
+ * @details
+ * TODO
+ *
+ * @param verbose
+ * Input.  TODO
+ * @param header
+ * Input.  Indicates whether or not there is a header line (as in a
+ * csv).
+ * @param nskip
+ * Input.  Number of lines to skip.  If header=true and nskip>0, then
+ * the number of lines skipped applies to post-header lines only.
+ * @param n
+ * Input.  The precise number of lines of input to (randomly) to 
+ * retain.
+ * @param input
+ * Input.  Absolute path to input file.
+ * @param output
+ * Input.  Absolute path to output file.
+ *
+ * @note
+ * Due to R's RNG, this call (as written) is very un-threadsafe.
+ * 
+ * @return
+ * The return value indicates the status of the function.
+ */
 int file_sampler_exact(bool verbose, bool header, const int nskip, const int n, const char *input, const char *output)
 {
   int ret = 0;
