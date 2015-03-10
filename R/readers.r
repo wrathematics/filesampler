@@ -31,6 +31,36 @@ file_sampler <- function(verbose, header, nskip, p, infile)
 
 
 
+file_sampler_exact <- function(verbose, header, nskip, n, infile)
+{
+  must_be(verbose, "logical")
+  must_be(header, "logical")
+  must_be(nskip, "int")
+  must_be(n, "int")
+  must_be(infile, "character")
+  
+  infile <- tools::file_path_as_absolute(infile)
+  
+  outfile <- tempfile()
+  ret <- .Call(R_file_sampler_exact, verbose, header, as.integer(nskip), as.integer(n), infile, outfile)
+  
+  if (ret < 0)
+  {
+    unlink(outfile)
+    
+    if (ret == -2)
+      stop("Invalid argument 'infile'; perhaps it doesn't exist?")
+    else if (ret == -3)
+      stop("Could not generate tempfile for writing for some reason?")
+    else
+      stop("what?")
+  }
+  
+  return(outfile)
+}
+
+
+
 #' @title Read Sample of CSV
 #' 
 #' @description 

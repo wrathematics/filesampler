@@ -11,7 +11,7 @@
 #' This package, including the underlying C library, is licensed under
 #' the permissive 2-clause BSD license.
 #'
-#' @useDynLib lineSampler, R_file_sampler, R_wc
+#' @useDynLib lineSampler, R_file_sampler, R_file_sampler_exact, R_wc
 #'
 #' @name lineSampler
 #' @docType package

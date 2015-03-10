@@ -116,6 +116,9 @@ int file_sampler(bool verbose, bool header, int nskip, const double p, const cha
 
 
 
+// ------------------------------------------------------
+// exact reader
+
 
 static inline int unif_rand_int(const int low, const int high)
 {
@@ -123,13 +126,14 @@ static inline int unif_rand_int(const int low, const int high)
 }
 
 
-static int res_sampler(const uint64_t nlines_in, const uint64_t nlines_out, uint64_t **samp)
+
+static int res_sampler(const int nskip, const uint64_t nlines_in, const uint64_t nlines_out, uint64_t **samp)
 {
   int i, j;
   *samp = malloc(nlines_out * sizeof(**samp));
   
   for (i=0; i<nlines_out; i++)
-    (*samp)[i] = i+1;
+    (*samp)[i] = nskip + i+1;
   
   GetRNGstate();
   
@@ -137,7 +141,7 @@ static int res_sampler(const uint64_t nlines_in, const uint64_t nlines_out, uint
   {
     j = unif_rand_int(0, i-1);
     if (j < nlines_out)
-      (*samp)[j] = i+1;
+      (*samp)[j] = nskip + i+1;
   }
   
   PutRNGstate();
@@ -145,4 +149,95 @@ static int res_sampler(const uint64_t nlines_in, const uint64_t nlines_out, uint
   return 0;
 }
 
+
+
+static int comp(const void *a, const void *b)
+{
+   return *(uint64_t*)a - *(uint64_t*)b;
+}
+
+
+int file_sampler_exact(bool verbose, bool header, const int nskip, const int n, const char *input, const char *output)
+{
+  int ret = 0;
+  FILE *fp_read, *fp_write;
+  char *buf;
+  int readlen;
+  // Have to track cases where buffer is too small for fgets()
+  bool should_write = false;
+  bool firstread = true;
+  uint64_t nletters, nwords;
+  uint64_t nlines_in = 0, nlines_out = 0;
+  uint64_t *samp;
+  
+  
+  fp_read = fopen(input, "r");
+  if (!fp_read) return READ_FAIL;
+  fp_write = fopen(output, "w");
+  
+  buf = malloc(BUFLEN * sizeof(char));
+  
+  
+  if (header)
+    read_header(buf, fp_read, fp_write, &nlines_in, &nlines_out);
+  
+  
+  ret = wc(input, &nletters, &nwords, &nlines_in);
+  if (ret) goto cleanup;
+  
+  // if nskip > nlines_in, etc.
+  
+  nlines_out = (uint64_t) n;
+  ret = res_sampler(nskip, nlines_in, nlines_out, &samp);
+  if (ret) goto cleanup;
+  
+  qsort(samp, nlines_out, sizeof(uint64_t), comp);
+  
+  GetRNGstate();
+  
+  
+  nlines_in = 0;
+  nlines_out = 0;
+  while (fgets(buf, BUFLEN, fp_read) != NULL)
+  {
+    if (firstread)
+    {
+      if (samp[nlines_out] == nlines_in)
+        should_write = true;
+      else
+        should_write = false;
+    }
+    
+    if (should_write)
+    {
+      nlines_out++;
+      fprintf(fp_write, "%s", buf);
+    }
+    
+    readlen = strnlen(buf, BUFLEN);
+    
+    if (HAS_NEWLINE)
+    {
+      nlines_in++;
+      should_write = false;
+      firstread = true;
+    }
+    else
+      firstread = false;
+    
+  }
+  
+  PutRNGstate();
+  
+  if (verbose)
+    PRINTFUN("Read %llu lines (%.3f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
+  
+  free(samp);
+  cleanup:
+    fclose(fp_read);
+    fclose(fp_write);
+    free(buf);
+  
+  return ret;
+}
 

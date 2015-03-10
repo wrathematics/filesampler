@@ -17,6 +17,7 @@
 
 int wc(const char *file, uint64_t *nletters, uint64_t *nwords, uint64_t *nlines);
 int file_sampler(bool verbose, bool header, int nskip, const double p, const char *input, const char *output);
+int file_sampler_exact(bool verbose, bool header, const int nskip, const int n, const char *input, const char *output);
 
 
 #endif

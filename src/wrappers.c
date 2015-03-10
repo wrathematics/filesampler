@@ -19,6 +19,19 @@ SEXP R_file_sampler(SEXP verbose, SEXP header, SEXP nskip, SEXP p, SEXP input, S
 
 
 
+SEXP R_file_sampler_exact(SEXP verbose, SEXP header, SEXP nskip, SEXP n, SEXP input, SEXP output)
+{
+  SEXP ret;
+  PROTECT(ret = allocVector(INTSXP, 1));
+  
+  INT(ret) = file_sampler_exact(INT(verbose), INT(header), INT(nskip), INT(n), CHARPT(input, 0), CHARPT(output, 0));
+  
+  UNPROTECT(1);
+  return ret;
+}
+
+
+
 #define COUNTS(n) REAL(counts)[n]
 #define RETVAL    0
 #define NLETTERS  1
