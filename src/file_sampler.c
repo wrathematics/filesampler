@@ -4,15 +4,19 @@
 
 #include "lineSampler.h"
 
+#define HAS_NEWLINE ((readlen > 0) && (buf[readlen-1] == '\n'))
 
+
+/* To make this useable outside of R, you need to:
+ *    1. remove the Get/PutRNGstate() calls
+ *    2. change RUNIF def to random uniform rng of your choice.
+ *    3. set PRINTFUN to (probably) printf().
+ */
 #include <R.h>
-#define RUNIF unif_rand // change this to the rng of your choice if not using R
-double unif_rand();       // also remove the Get/PutRNGstate()'s'
+#include <Rmath.h>
+#define RUNIF unif_rand
 #define PRINTFUN Rprintf
 
-
-
-#define HAS_NEWLINE ((readlen > 0) && (buf[readlen-1] == '\n'))
 
 
 static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_t *nlines_in, uint64_t *nlines_out)
@@ -122,7 +126,7 @@ int file_sampler(bool verbose, bool header, int nskip, const double p, const cha
 
 static inline int unif_rand_int(const int low, const int high)
 {
-  return (int) low + (high + 1 - low)*unif_rand() ;
+  return (int) low + (high + 1 - low)*RUNIF() ;
 }
 
 
