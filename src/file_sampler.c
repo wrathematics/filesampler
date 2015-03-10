@@ -123,13 +123,13 @@ static inline int unif_rand_int(const int low, const int high)
 }
 
 
-static uint64_t *res_sampler(const int nlines_in, const int nlines_out)
+static int res_sampler(const int nlines_in, const int nlines_out, uint64_t **samp)
 {
-  int i;
-  int ret = malloc(nlines_out * sizeof(int));
+  int i, j;
+  *samp = malloc(nlines_out * sizeof(**samp));
   
   for (i=0; i<nlines_out; i++)
-    ret[i] = i+1;
+    (*samp)[i] = i+1;
   
   GetRNGstate();
   
@@ -137,11 +137,12 @@ static uint64_t *res_sampler(const int nlines_in, const int nlines_out)
   {
     j = unif_rand_int(1, i);
     if (j <= nlines_out)
-      ret[j] = i+1;
+      (*samp)[j] = i+1;
   }
   
-  PutRNGState();
+  PutRNGstate();
   
-  return ret;
+  return 0;
 }
+
 
