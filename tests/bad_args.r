@@ -2,7 +2,7 @@ library(lineSampler)
 
 set.seed(1234)
 
-file <- tools::file_path_as_absolute(system.file("data/small.csv", package="lineSampler"))
+file <- tools::file_path_as_absolute(system.file("rawdata/small.csv", package="lineSampler"))
 
 
 ### p
