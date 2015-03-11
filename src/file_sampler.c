@@ -9,7 +9,7 @@
 
 /* To make this useable outside of R, you need to:
  *    1. remove the Get/PutRNGstate() calls
- *    2. change RUNIF def to random uniform rng of your choice.
+ *    2. change RUNIF def to random uniform(0,1) rng of your choice.
  *    3. set PRINTFUN to (probably) printf().
  */
 #include <R.h>
@@ -46,7 +46,13 @@ static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_
  * File Sampler
  *
  * @details
- * TODO
+ * This function takes an input file and randomly subsamples it at
+ * the given proportion p line-by-line, with the randomly chosen lines
+ * being placed in the given output file.  
+ * 
+ * If the file has many lines, then the size of the output file
+ * should be roughly p*nlines(input).  If you want to specify
+ * an exact number of lines, see file_sampler_exact().
  *
  * @param verbose
  * Input.  Indicates whether character/word/line counts of the input
@@ -200,17 +206,23 @@ static int comp(const void *a, const void *b)
  * File Sampler (Exact)
  *
  * @details
- * TODO
+ * This function takes an input file and randomly subsamples
+ * line-by-line producing exactly n lines in the subsample, with 
+ * the randomly chosen lines being placed in the given output file.  
+ * 
+ * If the file has many lines, it's probably just as good (and 
+ * certainly much faster) to instead use file_sampler(), which
+ * randomly subsamples at a proportion.
  *
- * @param verbose
- * Input.  TODO
  * @param header
  * Input.  Indicates whether or not there is a header line (as in a
  * csv).
  * @param nskip
  * Input.  Number of lines to skip.  If header=true and nskip>0, then
  * the number of lines skipped applies to post-header lines only.
- * @param n
+ * @param nlines_in
+ * Input.  The number of lines of the input file.  See wc().
+ * @param nlines_out
  * Input.  The precise number of lines of input to (randomly) to 
  * retain.
  * @param input
@@ -224,7 +236,7 @@ static int comp(const void *a, const void *b)
  * @return
  * The return value indicates the status of the function.
  */
-int file_sampler_exact(bool verbose, bool header, const int nskip, const int n, const char *input, const char *output)
+int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, const int nskip, const char *input, const char *output)
 {
   int ret = 0;
   FILE *fp_read, *fp_write;
@@ -233,10 +245,11 @@ int file_sampler_exact(bool verbose, bool header, const int nskip, const int n, 
   // Have to track cases where buffer is too small for fgets()
   bool should_write = false;
   bool firstread = true;
-  uint64_t nletters, nwords;
-  uint64_t nlines_in = 0, nlines_out = 0;
   uint64_t *samp;
   
+  
+  if (nskip > nlines_in)
+    return INVALID_NSKIP;
   
   fp_read = fopen(input, "r");
   if (!fp_read) return READ_FAIL;
@@ -248,13 +261,6 @@ int file_sampler_exact(bool verbose, bool header, const int nskip, const int n, 
   if (header)
     read_header(buf, fp_read, fp_write, &nlines_in, &nlines_out);
   
-  
-  ret = wc(input, &nletters, &nwords, &nlines_in);
-  if (ret) goto cleanup;
-  
-  // if nskip > nlines_in, etc.
-  
-  nlines_out = (uint64_t) n;
   ret = res_sampler(nskip, nlines_in, nlines_out, &samp);
   if (ret) goto cleanup;
   
@@ -295,9 +301,6 @@ int file_sampler_exact(bool verbose, bool header, const int nskip, const int n, 
   }
   
   PutRNGstate();
-  
-  if (verbose)
-    PRINTFUN("Read %llu lines (%.3f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
   
   free(samp);
   cleanup:

@@ -19,14 +19,20 @@ SEXP R_file_sampler(SEXP verbose, SEXP header, SEXP nskip, SEXP p, SEXP input, S
 
 
 
-SEXP R_file_sampler_exact(SEXP verbose, SEXP header, SEXP nskip, SEXP n, SEXP input, SEXP output)
+SEXP R_file_sampler_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, SEXP output)
 {
   SEXP ret;
   PROTECT(ret = allocVector(INTSXP, 1));
+  uint64_t nletters, nwords, nlines_in;
   
-  INT(ret) = file_sampler_exact(INT(verbose), INT(header), INT(nskip), INT(n), CHARPT(input, 0), CHARPT(output, 0));
+  INT(ret) = wc(CHARPT(input, 0), &nletters, &nwords, &nlines_in);
+  if (INT(ret)) goto cleanup;
   
-  UNPROTECT(1);
+  INT(ret) = file_sampler_exact(INT(header), nlines_in, INT(nlines_out), INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
+  
+  cleanup:
+    UNPROTECT(1);
+  
   return ret;
 }
 

@@ -6,6 +6,31 @@
 #include <R_ext/Utils.h>
 
 
+/**
+ * @file
+ * @brief 
+ * Wordcounts
+ *
+ * @details
+ * This function emulates the standard unix wc command, to generate
+ * letter, word, and line counts from a text file.
+ *
+ * @param file
+ * Input.  Absolute path to output file.
+ * @param nletters
+ * Output, passed by reference.  On successful return, the value
+ * is set to the number of "letters" (character) in the file.
+ * @param nwords
+ * Output, passed by reference.  On successful return, the value
+ * is set to the number of "words" (space separated tokens) in the
+ * file.
+ * @param nlines
+ * Output, passed by reference.  On successful return, the value
+ * is set to the number of lines in the file.
+ * 
+ * @return
+ * The return value indicates the status of the function.
+ */
 int wc(const char *file, uint64_t *nletters, uint64_t *nwords, uint64_t *nlines)
 {
   int i;

@@ -11,13 +11,14 @@
 #define BUFLEN 4096
 
 #define INVALID_PROB  -1
-#define READ_FAIL     -2
-#define WRITE_FAIL    -3
+#define INVALID_NSKIP -2
+#define READ_FAIL     -3
+#define WRITE_FAIL    -4
 
 
 int wc(const char *file, uint64_t *nletters, uint64_t *nwords, uint64_t *nlines);
 int file_sampler(bool verbose, bool header, int nskip, const double p, const char *input, const char *output);
-int file_sampler_exact(bool verbose, bool header, const int nskip, const int n, const char *input, const char *output);
+int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, const int nskip, const char *input, const char *output);
 
 
 #endif

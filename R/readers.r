@@ -31,7 +31,7 @@ file_sampler <- function(verbose, header, nskip, p, infile)
 
 
 
-file_sampler_exact <- function(verbose, header, nskip, n, infile)
+file_sampler_exact <- function(header, nskip, nlines, infile)
 {
   must_be(verbose, "logical")
   must_be(header, "logical")
@@ -42,7 +42,7 @@ file_sampler_exact <- function(verbose, header, nskip, n, infile)
   infile <- tools::file_path_as_absolute(infile)
   
   outfile <- tempfile()
-  ret <- .Call(R_file_sampler_exact, verbose, header, as.integer(nskip), as.integer(n), infile, outfile)
+  ret <- .Call(R_file_sampler_exact, header, as.integer(nskip), as.integer(nlines), infile, outfile)
   
   if (ret < 0)
   {
