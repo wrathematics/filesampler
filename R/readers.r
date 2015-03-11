@@ -33,10 +33,9 @@ file_sampler <- function(verbose, header, nskip, p, infile)
 
 file_sampler_exact <- function(header, nskip, nlines, infile)
 {
-  must_be(verbose, "logical")
   must_be(header, "logical")
   must_be(nskip, "int")
-  must_be(n, "int")
+  must_be(nlines, "int")
   must_be(infile, "character")
   
   infile <- tools::file_path_as_absolute(infile)
