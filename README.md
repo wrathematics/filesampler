@@ -1,19 +1,16 @@
 # lineSampler
 
-This is a simple R package to reasonably quickly read a random sample
-of a flat text file (such as a csv) into R.  We do so by scanning through
-the input text file once and "flipping a coin" (probability controlled by
-the user) to determine if the current line should be read in or not.
-Such lines are stored in a temporary text file, and then that downsampled
-file is read into R via R's `read.csv()` or `readLines()`.
+This is a simple R package to reasonably quickly read a random sample of a flat
+text file (such as a csv) into R. This allows you to get a subsample int R 
+without having to read the (possibly large) file into memory.
 
 Idea inspired by Eduardo Arino de la Rubia's [fast_sample](https://github.com/earino/fast_sample).
 
 
+
 ## Package Use
 
-The idea is to quickly randomly select a subset of a large-ish flat text
-file.
+The idea is to quickly randomly select a subset of a large-ish flat text file.
 
 ```r
 library(lineSampler)
@@ -25,6 +22,7 @@ wc(file)
 # Nwords:   12174948
 # Nlines:   12174948 
 
+### Read in approximately 0.1% of the input file
 system.time({
   ret <- read_csv_sampled(file, .001)
 })
@@ -44,40 +42,39 @@ str(ret) ### Just some random nonsense
 #  $ F: num  31.9 52.2 69.4 59.9 19.1 ...
 ```
 
-There is also a `readLines_sampled()` function for reading in 
-(line) subsamples of unstructured text.
+There is also a `readLines_sampled()` function for reading in (line) subsamples
+of unstructured text.
 
 
 
 ## How It Works
 
-The input file is scanned, line-by-line, and lines are randomly
-placed into a temporary file at the given proportion (by the user).
-This requires one pass through the file.  In the "exact" version, 
-a reservoir sampler is used to determine which lines will be
-read, and then pass through the input file and dumping lines to
-the temporary file as necessary (i.e., if that line number was
-chosen by the sampler).  In each case, R's `read.csv()` or
-`readLines()` is used to read the temp file into R.  
+The input file is scanned, line-by-line, and lines are randomly placed into a
+temporary file at the given proportion (by the user). This requires one pass
+through the file. In the "exact" version, a reservoir sampler is used to
+determine which lines will be read, and then pass through the input file and
+dumping lines to the temporary file as necessary (i.e., if that line number was
+chosen by the sampler). In each case, R's `read.csv()` or `readLines()` is used
+to read the temp file into R.  
 
-The package attempts to be reasonably efficient, with the underlying
-I/O handled by very ad hoc C code via `fgets()`.  The exact version
-necessarily requires 2 passes through the file (one to get the
-linecounts, then one to sample), while the basic version only 
-requires one pass.  On Linux (and possibly other OS's), your file
-may get cached, so the second read might be comparatively cheap.
-But for very large files (which shouldn't be csv anyway!), downsampling
-with the inexact version and a p of .001 or so should be more than
-sufficient.
+The package attempts to be reasonably efficient, with the underlying I/O handled
+by very ad hoc C code via `fgets()`. The exact readers necessarily require 2
+passes through the file (one to get the linecounts, then one to sample), while
+the basic version only requires one pass. On Linux (and possibly other OS's),
+your file may get cached on the first read, so the second read might be
+comparatively cheap. But for very large files (which shouldn't be csv anyway!),
+downsampling with the inexact version and a p of .001 or smaller should be more
+than sufficient.
 
-As a side note, you can see how large the file is without scanning
-it, just based on reports from the file system.  In R, you can
-do
+As a side note, you can see how large the file is without scanning it, just
+based on reports from the file system. In R, you can do
 
 ```r
 file.info("/tmp/big.csv")$size
 778814622
 ```
+
+or about 743 MiB on disk.
 
 From C, you can use `stat()` on *NIX systems, and `GetFileSizeEx()`
 on Windows (using the Win32 API).  A real example is provided in
