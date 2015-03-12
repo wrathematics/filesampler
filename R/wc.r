@@ -1,4 +1,5 @@
-#' @title Count Letters, Words, and Lines of a File
+#' @title 
+#' Count Letters, Words, and Lines of a File
 #' 
 #' @description 
 #' See title.
@@ -7,7 +8,9 @@
 #' Location of the file (as a string) from which the counts will be generated.
 #' 
 #' @details
-#' TODO
+#' The summary statistics of the input file are determined by
+#' scanning through the file as quickly as possible (i.e., it
+#' should be completely I/O bound).
 #' 
 #' @return
 #' A list containing the requested counts.
@@ -43,7 +46,6 @@ wc <- function(file)
 
 #' @rdname print wc
 #' @method print wc
-#' @return \code{NULL}
 #' @export
 print.wc <- function(x, ...)
 {

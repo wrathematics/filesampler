@@ -15,7 +15,9 @@ A list containing the requested counts.
 See title.
 }
 \details{
-TODO
+The summary statistics of the input file are determined by
+scanning through the file as quickly as possible (i.e., it
+should be completely I/O bound).
 }
 \examples{
 \dontrun{
