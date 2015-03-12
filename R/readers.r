@@ -1,3 +1,39 @@
+#' @title 
+#' File Sampler
+#' 
+#' @description 
+#' Randomly sample lines from an input text file at proportion p.
+#' 
+#' @param verbose
+#' Logical; indicates whether or not linecounts of the input file and the number
+#' of lines sampled should be printed.
+#' @param header
+#' Logical; indicates whether or not there is a header on the csv file.
+#' @param nskip
+#' Number of lines to skip.  If \code{header=TRUE}, then this only
+#' applies to lines after the header.
+#' @param p
+#' Proportion to retain; should be a numeric value between 0 and 1.
+#' @param infile
+#' Location of the file (as a string) to be subsampled.
+#' 
+#' @details
+#' The sampling is done in one pass of the input file, dumping
+#' lines to a temporary file as the input is read.
+#' 
+#' If the output file (the one pointed to by the return of this 
+#' function) is "large" and to be read into memory (which isn't 
+#' really appropriate for text files in the first place!), then 
+#' this strategy is probably not appropriate.
+#' 
+#' @return
+#' A temporary file that contains the downsampled data.  After
+#' reading into R (or whatever) with the reader of your choice,
+#' you will need to \code{unlink()} the file yourself.
+#' 
+#' @seealso \code{\link{file_sampler_exact}}
+#' 
+#' @export
 file_sampler <- function(verbose, header, nskip, p, infile)
 {
   must_be(verbose, "logical")
@@ -31,6 +67,45 @@ file_sampler <- function(verbose, header, nskip, p, infile)
 
 
 
+#' @title 
+#' Exact File Sampler
+#' 
+#' @description 
+#' Randomly sample exactly \code{nlines} lines from an input text 
+#' file.
+#' 
+#' @param header
+#' Logical; indicates whether or not there is a header on the csv file.
+#' @param nskip
+#' Number of lines to skip.  If \code{header=TRUE}, then this only
+#' applies to lines after the header.
+#' @param nlines
+#' The (exact) number of lines to sample from the input file.
+#' @param infile
+#' Location of the file (as a string) to be subsampled.
+#' 
+#' @details
+#' The sampling is done in two passes of the input file.  First, 
+#' the number of lines of the input file are determined by
+#' scanning through the file as quickly as possible (i.e., it
+#' should be completely I/O bound).  Next, an index of lines
+#' to keep is produced by reservoir sampling.  Then finally, 
+#' the input file is scanned again line by line with the chosen
+#' lines dumped into a temporary file.
+#' 
+#' If the output file (the one pointed to by the return of this 
+#' function) is "large" and to be read into memory (which isn't 
+#' really appropriate for text files in the first place!), then 
+#' this strategy is probably not appropriate.
+#' 
+#' @return
+#' A temporary file that contains the downsampled data.  After
+#' reading into R (or whatever) with the reader of your choice,
+#' you will need to \code{unlink()} the file yourself.
+#' 
+#' @seealso \code{\link{file_sampler}}
+#' 
+#' @export
 file_sampler_exact <- function(header, nskip, nlines, infile)
 {
   must_be(header, "logical")
