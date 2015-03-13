@@ -1,4 +1,5 @@
-# lineSampler
+# lineSampler [![Build Status](https://travis-ci.org/wrathematics/lineSampler.png)](https://travis-ci.org/wrathematics/lineSampler) 
+
 
 This is a simple R package to reasonably quickly read a random sample of a flat
 text file (such as a csv) into R. This allows you to get a subsample int R 
