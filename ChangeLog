@@ -1,0 +1,8 @@
+Release 0.2:
+	* 
+
+Release 0.1:
+	* Added basic sampler.
+	* Added reservoir sampler.
+	* Added misc utilities (wc, etc).
+
