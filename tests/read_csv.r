@@ -22,10 +22,10 @@ structure(list(A = c(30L, 92L, 6L, 49L, 77L, 54L, 67L), B = structure(c(2L,
     47.2880723653361)), .Names = c("A", "B", "C", "D", "E", "F"
 ), class = "data.frame", row.names = c(NA, -7L))
 
-all.equal(sampled, sampled_actual)
+stopifnot(all.equal(sampled, sampled_actual))
 
 
 ### verbose
 verb <- capture.output(invisible(read_csv_sampled(file, p=.05, verbose=TRUE)))
 verb_actual <- "Read 4 lines (0.040%) of 101 line file."
-all.equal(verb, verb_actual)
+stopifnot(all.equal(verb, verb_actual))
