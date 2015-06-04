@@ -18,6 +18,8 @@
 #'
 #' @useDynLib lineSampler, R_file_sampler, R_file_sampler_exact, R_wc
 #'
+#' @importFrom tools file_path_as_absolute
+#' 
 #' @name lineSampler
 #' @docType package
 #' @title File Line Sampler
