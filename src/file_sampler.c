@@ -21,13 +21,13 @@
 
 static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_t *nlines_in, uint64_t *nlines_out)
 {
-  int readlen;
+  size_t readlen;
   
   while (fgets(buf, BUFLEN, fp_read) != NULL)
   {
     fprintf(fp_write, "%s", buf);
     
-    readlen = strnlen(buf, BUFLEN);
+    readlen = strlen(buf);
     
     if (HAS_NEWLINE)
     {
@@ -82,7 +82,7 @@ int file_sampler(bool verbose, bool header, int nskip, const double p, const cha
 {
   FILE *fp_read, *fp_write;
   char *buf;
-  int readlen;
+  size_t readlen;
   // Have to track cases where buffer is too small for fgets()
   bool should_write = false;
   bool firstread = true;
@@ -130,7 +130,7 @@ int file_sampler(bool verbose, bool header, int nskip, const double p, const cha
       fprintf(fp_write, "%s", buf);
     }
     
-    readlen = strnlen(buf, BUFLEN);
+    readlen = strlen(buf);
     
     if (HAS_NEWLINE)
     {
@@ -241,7 +241,7 @@ int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, con
   int ret = 0;
   FILE *fp_read, *fp_write;
   char *buf;
-  int readlen;
+  size_t readlen;
   // Have to track cases where buffer is too small for fgets()
   bool should_write = false;
   bool firstread = true;
@@ -287,7 +287,7 @@ int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, con
       fprintf(fp_write, "%s", buf);
     }
     
-    readlen = strnlen(buf, BUFLEN);
+    readlen = strlen(buf);
     
     if (HAS_NEWLINE)
     {

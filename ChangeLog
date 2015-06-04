@@ -1,5 +1,5 @@
 Release 0.2:
-	* 
+	* Removed gnu extension (strnlen).
 
 Release 0.1:
 	* Added basic sampler.

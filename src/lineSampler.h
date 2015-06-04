@@ -1,5 +1,5 @@
-#ifndef CSVSAMPLER_H_
-#define CSVSAMPLER_H_
+#ifndef LINESAMPLER_H_
+#define LINESAMPLER_H_
 
 
 #include <string.h>
