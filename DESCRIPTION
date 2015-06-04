@@ -1,7 +1,7 @@
 Package: lineSampler
 Type: Package
 Title: File Line Sampler
-Version: 0.2
+Version: 0.3
 Description: A simple file sampler, implemented in C.
 License: BSD 2-clause License + file LICENSE
 Depends:
