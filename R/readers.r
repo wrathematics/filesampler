@@ -16,6 +16,8 @@
 #' Proportion to retain; should be a numeric value between 0 and 1.
 #' @param infile
 #' Location of the file (as a string) to be subsampled.
+#' @param outfile
+#' Output file.  Default is a temporary file.
 #' 
 #' @details
 #' The sampling is done in one pass of the input file, dumping
@@ -27,14 +29,12 @@
 #' this strategy is probably not appropriate.
 #' 
 #' @return
-#' A temporary file that contains the downsampled data.  After
-#' reading into R (or whatever) with the reader of your choice,
-#' you will need to \code{unlink()} the file yourself.
+#' NULL
 #' 
 #' @seealso \code{\link{file_sampler_exact}}
 #' 
 #' @export
-file_sampler <- function(verbose, header, nskip, p, infile)
+file_sampler <- function(verbose, header, nskip, p, infile, outfile=tempfile())
 {
   must_be(verbose, "logical")
   must_be(header, "logical")
@@ -46,8 +46,8 @@ file_sampler <- function(verbose, header, nskip, p, infile)
     stop("Argument 'p' must be between 0 and 1")
   
   infile <- tools::file_path_as_absolute(infile)
+  outfile <- tools::file_path_as_absolute(outfile)
   
-  outfile <- tempfile()
   ret <- .Call(R_file_sampler, verbose, header, as.integer(nskip), as.double(p), infile, outfile)
   
   if (ret < 0)
@@ -62,7 +62,7 @@ file_sampler <- function(verbose, header, nskip, p, infile)
       stop("what?")
   }
   
-  return(outfile)
+  invisible()
 }
 
 
@@ -99,14 +99,12 @@ file_sampler <- function(verbose, header, nskip, p, infile)
 #' this strategy is probably not appropriate.
 #' 
 #' @return
-#' A temporary file that contains the downsampled data.  After
-#' reading into R (or whatever) with the reader of your choice,
-#' you will need to \code{unlink()} the file yourself.
+#' NULL
 #' 
 #' @seealso \code{\link{file_sampler}}
 #' 
 #' @export
-file_sampler_exact <- function(header, nskip, nlines, infile)
+file_sampler_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
 {
   must_be(header, "logical")
   must_be(nskip, "int")
@@ -114,8 +112,8 @@ file_sampler_exact <- function(header, nskip, nlines, infile)
   must_be(infile, "character")
   
   infile <- tools::file_path_as_absolute(infile)
+  outfile <- tools::file_path_as_absolute(outfile)
   
-  outfile <- tempfile()
   ret <- .Call(R_file_sampler_exact, header, as.integer(nskip), as.integer(nlines), infile, outfile)
   
   if (ret < 0)
@@ -130,7 +128,7 @@ file_sampler_exact <- function(header, nskip, nlines, infile)
       stop("what?")
   }
   
-  return(outfile)
+  invisible()
 }
 
 
@@ -146,26 +144,10 @@ file_sampler_exact <- function(header, nskip, nlines, infile)
 #' Location of the file (as a string) to be subsampled.
 #' @param p
 #' Proportion to retain; should be a numeric value between 0 and 1.
-#' @param header
-#' Logical; indicates whether or not there is a header on the csv file.
-#' @param nskip
-#' Number of lines to skip.  If \code{header=TRUE}, then this only
-#' applies to lines after the header.
-#' @param sep
-#' Separator character.
-#' @param quote
-#' Quote character for delimiting columns read as strings.
-#' @param dec
-#' "Decimal point" character.
-#' @param fill
-#' Logical; standardizes rows of unequal length to have implicit blanks added.
-#' @param comment.char
-#' Comments character.
+#' @param header,nskip,sep,quote,dec,fill,comment.char,...
 #' @param verbose
 #' Logical; indicates whether or not linecounts of the input file and the number
 #' of lines sampled should be printed.
-#' @param ...
-#' Additional arguments to be passed to \code{read.csv()}.
 #' 
 #' @details
 #' This function scans over the test of the input file and at each step, randomly
@@ -201,7 +183,8 @@ read_csv_sampled <- function(file, p=.1, header=TRUE, nskip=0, sep=",", quote="\
   if (p == 0)
     stop("no lines available for input")
   
-  outfile <- file_sampler(verbose=verbose, header=header, nskip=nskip, p=p, infile=file)
+  outfile <- tempfile()
+  file_sampler(verbose=verbose, header=header, nskip=nskip, p=p, infile=file, outfile=outfile)
   
   data <- read.csv(file=outfile, header=header, sep=sep, quote=quote, dec=dec, fill=fill, comment.char=comment.char, ...)
   unlink(outfile)
@@ -224,17 +207,7 @@ read_csv_sampled <- function(file, p=.1, header=TRUE, nskip=0, sep=",", quote="\
 #' Proportion to retain; should be a numeric value between 0 and 1.
 #' @param nskip
 #' Number of lines to skip.
-#' @param n
-#' The max number of lines to read. Negative value means read everything.
-#' @param ok
-#' Logical; Ok to reach end of connection before \code{n} lines are read? Only
-#' relevant when \code{n>0}.
-#' @param warn
-#' Logical; warn if file is missing EOL.
-#' @param encoding
-#' Character encoding for strings.
-#' @param skipNul
-#' Logical; should \code{nul}'s be skipped?
+#' @param n,ok,warn,encoding,skipNul
 #' @param verbose
 #' Logical; indicates whether or not linecounts of the input file and the number
 #' of lines sampled should be printed.
@@ -277,7 +250,8 @@ readLines_sampled <- function(file, p=.1, nskip=0, n=-1L, ok=TRUE, warn=TRUE, en
   if (n > 0 && n < nskip)
     return(character(0))
   
-  outfile <- file_sampler(verbose=verbose, header=FALSE, nskip=nskip, p=p, infile=file)
+  outfile <- tempfile()
+  file_sampler(verbose=verbose, header=FALSE, nskip=nskip, p=p, infile=file, outfile=outfile)
   
   data <- readLines(outfile, n=n, ok=ok, warn=warn, encoding=encoding, skipNul=skipNul)
   unlink(outfile)
