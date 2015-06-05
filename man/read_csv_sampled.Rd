@@ -4,7 +4,8 @@
 \alias{read_csv_sampled}
 \title{Read Sample of CSV}
 \usage{
-read_csv_sampled(file, p = 0.1, header = TRUE, nskip = 0, sep = ",",
+read_csv_sampled(file, p = 0.1, header = TRUE, nskip = 0, nmax = 0,
+  sep = ",",
   quote = "\\"", dec = ".", fill = TRUE, comment.char = "", verbose = FALSE, ...)
 }
 \arguments{

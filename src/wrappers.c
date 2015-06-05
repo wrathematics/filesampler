@@ -6,12 +6,12 @@
 #define INT(x) INTEGER(x)[0]
 #define DBL(x) REAL(x)[0]
 
-SEXP R_file_sampler(SEXP verbose, SEXP header, SEXP nskip, SEXP p, SEXP input, SEXP output)
+SEXP R_file_sampler(SEXP verbose, SEXP header, SEXP nskip, SEXP nmax, SEXP p, SEXP input, SEXP output)
 {
   SEXP ret;
   PROTECT(ret = allocVector(INTSXP, 1));
   
-  INT(ret) = file_sampler(INT(verbose), INT(header), INT(nskip), DBL(p), CHARPT(input, 0), CHARPT(output, 0));
+  INT(ret) = file_sampler(INT(verbose), INT(header), (uint32_t)INT(nskip), (uint32_t)INT(nmax), DBL(p), CHARPT(input, 0), CHARPT(output, 0));
   
   UNPROTECT(1);
   return ret;
@@ -28,7 +28,7 @@ SEXP R_file_sampler_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, 
   INT(ret) = wc(CHARPT(input, 0), &nletters, &nwords, &nlines_in);
   if (INT(ret)) goto cleanup;
   
-  INT(ret) = file_sampler_exact(INT(header), nlines_in, INT(nlines_out), INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
+  INT(ret) = file_sampler_exact(INT(header), nlines_in, INT(nlines_out), (uint32_t)INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
   
   cleanup:
     UNPROTECT(1);

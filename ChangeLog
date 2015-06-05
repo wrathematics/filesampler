@@ -1,3 +1,6 @@
+Release 0.3:
+	* Added nmax reader option.
+
 Release 0.2:
 	* Removed gnu extension (strnlen).
 	* Fixed numerous packaging and documentation issues.

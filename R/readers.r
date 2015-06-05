@@ -34,21 +34,25 @@
 #' @seealso \code{\link{file_sampler_exact}}
 #' 
 #' @export
-file_sampler <- function(verbose, header, nskip, p, infile, outfile=tempfile())
+file_sampler <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
 {
   must_be(verbose, "logical")
   must_be(header, "logical")
   must_be(nskip, "int")
+  must_be(nmax, "int")
   must_be(p, "numeric")
   must_be(infile, "character")
   
+  if (nskip < 0)
+    stop("Argument 'nskip' must be >=0")
+  if (nmax < 0)
+    stop("Argument 'nmax' must be >=0")
   if (p < 0 || p > 1)
     stop("Argument 'p' must be between 0 and 1")
   
   infile <- tools::file_path_as_absolute(infile)
-  outfile <- tools::file_path_as_absolute(outfile)
   
-  ret <- .Call(R_file_sampler, verbose, header, as.integer(nskip), as.double(p), infile, outfile)
+  ret <- .Call(R_file_sampler, verbose, header, as.integer(nskip), as.integer(nmax), as.double(p), infile, outfile)
   
   if (ret < 0)
   {
@@ -112,7 +116,6 @@ file_sampler_exact <- function(header, nskip, nlines, infile, outfile=tempfile()
   must_be(infile, "character")
   
   infile <- tools::file_path_as_absolute(infile)
-  outfile <- tools::file_path_as_absolute(outfile)
   
   ret <- .Call(R_file_sampler_exact, header, as.integer(nskip), as.integer(nlines), infile, outfile)
   
@@ -178,13 +181,13 @@ file_sampler_exact <- function(header, nskip, nlines, infile, outfile=tempfile()
 #' }
 #'
 #' @export
-read_csv_sampled <- function(file, p=.1, header=TRUE, nskip=0, sep=",", quote="\"", dec=".", fill=TRUE, comment.char="", verbose=FALSE, ...)
+read_csv_sampled <- function(file, p=.1, header=TRUE, nskip=0, nmax=0, sep=",", quote="\"", dec=".", fill=TRUE, comment.char="", verbose=FALSE, ...)
 {
   if (p == 0)
     stop("no lines available for input")
   
   outfile <- tempfile()
-  file_sampler(verbose=verbose, header=header, nskip=nskip, p=p, infile=file, outfile=outfile)
+  file_sampler(verbose=verbose, header=header, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   
   data <- read.csv(file=outfile, header=header, sep=sep, quote=quote, dec=dec, fill=fill, comment.char=comment.char, ...)
   unlink(outfile)
@@ -242,7 +245,7 @@ read_csv_sampled <- function(file, p=.1, header=TRUE, nskip=0, sep=",", quote="\
 #' }
 #'
 #' @export
-readLines_sampled <- function(file, p=.1, nskip=0, n=-1L, ok=TRUE, warn=TRUE, encoding="unknown", skipNul=FALSE, verbose=FALSE)
+readLines_sampled <- function(file, p=.1, nskip=0, nmax=0, n=-1L, ok=TRUE, warn=TRUE, encoding="unknown", skipNul=FALSE, verbose=FALSE)
 {
   if (p == 0)
     return(character(0))
@@ -251,7 +254,7 @@ readLines_sampled <- function(file, p=.1, nskip=0, n=-1L, ok=TRUE, warn=TRUE, en
     return(character(0))
   
   outfile <- tempfile()
-  file_sampler(verbose=verbose, header=FALSE, nskip=nskip, p=p, infile=file, outfile=outfile)
+  file_sampler(verbose=verbose, header=FALSE, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   
   data <- readLines(outfile, n=n, ok=ok, warn=warn, encoding=encoding, skipNul=skipNul)
   unlink(outfile)

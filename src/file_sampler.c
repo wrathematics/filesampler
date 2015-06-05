@@ -63,6 +63,8 @@ static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_
  * @param nskip
  * Input.  Number of lines to skip.  If header=true and nskip>0, then
  * the number of lines skipped applies to post-header lines only.
+ * @param nmax
+ * Input.  Max number of lines to read.  If nmax==0 then there is no max.
  * @param p
  * Input.  Proportion of lines from input file to (randomly) retain.
  * The proportion retained is not guaranteed to be exactly p, but 
@@ -78,7 +80,7 @@ static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_
  * @return
  * The return value indicates the status of the function.
  */
-int file_sampler(bool verbose, bool header, int nskip, const double p, const char *input, const char *output)
+int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output)
 {
   FILE *fp_read, *fp_write;
   char *buf;
@@ -86,6 +88,7 @@ int file_sampler(bool verbose, bool header, int nskip, const double p, const cha
   // Have to track cases where buffer is too small for fgets()
   bool should_write = false;
   bool firstread = true;
+  bool checkmax = nmax ? true : false;
   uint64_t nlines_in = 0, nlines_out = 0;
   
   if (p < 0. || p > 1.) return INVALID_PROB;
@@ -128,6 +131,12 @@ int file_sampler(bool verbose, bool header, int nskip, const double p, const cha
     {
       nlines_out++;
       fprintf(fp_write, "%s", buf);
+      
+      if (checkmax)
+      {
+        nmax--;
+        if (!nmax) break;
+      }
     }
     
     readlen = strlen(buf);
@@ -140,13 +149,17 @@ int file_sampler(bool verbose, bool header, int nskip, const double p, const cha
     }
     else
       firstread = false;
-    
   }
   
   PutRNGstate();
   
   if (verbose)
-    PRINTFUN("Read %llu lines (%.3f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
+  {
+    if (checkmax && !nmax)
+      PRINTFUN("Read nmax=%llu lines.\n", nmax);
+    else
+      PRINTFUN("Read %llu lines (%.3f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
+  }
   
   cleanup:
     fclose(fp_read);
@@ -169,7 +182,7 @@ static inline int unif_rand_int(const int low, const int high)
 
 
 
-static int res_sampler(const int nskip, const uint64_t nlines_in, const uint64_t nlines_out, uint64_t **samp)
+static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uint64_t nlines_out, uint64_t **samp)
 {
   int i, j;
   *samp = malloc(nlines_out * sizeof(**samp));
@@ -236,7 +249,7 @@ static int comp(const void *a, const void *b)
  * @return
  * The return value indicates the status of the function.
  */
-int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, const int nskip, const char *input, const char *output)
+int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, const uint32_t nskip, const char *input, const char *output)
 {
   int ret = 0;
   FILE *fp_read, *fp_write;
