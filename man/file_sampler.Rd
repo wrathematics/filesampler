@@ -15,6 +15,8 @@ of lines sampled should be printed.}
 \item{nskip}{Number of lines to skip.  If \code{header=TRUE}, then this only
 applies to lines after the header.}
 
+\item{nmax}{Max number of lines to read.  If nmax==0, then there is no read cap.}
+
 \item{p}{Proportion to retain; should be a numeric value between 0 and 1.}
 
 \item{infile}{Location of the file (as a string) to be subsampled.}

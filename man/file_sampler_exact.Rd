@@ -15,6 +15,8 @@ applies to lines after the header.}
 \item{nlines}{The (exact) number of lines to sample from the input file.}
 
 \item{infile}{Location of the file (as a string) to be subsampled.}
+
+\item{outfile}{Output file.  Default is a temporary file.}
 }
 \description{
 Randomly sample exactly \code{nlines} lines from an input text

@@ -13,7 +13,12 @@ read_csv_sampled(file, p = 0.1, header = TRUE, nskip = 0, nmax = 0,
 
 \item{p}{Proportion to retain; should be a numeric value between 0 and 1.}
 
-\item{header,nskip,sep,quote,dec,fill,comment.char,...}{}
+\item{header,sep,quote,dec,fill,comment.char,...}{As in \code{read.csv()}}
+
+\item{nskip}{Number of lines to skip.  If \code{header=TRUE}, then this only
+applies to lines after the header.}
+
+\item{nmax}{Max number of lines to read.  If nmax==0, then there is no read cap.}
 
 \item{verbose}{Logical; indicates whether or not linecounts of the input file and the number
 of lines sampled should be printed.}

@@ -12,6 +12,8 @@
 #' @param nskip
 #' Number of lines to skip.  If \code{header=TRUE}, then this only
 #' applies to lines after the header.
+#' @param nmax
+#' Max number of lines to read.  If nmax==0, then there is no read cap.
 #' @param p
 #' Proportion to retain; should be a numeric value between 0 and 1.
 #' @param infile
@@ -87,6 +89,8 @@ file_sampler <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfi
 #' The (exact) number of lines to sample from the input file.
 #' @param infile
 #' Location of the file (as a string) to be subsampled.
+#' @param outfile
+#' Output file.  Default is a temporary file.
 #' 
 #' @details
 #' The sampling is done in two passes of the input file.  First, 
@@ -147,7 +151,13 @@ file_sampler_exact <- function(header, nskip, nlines, infile, outfile=tempfile()
 #' Location of the file (as a string) to be subsampled.
 #' @param p
 #' Proportion to retain; should be a numeric value between 0 and 1.
-#' @param header,nskip,sep,quote,dec,fill,comment.char,...
+#' @param nskip
+#' Number of lines to skip.  If \code{header=TRUE}, then this only
+#' applies to lines after the header.
+#' @param nmax
+#' Max number of lines to read.  If nmax==0, then there is no read cap.
+#' @param header,sep,quote,dec,fill,comment.char,...
+#' As in \code{read.csv()}
 #' @param verbose
 #' Logical; indicates whether or not linecounts of the input file and the number
 #' of lines sampled should be printed.
@@ -210,7 +220,10 @@ read_csv_sampled <- function(file, p=.1, header=TRUE, nskip=0, nmax=0, sep=",", 
 #' Proportion to retain; should be a numeric value between 0 and 1.
 #' @param nskip
 #' Number of lines to skip.
+#' @param nmax
+#' Max number of lines to read.  If nmax==0, then there is no read cap.
 #' @param n,ok,warn,encoding,skipNul
+#' As in \code{readLines()}.
 #' @param verbose
 #' Logical; indicates whether or not linecounts of the input file and the number
 #' of lines sampled should be printed.
