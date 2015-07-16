@@ -91,11 +91,25 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
   bool checkmax = nmax ? true : false;
   uint64_t nlines_in = 0, nlines_out = 0;
   
-  if (p < 0. || p > 1.) return INVALID_PROB;
+  if (p < 0. || p > 1.)
+    return INVALID_PROB;
+  else if (p == 0.)
+  {
+    if (verbose)
+      PRINTFUN("Read 0 lines of unknown length file (p == 0).\n");
+    
+    return 0;
+  }
+  
+  
   
   fp_read = fopen(input, "r");
-  if (!fp_read) return READ_FAIL;
+  if (!fp_read)
+    return READ_FAIL;
+  
   fp_write = fopen(output, "w");
+  if (!fp_write)
+    return WRITE_FAIL;
   
   buf = malloc(BUFLEN * sizeof(char));
   
@@ -103,14 +117,6 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
   
   if (header)
     read_header(buf, fp_read, fp_write, &nlines_in, &nlines_out);
-  
-  if (p == 0.)
-  {
-    if (verbose)
-      PRINTFUN("Read 0 lines (p == 0) of unknown length file.\n");
-    
-    goto cleanup;
-  }
   
   
   GetRNGstate();
