@@ -1,6 +1,6 @@
 # lineSampler
 
-* **Version:** 0.3
+* **Version:** 0.3-0
 * **Status:** [![Build Status](https://travis-ci.org/wrathematics/lineSampler.png)](https://travis-ci.org/wrathematics/lineSampler)
 * **License:** [![License](http://img.shields.io/badge/license-BSD%202--Clause-orange.svg?style=flat)](http://opensource.org/licenses/BSD-2-Clause)
 * **Author:** Drew Schmidt
@@ -94,4 +94,3 @@ or about 743 MiB on disk.
 From C, you can use `stat()` on *NIX systems, and `GetFileSizeEx()`
 on Windows (using the Win32 API).  A real example is provided in
 the [meminfo library](https://github.com/wrathematics/memuse/blob/master/src/meminfo/src/fileinfo.c).
-

@@ -1,13 +1,24 @@
 Package: lineSampler
 Type: Package
 Title: File Line Sampler
-Version: 0.3
-Description: A simple file sampler, implemented in C.
+Version: 0.3-0
+Description: A simple package for reading subsamples of flat text files
+    by line in a reasonably efficient manner.  We do so by sampling 
+    as the input file is scanned and randomly choosing whether or not to
+    dump the current line to an external temporary file.  This 
+    temporary file is then read back into R.  For (aggressive) 
+    downsampling, this is a very effective strategy; for resampling,
+    you are much better off reading the full dataset into memory.
 License: BSD 2-clause License + file LICENSE
 Depends:
-    R (>= 2.14.0),
-    tools
+    R (>= 2.14.0)
+Imports:
+    tools,
+    utils,
+    assertthat (>= 0.1)
 NeedsCompilation: yes
 ByteCompile: yes
-Author: Drew Schmidt [aut, cre]
+Authors@R: c(person("Drew", "Schmidt", role = c("aut", "cre"), email =
+    "wrathematics@gmail.com"))
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
+RoxygenNote: 5.0.1

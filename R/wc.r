@@ -26,7 +26,7 @@
 #' @export
 wc <- function(file)
 {
-  must_be(file, "character")
+  assert_that(is.string(file))
   
   file <- tools::file_path_as_absolute(file)
   

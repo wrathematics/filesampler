@@ -38,17 +38,13 @@
 #' @export
 file_sampler <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
 {
-  must_be(verbose, "logical")
-  must_be(header, "logical")
-  must_be(nskip, "int")
-  must_be(nmax, "int")
-  must_be(p, "numeric")
-  must_be(infile, "character")
+  assert_that(is.flag(verbose))
+  assert_that(is.flag(header))
+  assert_that(is.count(nskip))
+  assert_that(is.count(nmax))
+  assert_that(is.scalar(p))
+  assert_that(is.string(infile))
   
-  if (nskip < 0)
-    stop("Argument 'nskip' must be >=0")
-  if (nmax < 0)
-    stop("Argument 'nmax' must be >=0")
   if (p < 0 || p > 1)
     stop("Argument 'p' must be between 0 and 1")
   
@@ -114,10 +110,10 @@ file_sampler <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfi
 #' @export
 file_sampler_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
 {
-  must_be(header, "logical")
-  must_be(nskip, "int")
-  must_be(nlines, "int")
-  must_be(infile, "character")
+  assert_that(is.flag(header))
+  assert_that(is.count(nskip))
+  assert_that(is.count(nlines))
+  assert_that(is.string(infile))
   
   infile <- tools::file_path_as_absolute(infile)
   
@@ -274,4 +270,3 @@ readLines_sampled <- function(file, p=.1, nskip=0, nmax=0, n=-1L, ok=TRUE, warn=
   
   return(data)
 }
-

@@ -1,6 +1,6 @@
 #' File Line Sampler
 #' 
-#' A simple package for reading subsamples of text files (primarily csv's)
+#' A simple package for reading subsamples of flat text files
 #' by line in a reasonably efficient manner.  We do so by sampling as the
 #' input file is scanned and randomly choosing whether or not to
 #' dump the current line to an external temporary file.  This 
@@ -18,7 +18,9 @@
 #'
 #' @useDynLib lineSampler, R_file_sampler, R_file_sampler_exact, R_wc
 #'
+#' @importFrom utils read.csv
 #' @importFrom tools file_path_as_absolute
+#' @import assertthat
 #' 
 #' @name lineSampler
 #' @docType package
