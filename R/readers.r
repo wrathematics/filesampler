@@ -40,8 +40,8 @@ file_sampler <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfi
 {
   assert_that(is.flag(verbose))
   assert_that(is.flag(header))
-  assert_that(is.count(nskip))
-  assert_that(is.count(nmax))
+  assert_that(nskip == 0 || is.count(nskip))
+  assert_that(nmax == 0 || is.count(nmax))
   assert_that(is.scalar(p))
   assert_that(is.string(infile))
   
