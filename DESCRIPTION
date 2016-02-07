@@ -11,7 +11,7 @@ Description: A simple package for reading subsamples of flat text files
     you are much better off reading the full dataset into memory.
 License: BSD 2-clause License + file LICENSE
 Depends:
-    R (>= 2.14.0)
+    R (>= 3.0.0)
 Imports:
     tools,
     utils,

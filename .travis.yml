@@ -5,6 +5,7 @@ warnings_are_errors: true
 env: 
   global:
     - CRAN: https://cran.rstudio.com
+    - _R_CHECK_FORCE_SUGGESTS_=FALSE
 
 r_packages:
   - assertthat
