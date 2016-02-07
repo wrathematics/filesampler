@@ -15,7 +15,7 @@
 #' @return
 #' A list containing the requested counts.
 #' 
-#' @seealso \code{\link{read_csv_sampled}, \link{readLines_sampled}}
+#' @seealso \code{\link{sample_csv}, \link{sample_lines}}
 #' 
 #' @examples \dontrun{
 #' library(lineSampler)

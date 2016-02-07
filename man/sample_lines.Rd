@@ -49,7 +49,7 @@ as one of the lines read and as one of the lines possible.
 \dontrun{
 library(lineSampler)
 file <- "/path/to/my/big.txt"
-data  <- readLines_sampled(file=file)
+data  <- sample_lines(file=file)
 }
 
 }

@@ -51,7 +51,7 @@ as one of the lines read and as one of the lines possible.
 \dontrun{
 library(lineSampler)
 file <- "/path/to/my/big.csv"
-data  <- read_csv_sampled(file=file)
+data  <- sample_csv(file=file)
 }
 
 }

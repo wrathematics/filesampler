@@ -29,6 +29,6 @@ data  <- wc(file=file)
 
 }
 \seealso{
-\code{\link{read_csv_sampled}, \link{readLines_sampled}}
+\code{\link{sample_csv}, \link{sample_lines}}
 }
 

@@ -183,7 +183,7 @@ sample_file_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
 #' @examples \dontrun{
 #' library(lineSampler)
 #' file <- "/path/to/my/big.csv"
-#' data  <- read_csv_sampled(file=file)
+#' data  <- sample_csv(file=file)
 #' }
 #'
 #' @export
@@ -250,7 +250,7 @@ sample_csv <- function(file, p=.05, header=TRUE, nskip=0, nmax=0, sep=",", quote
 #' @examples \dontrun{
 #' library(lineSampler)
 #' file <- "/path/to/my/big.txt"
-#' data  <- readLines_sampled(file=file)
+#' data  <- sample_lines(file=file)
 #' }
 #'
 #' @export
