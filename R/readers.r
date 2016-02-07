@@ -1,5 +1,5 @@
 #' @title 
-#' File Sampler
+#' Proportional File Sampler
 #' 
 #' @description 
 #' Randomly sample lines from an input text file at proportion p.

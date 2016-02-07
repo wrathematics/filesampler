@@ -1,7 +1,7 @@
 Package: lineSampler
 Type: Package
 Title: File Line Sampler
-Version: 0.3-0
+Version: 0.3.0
 Description: A simple package for reading subsamples of flat text files
     by line in a reasonably efficient manner.  We do so by sampling 
     as the input file is scanned and randomly choosing whether or not to
@@ -16,9 +16,16 @@ Imports:
     tools,
     utils,
     assertthat (>= 0.1)
+Suggests:
+    knitr,
+    rmarkdown,
+    memuse (>= 3.0.0)
+VignetteBuilder: knitr
 NeedsCompilation: yes
 ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role = c("aut", "cre"), email =
     "wrathematics@gmail.com"))
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
+URL: https://github.com/wrathematics/lineSampler
+BugReports: https://github.com/wrathematics/lineSampler/issues
 RoxygenNote: 5.0.1

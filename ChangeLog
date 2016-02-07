@@ -1,12 +1,13 @@
 Release 0.3-0:
   * Rework API.
+  * Added vignette.
 	* Added nmax reader option.
 	* Fix broken help/NAMESPACE issues.
 	* Change versioning format.
 	* Change to assertthat.
 
 Release 0.2-0:
-	* Removed gnu extension (strnlen).
+	* Removed gnu extensions (strnlen).
 	* Fixed numerous packaging and documentation issues.
 
 Release 0.1-0:

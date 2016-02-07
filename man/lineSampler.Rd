@@ -28,5 +28,8 @@ the permissive 2-clause BSD license.
 \author{
 Drew Schmidt \email{wrathematics@gmail.com}
 }
+\references{
+Project URL: \url{https://github.com/wrathematics/lineSampler}
+}
 \keyword{package}
 

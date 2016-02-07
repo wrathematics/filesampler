@@ -15,6 +15,9 @@
 #'
 #' This package, including the underlying C library, is licensed under
 #' the permissive 2-clause BSD license.
+#' 
+#' @author Drew Schmidt \email{wrathematics@@gmail.com}
+#' @references Project URL: \url{https://github.com/wrathematics/lineSampler}
 #'
 #' @useDynLib lineSampler, R_file_sampler, R_file_sampler_exact, R_wc
 #'
@@ -25,6 +28,5 @@
 #' @name lineSampler
 #' @docType package
 #' @title File Line Sampler
-#' @author Drew Schmidt \email{wrathematics@@gmail.com}
 #' @keywords package
 NULL

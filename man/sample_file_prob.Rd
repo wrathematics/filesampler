@@ -2,7 +2,7 @@
 % Please edit documentation in R/readers.r
 \name{sample_file_prob}
 \alias{sample_file_prob}
-\title{File Sampler}
+\title{Proportional File Sampler}
 \usage{
 sample_file_prob(verbose, header, nskip, nmax, p, infile,
   outfile = tempfile())
