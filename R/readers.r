@@ -31,12 +31,12 @@
 #' this strategy is probably not appropriate.
 #' 
 #' @return
-#' NULL
+#' \code{NULL}
 #' 
-#' @seealso \code{\link{file_sampler_exact}}
+#' @seealso \code{\link{sample_file_exact}}
 #' 
 #' @export
-file_sampler <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
+sample_file_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
 {
   assert_that(is.flag(verbose))
   assert_that(is.flag(header))
@@ -103,12 +103,12 @@ file_sampler <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfi
 #' this strategy is probably not appropriate.
 #' 
 #' @return
-#' NULL
+#' \code{NULL}
 #' 
-#' @seealso \code{\link{file_sampler}}
+#' @seealso \code{\link{sample_file_prob}}
 #' 
 #' @export
-file_sampler_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
+sample_file_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
 {
   assert_that(is.flag(header))
   assert_that(is.count(nskip))
@@ -178,7 +178,7 @@ file_sampler_exact <- function(header, nskip, nlines, infile, outfile=tempfile()
 #' @return
 #' A dataframe, as with \code{read.csv()}.
 #' 
-#' @seealso \code{\link{readLines_sampled}, \link{wc}}
+#' @seealso \code{\link{sample_lines}, \link{wc}}
 #' 
 #' @examples \dontrun{
 #' library(lineSampler)
@@ -187,13 +187,13 @@ file_sampler_exact <- function(header, nskip, nlines, infile, outfile=tempfile()
 #' }
 #'
 #' @export
-read_csv_sampled <- function(file, p=.1, header=TRUE, nskip=0, nmax=0, sep=",", quote="\"", dec=".", fill=TRUE, comment.char="", verbose=FALSE, ...)
+sample_csv <- function(file, p=.05, header=TRUE, nskip=0, nmax=0, sep=",", quote="\"", dec=".", fill=TRUE, comment.char="", verbose=FALSE, ...)
 {
   if (p == 0)
     stop("no lines available for input")
   
   outfile <- tempfile()
-  file_sampler(verbose=verbose, header=header, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
+  sample_file_prob(verbose=verbose, header=header, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   
   data <- read.csv(file=outfile, header=header, sep=sep, quote=quote, dec=dec, fill=fill, comment.char=comment.char, ...)
   unlink(outfile)
@@ -245,7 +245,7 @@ read_csv_sampled <- function(file, p=.1, header=TRUE, nskip=0, nmax=0, sep=",", 
 #' @return
 #' A character vector, as with \code{readLines()}.
 #' 
-#' @seealso \code{\link{read_csv_sampled}, \link{wc}}
+#' @seealso \code{\link{sample_csv}, \link{wc}}
 #' 
 #' @examples \dontrun{
 #' library(lineSampler)
@@ -254,7 +254,7 @@ read_csv_sampled <- function(file, p=.1, header=TRUE, nskip=0, nmax=0, sep=",", 
 #' }
 #'
 #' @export
-readLines_sampled <- function(file, p=.1, nskip=0, nmax=0, n=-1L, ok=TRUE, warn=TRUE, encoding="unknown", skipNul=FALSE, verbose=FALSE)
+sample_lines <- function(file, p=.1, nskip=0, nmax=0, n=-1L, ok=TRUE, warn=TRUE, encoding="unknown", skipNul=FALSE, verbose=FALSE)
 {
   if (p == 0)
     return(character(0))
@@ -263,7 +263,7 @@ readLines_sampled <- function(file, p=.1, nskip=0, nmax=0, n=-1L, ok=TRUE, warn=
     return(character(0))
   
   outfile <- tempfile()
-  file_sampler(verbose=verbose, header=FALSE, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
+  sample_file_prob(verbose=verbose, header=FALSE, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   
   data <- readLines(outfile, n=n, ok=ok, warn=warn, encoding=encoding, skipNul=skipNul)
   unlink(outfile)

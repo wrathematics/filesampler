@@ -44,7 +44,12 @@ wc <- function(file)
 
 
 
-#' @rdname print wc
+#' @title Print \code{wc} objects
+#' @description Printing for \code{wc()}
+#' @param x \code{wc} object
+#' @param ... unused
+#' @name print-wc
+#' @rdname print-wc
 #' @method print wc
 #' @export
 print.wc <- function(x, ...)

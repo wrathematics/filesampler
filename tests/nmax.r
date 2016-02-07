@@ -6,7 +6,7 @@ file <- tools::file_path_as_absolute(system.file("rawdata/small.csv", package="l
 
 
 ### read_csv_sampled
-sampled <- read_csv_sampled(file, p=.05, nmax=1)
+sampled <- sample_csv(file, p=.05, nmax=1)
 
 sampled_actual <-
 structure(list(A = 30L, B = structure(1L, .Label = "m", class = "factor"), 
@@ -16,4 +16,3 @@ structure(list(A = 30L, B = structure(1L, .Label = "m", class = "factor"),
 -1L))
 
 stopifnot(all.equal(sampled, sampled_actual))
-

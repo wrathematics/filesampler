@@ -1,4 +1,5 @@
 Release 0.3-0:
+  * Rework API.
 	* Added nmax reader option.
 	* Fix broken help/NAMESPACE issues.
 	* Change versioning format.

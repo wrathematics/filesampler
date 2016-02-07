@@ -6,7 +6,7 @@ file <- tools::file_path_as_absolute(system.file("rawdata/small.csv", package="l
 
 
 ### read_csv_sampled
-sampled <- read_csv_sampled(file, p=.05)
+sampled <- sample_csv(file, p=.05)
 
 sampled_actual <-
 structure(list(A = c(30L, 92L, 6L, 49L, 77L, 54L, 67L), B = structure(c(2L, 
@@ -26,6 +26,6 @@ stopifnot(all.equal(sampled, sampled_actual))
 
 
 ### verbose
-verb <- capture.output(invisible(read_csv_sampled(file, p=.05, verbose=TRUE)))
+verb <- capture.output(invisible(sample_csv(file, p=.05, verbose=TRUE)))
 verb_actual <- "Read 4 lines (0.040%) of 101 line file."
 stopifnot(all.equal(verb, verb_actual))
