@@ -1,11 +1,33 @@
 library(lineSampler)
 
-set.seed(1234)
-
 file <- tools::file_path_as_absolute(system.file("rawdata/small.csv", package="lineSampler"))
 
+### Argument checks
 
-### read_csv_sampled
+# p
+badp <- "<simpleError in sample_file_prob(verbose = verbose, header = header, nskip = nskip,     nmax = nmax, p = p, infile = file, outfile = outfile): Argument 'p' must be between 0 and 1>"
+badval <- tryCatch(sampled <- sample_csv(file, p=-1), error=capture.output)
+stopifnot(all.equal(badp, badval))
+badval <- tryCatch(sampled <- sample_csv(file, p=1.1), error=capture.output)
+stopifnot(all.equal(badp, badval))
+
+
+# nmax
+set.seed(1234)
+sampled <- sample_csv(file, p=.05, nmax=1)
+
+sampled_actual <-
+structure(list(A = 30L, B = structure(1L, .Label = "m", class = "factor"), 
+    C = structure(1L, .Label = "U", class = "factor"), D = 0.663265228504315, 
+    E = -0.102609033060013, F = 46.2487461487763), .Names = c("A", 
+"B", "C", "D", "E", "F"), class = "data.frame", row.names = c(NA, 
+-1L))
+
+stopifnot(all.equal(sampled, sampled_actual))
+
+
+### general functionality
+set.seed(1234)
 sampled <- sample_csv(file, p=.05)
 
 sampled_actual <-
