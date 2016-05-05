@@ -24,6 +24,8 @@
 #' 
 #' @param file
 #' Location of the file (as a string) to be subsampled.
+#' @param n
+#' As in \code{readLines()}.
 #' @param p
 #' Proportion to retain; should be a numeric value between 0 and 1.
 #' @param nskip
@@ -48,8 +50,10 @@
 #' }
 #'
 #' @export
-sample_lines <- function(file, p=.1, nskip=0, nmax=0, n=-1L, verbose=FALSE, ...)
+sample_lines <- function(file, n=-1L, p=.1, nskip=0, nmax=0, verbose=FALSE, ...)
 {
+  assert_that(is.number(n) && is.count(abs(n)))
+  
   if (p == 0)
     return(character(0))
   

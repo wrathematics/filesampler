@@ -26,6 +26,8 @@
 #' Location of the file (as a string) to be subsampled.
 #' @param p
 #' Proportion to retain; should be a numeric value between 0 and 1.
+#' @param header
+#' As in \code{read.csv()}.
 #' @param nskip
 #' Number of lines to skip.  If \code{header=TRUE}, then this only
 #' applies to lines after the header.

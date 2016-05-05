@@ -4,11 +4,13 @@
 \alias{sample_lines}
 \title{Read Sample Lines of Text File}
 \usage{
-sample_lines(file, p = 0.1, nskip = 0, nmax = 0, n = -1L,
+sample_lines(file, n = -1L, p = 0.1, nskip = 0, nmax = 0,
   verbose = FALSE, ...)
 }
 \arguments{
 \item{file}{Location of the file (as a string) to be subsampled.}
+
+\item{n}{As in \code{readLines()}.}
 
 \item{p}{Proportion to retain; should be a numeric value between 0 and 1.}
 

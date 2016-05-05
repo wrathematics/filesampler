@@ -12,6 +12,8 @@ sample_csv(file, p = 0.05, header = TRUE, nskip = 0, nmax = 0,
 
 \item{p}{Proportion to retain; should be a numeric value between 0 and 1.}
 
+\item{header}{As in \code{read.csv()}.}
+
 \item{nskip}{Number of lines to skip.  If \code{header=TRUE}, then this only
 applies to lines after the header.}
 
