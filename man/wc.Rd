@@ -4,10 +4,13 @@
 \alias{wc}
 \title{Count Letters, Words, and Lines of a File}
 \usage{
-wc(file)
+wc(file, chars = TRUE, words = TRUE, lines = TRUE)
 }
 \arguments{
 \item{file}{Location of the file (as a string) from which the counts will be generated.}
+
+\item{chars, words, lines}{Logical; show char/word/line counts be shown? At least one of
+the three must be \code{TRUE}.}
 }
 \value{
 A list containing the requested counts.

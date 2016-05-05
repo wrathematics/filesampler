@@ -30,8 +30,6 @@
 #' Number of lines to skip.
 #' @param nmax
 #' Max number of lines to read.  If nmax==0, then there is no read cap.
-#' @param n,ok,warn,encoding,skipNul
-#' As in \code{readLines()}.
 #' @param verbose
 #' Logical; indicates whether or not linecounts of the input file and the number
 #' of lines sampled should be printed.

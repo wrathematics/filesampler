@@ -16,8 +16,6 @@ sample_lines(file, p = 0.1, nskip = 0, nmax = 0, n = -1L,
 
 \item{nmax}{Max number of lines to read.  If nmax==0, then there is no read cap.}
 
-\item{n, ok, warn, encoding, skipNul}{As in \code{readLines()}.}
-
 \item{verbose}{Logical; indicates whether or not linecounts of the input file and the number
 of lines sampled should be printed.}
 
