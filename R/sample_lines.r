@@ -35,6 +35,8 @@
 #' @param verbose
 #' Logical; indicates whether or not linecounts of the input file and the number
 #' of lines sampled should be printed.
+#' @param ...
+#' Additional arguments passed to \code{readLines()}.
 #' 
 #' @return
 #' A character vector, as with \code{readLines()}.
@@ -48,7 +50,7 @@
 #' }
 #'
 #' @export
-sample_lines <- function(file, p=.1, nskip=0, nmax=0, n=-1L, ok=TRUE, warn=TRUE, encoding="unknown", skipNul=FALSE, verbose=FALSE)
+sample_lines <- function(file, p=.1, nskip=0, nmax=0, n=-1L, verbose=FALSE, ...)
 {
   if (p == 0)
     return(character(0))
@@ -59,7 +61,7 @@ sample_lines <- function(file, p=.1, nskip=0, nmax=0, n=-1L, ok=TRUE, warn=TRUE,
   outfile <- tempfile()
   sample_file_prob(verbose=verbose, header=FALSE, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   
-  data <- readLines(outfile, n=n, ok=ok, warn=warn, encoding=encoding, skipNul=skipNul)
+  data <- readLines(outfile, n=n, ...)
   unlink(outfile)
   
   return(data)

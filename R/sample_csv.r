@@ -6,21 +6,6 @@
 #' 10% of the data.  This is the analogue of the base R function
 #' \code{read.csv()}.
 #' 
-#' @param file
-#' Location of the file (as a string) to be subsampled.
-#' @param p
-#' Proportion to retain; should be a numeric value between 0 and 1.
-#' @param nskip
-#' Number of lines to skip.  If \code{header=TRUE}, then this only
-#' applies to lines after the header.
-#' @param nmax
-#' Max number of lines to read.  If nmax==0, then there is no read cap.
-#' @param header,sep,quote,dec,fill,comment.char,...
-#' As in \code{read.csv()}
-#' @param verbose
-#' Logical; indicates whether or not linecounts of the input file and the number
-#' of lines sampled should be printed.
-#' 
 #' @details
 #' This function scans over the test of the input file and at each step, randomly
 #' chooses whether or not to include the current line into a downsampled file.
@@ -37,6 +22,20 @@
 #' will be printed to the terminal.  This counts the header (if there is one)
 #' as one of the lines read and as one of the lines possible.
 #' 
+#' @param file
+#' Location of the file (as a string) to be subsampled.
+#' @param p
+#' Proportion to retain; should be a numeric value between 0 and 1.
+#' @param nskip
+#' Number of lines to skip.  If \code{header=TRUE}, then this only
+#' applies to lines after the header.
+#' @param nmax
+#' Max number of lines to read.  If nmax==0, then there is no read cap.
+#' @param verbose
+#' Logical; indicates whether or not linecounts of the input file and the number
+#' of lines sampled should be printed.
+#' @param ...
+#' Additional arguments passed to \code{read.csv()}.
 #' 
 #' @return
 #' A dataframe, as with \code{read.csv()}.
@@ -46,11 +45,11 @@
 #' @examples \dontrun{
 #' library(lineSampler)
 #' file <- "/path/to/my/big.csv"
-#' data  <- sample_csv(file=file)
+#' data  <- sample_csv(file=file, sep=",")
 #' }
 #'
 #' @export
-sample_csv <- function(file, p=.05, header=TRUE, nskip=0, nmax=0, sep=",", quote="\"", dec=".", fill=TRUE, comment.char="", verbose=FALSE, ...)
+sample_csv <- function(file, p=.05, header=TRUE, nskip=0, nmax=0, verbose=FALSE, ...)
 {
   if (p == 0)
     stop("no lines available for input")
@@ -58,7 +57,7 @@ sample_csv <- function(file, p=.05, header=TRUE, nskip=0, nmax=0, sep=",", quote
   outfile <- tempfile()
   sample_file_prob(verbose=verbose, header=header, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   
-  data <- read.csv(file=outfile, header=header, sep=sep, quote=quote, dec=dec, fill=fill, comment.char=comment.char, ...)
+  data <- read.csv(file=outfile, header=header, ...)
   unlink(outfile)
   
   return(data)
