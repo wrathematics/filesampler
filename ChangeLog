@@ -1,16 +1,19 @@
+Release 0.3-1:
+  * Internal reorganization.
+
 Release 0.3-0:
   * Rework API.
   * Added vignette.
-	* Added nmax reader option.
-	* Fix broken help/NAMESPACE issues.
-	* Change versioning format.
-	* Change to assertthat.
+  * Added nmax reader option.
+  * Fix broken help/NAMESPACE issues.
+  * Change versioning format.
+  * Change to assertthat.
 
 Release 0.2-0:
-	* Removed gnu extensions (strnlen).
-	* Fixed numerous packaging and documentation issues.
+  * Removed gnu extensions (strnlen).
+  * Fixed numerous packaging and documentation issues.
 
 Release 0.1-0:
-	* Added basic sampler.
-	* Added reservoir sampler.
-	* Added misc utilities (wc, etc).
+  * Added basic sampler.
+  * Added reservoir sampler.
+  * Added misc utilities (wc, etc).
