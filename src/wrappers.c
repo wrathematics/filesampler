@@ -1,3 +1,30 @@
+/*  Copyright (c) 2015-2016, Drew Schmidt
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    1. Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+
+    2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+    TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+    PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+    CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+    EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+    PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+    PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+    LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+
 #include <R.h>
 #include <Rinternals.h>
 #include "lineSampler.h"
@@ -25,7 +52,7 @@ SEXP R_file_sampler_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, 
   PROTECT(ret = allocVector(INTSXP, 1));
   uint64_t nletters, nwords, nlines_in;
   
-  INT(ret) = wc(CHARPT(input, 0), &nletters, &nwords, &nlines_in);
+  INT(ret) = file_sampler_wc(CHARPT(input, 0), &nletters, &nwords, &nlines_in);
   if (INT(ret)) goto cleanup;
   
   INT(ret) = file_sampler_exact(INT(header), nlines_in, INT(nlines_out), (uint32_t)INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
@@ -39,27 +66,28 @@ SEXP R_file_sampler_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, 
 
 
 #define COUNTS(n) REAL(counts)[n]
-#define RETVAL    0
-#define NLETTERS  1
-#define NWORDS    2
-#define NLINES    3
-SEXP R_wc(SEXP input)
+#define RETVAL  0
+#define NCHARS  1
+#define NWORDS  2
+#define NLINES  3
+SEXP R_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
 {
   int retval;
-  uint64_t nletters, nwords, nlines;
-  // Putting everything in an int vec because FUCK lists
+  uint64_t nchars, nwords, nlines;
+  const int chars = INT(chars_);
+  const int words = INT(words_);
+  const int lines = INT(lines_);
   SEXP counts;
   // REALSXP because R is too stupid to have 64-bit ints already
   PROTECT(counts = allocVector(REALSXP, 4));
   
-  retval = wc(CHARPT(input, 0), &nletters, &nwords, &nlines);
+  retval = file_sampler_wc(CHARPT(input, 0), &nchars, &nwords, &nlines);
   
   COUNTS(RETVAL) = (double) retval;
-  COUNTS(NLETTERS) = (double) nletters;
-  COUNTS(NWORDS) = (double) nwords;
-  COUNTS(NLINES) = (double) nlines;
+  COUNTS(NCHARS) = chars ? (double) nchars : -1.;
+  COUNTS(NWORDS) = words ? (double) nwords : -1.;
+  COUNTS(NLINES) = lines ? (double) nlines : -1.;
   
   UNPROTECT(1);
   return counts;
 }
-
