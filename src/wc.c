@@ -82,6 +82,7 @@ int file_sampler_wc(const char *file, uint64_t *nchars, uint64_t *nwords, uint64
       {
         (*nwords)++;
         (*nlines)++;
+        (*nchars)++;
       }
       else
       {
