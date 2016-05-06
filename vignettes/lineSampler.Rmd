@@ -34,11 +34,16 @@ You can install the stable version from CRAN using the usual `install.packages()
 install.packages("lineSampler")
 ```
 
-The development version is maintained on GitHub.  You can install this version using the `devtools` package:
+The development version is maintained on GitHub, and can easily be installed by any of the packages that offer installations from GitHub:
 
 ```r
+### Pick your preference
 devtools::install_github("wrathematics/lineSampler")
+ghit::install_github("wrathematics/lineSampler")
+remotes::install_github("wrathematics/lineSampler")
 ```
+
+
 
 
 
