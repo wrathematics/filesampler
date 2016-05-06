@@ -66,10 +66,9 @@ SEXP R_file_sampler_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, 
 
 
 #define COUNTS(n) REAL(counts)[n]
-#define RETVAL  0
-#define NCHARS  1
-#define NWORDS  2
-#define NLINES  3
+#define NCHARS  0
+#define NWORDS  1
+#define NLINES  2
 SEXP R_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
 {
   int retval;
@@ -79,11 +78,18 @@ SEXP R_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
   const bool lines = INT(lines_);
   SEXP counts;
   // REALSXP because R is too stupid to have 64-bit ints already
-  PROTECT(counts = allocVector(REALSXP, 4));
+  PROTECT(counts = allocVector(REALSXP, 3));
   
   retval = file_sampler_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
   
-  COUNTS(RETVAL) = (double) retval;
+  if (!retval)
+  {
+    if (retval == MALLOC_FAIL)
+      error("Out of memory");
+    else if (retval == READ_FAIL)
+      error("Could not read file; perhaps it doesn't exist?");
+  }
+  
   COUNTS(NCHARS) = chars ? (double) nchars : -1.;
   COUNTS(NWORDS) = words ? (double) nwords : -1.;
   COUNTS(NLINES) = lines ? (double) nlines : -1.;

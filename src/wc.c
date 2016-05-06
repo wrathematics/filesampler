@@ -163,24 +163,18 @@ int file_sampler_wc(const char *file, const bool chars, uint64_t *nchars,
   FILE *fp;
   char *buf;
   
-  *nchars = 0;
-  *nwords = 0;
-  *nlines = 0;
-  
   fp = fopen(file, "r");
   if (!fp)
     return READ_FAIL;
   
   buf = malloc(BUFLEN * sizeof(char));
-  // TODO
-  // if ()
-  //   return MALLOC_FAIL;
+  if (buf == NULL)
+    return MALLOC_FAIL;
   
   if (!chars && !words && lines)
     ret = wc_linesonly(fp, buf, nlines);
   else
     ret = wc_full(fp, buf, nchars, nwords, nlines);
-  
   
   fclose(fp);
   free(buf);

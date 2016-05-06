@@ -38,13 +38,9 @@ wc <- function(file, chars=TRUE, words=TRUE, lines=TRUE)
     stop("at least one of the arguments 'chars', 'words', or 'lines' must be TRUE")
   
   file <- tools::file_path_as_absolute(file)
-  
   ret <- .Call(R_wc, file, chars, words, lines)
   
-  if (as.integer(ret[1]) == -2)
-    stop("Invalid argument 'infile'; perhaps it doesn't exist?")
-  
-  counts <- list(chars=ret[2], words=ret[3], lines=ret[4])
+  counts <- list(chars=ret[1L], words=ret[2L], lines=ret[3L])
   class(counts) <- "wc"
   attr(counts, "file") <- file
   
