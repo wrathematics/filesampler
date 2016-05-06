@@ -27,19 +27,9 @@
 
 #include "lineSampler.h"
 #include "omputils.h"
+#include "rand.h"
 
 #define HAS_NEWLINE ((readlen > 0) && (buf[readlen-1] == '\n'))
-
-
-/* To make this useable outside of R, you need to:
- *    1. remove the Get/PutRNGstate() calls
- *    2. change RUNIF def to random uniform(0,1) rng of your choice.
- *    3. set PRINTFUN to (probably) printf(). */
-#include <R.h>
-#include <Rmath.h>
-#define RUNIF unif_rand
-#define PRINTFUN Rprintf
-
 
 
 static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_t *nlines_in, uint64_t *nlines_out)
@@ -150,7 +140,7 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
     read_header(buf, fp_read, fp_write, &nlines_in, &nlines_out);
   
   
-  GetRNGstate();
+  STARTRNG();
   
   while (fgets(buf, BUFLEN, fp_read) != NULL)
   {
@@ -204,7 +194,7 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
   
   
   cleanup:
-    PutRNGstate();
+    ENDRNG();
     fclose(fp_read);
     fclose(fp_write);
     free(buf);
@@ -236,7 +226,7 @@ static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uin
   for (i=0; i<nlines_out; i++)
     (*samp)[i] = nskip + i+1;
   
-  GetRNGstate();
+  STARTRNG();
   
   SAFE_FOR_SIMD
   for (i=nlines_out; i<nlines_in; i++)
@@ -246,7 +236,7 @@ static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uin
       (*samp)[j] = nskip + i+1;
   }
   
-  PutRNGstate();
+  ENDRNG();
   
   return 0;
 }
@@ -340,7 +330,7 @@ int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, con
   
   qsort(samp, nlines_out, sizeof(uint64_t), comp);
   
-  GetRNGstate();
+  STARTRNG();
   
   
   nlines_in = 0;
@@ -382,7 +372,7 @@ int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, con
   
   
   fullcleanup:
-    PutRNGstate();
+    ENDRNG();
     free(samp);
   
   cleanup:
