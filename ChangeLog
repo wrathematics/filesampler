@@ -3,6 +3,7 @@ Release 0.3-1:
   * Add option to turn off counts in wc().
   * Optimize wc().
   * Better error checking/handling across the board.
+  * Better internal library/R separation for easier code re-use.
 
 Release 0.3-0:
   * Rework API.
