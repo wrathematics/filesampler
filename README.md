@@ -14,8 +14,19 @@ Idea inspired by Eduardo Arino de la Rubia's [fast_sample](https://github.com/ea
 
 ## Installation
 
+From CRAN:
+
 ```r
 devtools::install_github("wrathematics/lineSampler")
+```
+
+The development version is maintained on GitHub, and can easily be installed by any of the packages that offer installations from GitHub:
+
+```r
+### Pick your preference
+devtools::install_github("wrathematics/lineSampler")
+ghit::install_github("wrathematics/lineSampler")
+remotes::install_github("wrathematics/lineSampler")
 ```
 
 
