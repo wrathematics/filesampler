@@ -26,6 +26,7 @@
 
 
 #include "lineSampler.h"
+#include "omputils.h"
 
 #define HAS_NEWLINE ((readlen > 0) && (buf[readlen-1] == '\n'))
 
@@ -221,11 +222,13 @@ static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uin
   int i, j;
   *samp = malloc(nlines_out * sizeof(**samp));
   
+  SAFE_FOR_SIMD
   for (i=0; i<nlines_out; i++)
     (*samp)[i] = nskip + i+1;
   
   GetRNGstate();
   
+  SAFE_FOR_SIMD
   for (i=nlines_out; i<nlines_in; i++)
   {
     j = unif_rand_int(0, i-1);

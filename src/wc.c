@@ -28,6 +28,7 @@
 #include <R_ext/Utils.h>
 #include <ctype.h>
 #include "lineSampler.h"
+#include "omputils.h"
 
 
 static inline bool isnewline(const char c)
@@ -47,7 +48,7 @@ static int wc_linesonly(FILE *restrict fp, char *restrict buf, uint64_t *restric
     
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     
-    #pragma omp for simd
+    SAFE_FOR_SIMD
     for (int i=0; i<readlen; i++)
     {
       if (isnewline(buf[i]))
@@ -73,7 +74,7 @@ static int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict 
     
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     
-    #pragma omp for simd
+    SAFE_FOR_SIMD
     for (int i=0; i<readlen; i++)
     {
       if (isspace(buf[i]))
@@ -103,7 +104,7 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
     
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     
-    #pragma omp for simd
+    SAFE_FOR_SIMD
     for (int i=0; i<readlen; i++)
     {
       if (isnewline(buf[i]))
