@@ -39,3 +39,16 @@ ret <- sample_csv(file, p=.001)
 ```
 
 There is also a `sample_lines()` function for reading in (line) subsamples of unstructured text akin to `readLines()`.  See package vignette for more details.
+
+
+
+## Code Re-Use
+
+The C code in the `src/` tree of this package can easily be re-purposed for use outside of R.  The utilities of interest are in:
+
+  * file_sampler.c
+  * wc.c
+
+A uniform random number generator must be set. Set `RUNIF` to the appropriate function in `rand.h`.  You will also need to set `PRINTFUN` to something, probably `printf()`.  You will also need to set `STARTRNG` and `ENDRNG` appropriately (with the latter probably being an empty define).
+
+Finally, to handle interrupts, you will need to create an appropriate `check_interrupt()` as in interrupt.c. Or if you're lazy and don't care, just set it to always return `false`.
