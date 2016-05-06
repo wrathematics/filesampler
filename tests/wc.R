@@ -17,3 +17,7 @@ stopifnot(all.equal(truth, test))
 truth = c(nchars, nwords, -1)
 test = as.integer(wc(file, lines=FALSE))
 stopifnot(all.equal(truth, test))
+
+truth = c(nchars, -1, -1)
+test = as.integer(wc(file, words=FALSE, lines=FALSE))
+stopifnot(all.equal(truth, test))

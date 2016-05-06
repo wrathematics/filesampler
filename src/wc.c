@@ -37,6 +37,27 @@ static inline bool isnewline(const char c)
 }
 
 
+
+static int wc_charsonly(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars)
+{
+  size_t readlen = BUFLEN;
+  uint64_t nc = 0;
+  
+  while (readlen == BUFLEN)
+  {
+    R_CheckUserInterrupt();
+    
+    readlen = fread(buf, sizeof(char), BUFLEN, fp);
+    nc += readlen;
+  }
+  
+  *nchars = nc;
+  
+  return 0;
+}
+
+
+
 static int wc_linesonly(FILE *restrict fp, char *restrict buf, uint64_t *restrict nlines)
 {
   size_t readlen = BUFLEN;
@@ -60,6 +81,7 @@ static int wc_linesonly(FILE *restrict fp, char *restrict buf, uint64_t *restric
   
   return 0;
 }
+
 
 
 static int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nwords)
@@ -91,6 +113,7 @@ static int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict 
 }
 
 
+
 static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nwords, uint64_t *restrict nlines)
 {
   uint64_t nc = 0;
@@ -103,6 +126,7 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
     R_CheckUserInterrupt();
     
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
+    nc += readlen;
     
     SAFE_FOR_SIMD
     for (int i=0; i<readlen; i++)
@@ -117,8 +141,6 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
         if (isspace(buf[i]))
           nw++;
       }
-      
-      nc++;
     }
   }
   
@@ -128,6 +150,7 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
   
   return 0;
 }
+
 
 
 /**
@@ -174,6 +197,10 @@ int file_sampler_wc(const char *file, const bool chars, uint64_t *nchars,
   
   if (!chars && !words && lines)
     ret = wc_linesonly(fp, buf, nlines);
+  else if (chars && words && !lines)
+    ret = wc_nolines(fp, buf, nchars, nwords);
+  else if (chars && !words && !lines)
+    ret = wc_charsonly(fp, buf, nchars);
   else
     ret = wc_full(fp, buf, nchars, nwords, nlines);
   
