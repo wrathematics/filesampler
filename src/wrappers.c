@@ -50,9 +50,9 @@ SEXP R_file_sampler_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, 
 {
   SEXP ret;
   PROTECT(ret = allocVector(INTSXP, 1));
-  uint64_t nletters, nwords, nlines_in;
+  uint64_t nlines_in;
   
-  INT(ret) = file_sampler_wc(CHARPT(input, 0), &nletters, &nwords, &nlines_in);
+  INT(ret) = file_sampler_wc(CHARPT(input, 0), false, NULL, false, NULL, true, &nlines_in);
   if (INT(ret)) goto cleanup;
   
   INT(ret) = file_sampler_exact(INT(header), nlines_in, INT(nlines_out), (uint32_t)INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
@@ -74,14 +74,14 @@ SEXP R_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
 {
   int retval;
   uint64_t nchars, nwords, nlines;
-  const int chars = INT(chars_);
-  const int words = INT(words_);
-  const int lines = INT(lines_);
+  const bool chars = INT(chars_);
+  const bool words = INT(words_);
+  const bool lines = INT(lines_);
   SEXP counts;
   // REALSXP because R is too stupid to have 64-bit ints already
   PROTECT(counts = allocVector(REALSXP, 4));
   
-  retval = file_sampler_wc(CHARPT(input, 0), &nchars, &nwords, &nlines);
+  retval = file_sampler_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
   
   COUNTS(RETVAL) = (double) retval;
   COUNTS(NCHARS) = chars ? (double) nchars : -1.;

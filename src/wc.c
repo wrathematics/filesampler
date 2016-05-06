@@ -25,8 +25,108 @@
 */
 
 
-#include "lineSampler.h"
 #include <R_ext/Utils.h>
+#include <ctype.h>
+#include "lineSampler.h"
+
+
+static inline bool isnewline(const char c)
+{
+  return (c=='\n') ? true : false;
+}
+
+
+static int wc_linesonly(FILE *restrict fp, char *restrict buf, uint64_t *restrict nlines)
+{
+  size_t readlen = BUFLEN;
+  uint64_t nl = 0;
+  
+  while (readlen == BUFLEN)
+  {
+    R_CheckUserInterrupt();
+    
+    readlen = fread(buf, sizeof(char), BUFLEN, fp);
+    
+    #pragma omp for simd
+    for (int i=0; i<readlen; i++)
+    {
+      if (isnewline(buf[i]))
+        nl++;
+    }
+  }
+  
+  *nlines = nl;
+  
+  return 0;
+}
+
+
+static int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nwords)
+{
+  uint64_t nc = 0;
+  uint64_t nw = 0;
+  size_t readlen = BUFLEN;
+  
+  while (readlen == BUFLEN)
+  {
+    R_CheckUserInterrupt();
+    
+    readlen = fread(buf, sizeof(char), BUFLEN, fp);
+    
+    #pragma omp for simd
+    for (int i=0; i<readlen; i++)
+    {
+      if (isspace(buf[i]))
+        nw++;
+      
+      nc++;
+    }
+  }
+  
+  *nchars = nc;
+  *nwords = nw;
+  
+  return 0;
+}
+
+
+static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nwords, uint64_t *restrict nlines)
+{
+  uint64_t nc = 0;
+  uint64_t nw = 0;
+  uint64_t nl = 0;
+  size_t readlen = BUFLEN;
+  
+  while (readlen == BUFLEN)
+  {
+    R_CheckUserInterrupt();
+    
+    readlen = fread(buf, sizeof(char), BUFLEN, fp);
+    
+    #pragma omp for simd
+    for (int i=0; i<readlen; i++)
+    {
+      if (isnewline(buf[i]))
+      {
+        nw++;
+        nl++;
+      }
+      else
+      {
+        if (isspace(buf[i]))
+          nw++;
+      }
+      
+      nc++;
+    }
+  }
+  
+  *nchars = nc;
+  *nwords = nw;
+  *nlines = nl;
+  
+  return 0;
+}
 
 
 /**
@@ -40,6 +140,8 @@
  *
  * @param file
  * Input.  Absolute path to output file.
+ * @param chars
+ * 
  * @param nchars
  * Output, passed by reference.  On successful return, the value
  * is set to the number of "letters" (character) in the file.
@@ -54,47 +156,34 @@
  * @return
  * The return value indicates the status of the function.
  */
-int file_sampler_wc(const char *file, uint64_t *nchars, uint64_t *nwords, uint64_t *nlines)
+int file_sampler_wc(const char *file, const bool chars, uint64_t *nchars, 
+  const bool words, uint64_t *nwords, const bool lines, uint64_t *nlines)
 {
-  int i;
+  int ret = 0;
   FILE *fp;
   char *buf;
-  size_t readlen = BUFLEN;
   
   *nchars = 0;
   *nwords = 0;
   *nlines = 0;
   
   fp = fopen(file, "r");
-  if (!fp) return READ_FAIL;
+  if (!fp)
+    return READ_FAIL;
   
   buf = malloc(BUFLEN * sizeof(char));
+  // TODO
+  // if ()
+  //   return MALLOC_FAIL;
   
-  while (readlen == BUFLEN)
-  {
-    R_CheckUserInterrupt();
-    
-    readlen = fread(buf, sizeof(char), BUFLEN, fp);
-    
-    for (i=0; i<readlen; i++)
-    {
-      if (buf[i] == '\n')
-      {
-        (*nwords)++;
-        (*nlines)++;
-        (*nchars)++;
-      }
-      else
-      {
-        if (buf[i] == ' ')
-          (*nwords)++;
-        
-        (*nchars)++;
-      }
-    }
-  }
+  if (!chars && !words && lines)
+    ret = wc_linesonly(fp, buf, nlines);
+  else
+    ret = wc_full(fp, buf, nchars, nwords, nlines);
   
+  
+  fclose(fp);
   free(buf);
   
-  return 0;
+  return ret;
 }
