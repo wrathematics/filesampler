@@ -105,6 +105,7 @@ static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_
  */
 int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output)
 {
+  int ret = 0;
   FILE *fp_read, *fp_write;
   char *buf;
   size_t readlen;
@@ -153,6 +154,12 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
   
   while (fgets(buf, BUFLEN, fp_read) != NULL)
   {
+    if (check_interrupt())
+    {
+      ret = USER_INTERRUPT;
+      goto cleanup;
+    }
+    
     if (firstread)
     {
       if (RUNIF() < p)
@@ -187,8 +194,6 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
       firstread = false;
   }
   
-  PutRNGstate();
-  
   if (verbose)
   {
     if (checkmax && !nmax)
@@ -197,11 +202,14 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
       PRINTFUN("Read %llu lines (%.3f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
   }
   
-  fclose(fp_read);
-  fclose(fp_write);
-  free(buf);
   
-  return 0;
+  cleanup:
+    PutRNGstate();
+    fclose(fp_read);
+    fclose(fp_write);
+    free(buf);
+  
+  return ret;
 }
 
 
@@ -221,6 +229,8 @@ static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uin
 {
   int i, j;
   *samp = malloc(nlines_out * sizeof(**samp));
+  if (samp == NULL)
+    return MALLOC_FAIL;
   
   SAFE_FOR_SIMD
   for (i=0; i<nlines_out; i++)
@@ -245,7 +255,7 @@ static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uin
 
 static int comp(const void *a, const void *b)
 {
-   return *(uint64_t*)a - *(uint64_t*)b;
+  return *(uint64_t*)a - *(uint64_t*)b;
 }
 
 
@@ -337,6 +347,12 @@ int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, con
   nlines_out = 0;
   while (fgets(buf, BUFLEN, fp_read) != NULL)
   {
+    if (check_interrupt())
+    {
+      ret = USER_INTERRUPT;
+      goto fullcleanup;
+    }
+    
     if (firstread)
     {
       if (samp[nlines_out] == nlines_in)
@@ -364,9 +380,11 @@ int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, con
     
   }
   
-  PutRNGstate();
   
-  free(samp);
+  fullcleanup:
+    PutRNGstate();
+    free(samp);
+  
   cleanup:
     fclose(fp_read);
     fclose(fp_write);
