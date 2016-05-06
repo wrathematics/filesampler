@@ -37,6 +37,7 @@
 #define READ_FAIL_MSG "Could not read infile; perhaps it doesn't exist?"
 #define WRITE_FAIL_MSG "Could not generate tempfile for writing for some reason?"
 #define MALLOC_FAIL_MSG "Out of memory"
+#define USER_INTERRUPT_MSG "process killed by user interrupt"
 
 #define CHKRET(ret) \
   if (ret == READ_FAIL) \
@@ -44,7 +45,9 @@
   else if (ret == WRITE_FAIL) \
     error(WRITE_FAIL_MSG); \
   else if (ret == MALLOC_FAIL) \
-    error(MALLOC_FAIL_MSG);
+    error(MALLOC_FAIL_MSG); \
+  else if (ret == USER_INTERRUPT) \
+    error(USER_INTERRUPT_MSG);
 
 SEXP R_file_sampler(SEXP verbose, SEXP header, SEXP nskip, SEXP nmax, SEXP p, SEXP input, SEXP output)
 {

@@ -25,7 +25,6 @@
 */
 
 
-#include <R_ext/Utils.h>
 #include <ctype.h>
 #include "lineSampler.h"
 #include "omputils.h"
@@ -45,7 +44,8 @@ static int wc_charsonly(FILE *restrict fp, char *restrict buf, uint64_t *restric
   
   while (readlen == BUFLEN)
   {
-    R_CheckUserInterrupt();
+    if (check_interrupt())
+      return USER_INTERRUPT;
     
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     nc += readlen;
@@ -65,7 +65,8 @@ static int wc_linesonly(FILE *restrict fp, char *restrict buf, uint64_t *restric
   
   while (readlen == BUFLEN)
   {
-    R_CheckUserInterrupt();
+    if (check_interrupt())
+      return USER_INTERRUPT;
     
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     
@@ -92,7 +93,8 @@ static int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict 
   
   while (readlen == BUFLEN)
   {
-    R_CheckUserInterrupt();
+    if (check_interrupt())
+      return USER_INTERRUPT;
     
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     
@@ -123,7 +125,8 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
   
   while (readlen == BUFLEN)
   {
-    R_CheckUserInterrupt();
+    if (check_interrupt())
+      return USER_INTERRUPT;
     
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     nc += readlen;
