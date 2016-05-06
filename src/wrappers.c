@@ -33,34 +33,43 @@
 #define INT(x) INTEGER(x)[0]
 #define DBL(x) REAL(x)[0]
 
+
+#define READ_FAIL_MSG "Could not read infile; perhaps it doesn't exist?"
+#define WRITE_FAIL_MSG "Could not generate tempfile for writing for some reason?"
+#define MALLOC_FAIL_MSG "Out of memory"
+
+#define CHKRET(ret) \
+  if (ret == READ_FAIL) \
+    error(READ_FAIL_MSG); \
+  else if (ret == WRITE_FAIL) \
+    error(WRITE_FAIL_MSG); \
+  else if (ret == MALLOC_FAIL) \
+    error(MALLOC_FAIL_MSG);
+
 SEXP R_file_sampler(SEXP verbose, SEXP header, SEXP nskip, SEXP nmax, SEXP p, SEXP input, SEXP output)
 {
-  SEXP ret;
-  PROTECT(ret = allocVector(INTSXP, 1));
+  int ret;
   
-  INT(ret) = file_sampler(INT(verbose), INT(header), (uint32_t)INT(nskip), (uint32_t)INT(nmax), DBL(p), CHARPT(input, 0), CHARPT(output, 0));
+  ret = file_sampler(INT(verbose), INT(header), (uint32_t)INT(nskip), (uint32_t)INT(nmax), DBL(p), CHARPT(input, 0), CHARPT(output, 0));
+  CHKRET(ret);
   
-  UNPROTECT(1);
-  return ret;
+  return R_NilValue;
 }
 
 
 
 SEXP R_file_sampler_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, SEXP output)
 {
-  SEXP ret;
-  PROTECT(ret = allocVector(INTSXP, 1));
+  int ret;
   uint64_t nlines_in;
   
-  INT(ret) = file_sampler_wc(CHARPT(input, 0), false, NULL, false, NULL, true, &nlines_in);
-  if (INT(ret)) goto cleanup;
+  ret = file_sampler_wc(CHARPT(input, 0), false, NULL, false, NULL, true, &nlines_in);
+  CHKRET(ret);
   
-  INT(ret) = file_sampler_exact(INT(header), nlines_in, INT(nlines_out), (uint32_t)INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
+  ret = file_sampler_exact(INT(header), nlines_in, INT(nlines_out), (uint32_t)INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
+  CHKRET(ret);
   
-  cleanup:
-    UNPROTECT(1);
-  
-  return ret;
+  return R_NilValue;
 }
 
 
@@ -69,9 +78,10 @@ SEXP R_file_sampler_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, 
 #define NCHARS  0
 #define NWORDS  1
 #define NLINES  2
+
 SEXP R_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
 {
-  int retval;
+  int ret;
   uint64_t nchars, nwords, nlines;
   const bool chars = INT(chars_);
   const bool words = INT(words_);
@@ -80,15 +90,8 @@ SEXP R_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
   // REALSXP because R is too stupid to have 64-bit ints already
   PROTECT(counts = allocVector(REALSXP, 3));
   
-  retval = file_sampler_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
-  
-  if (!retval)
-  {
-    if (retval == MALLOC_FAIL)
-      error("Out of memory");
-    else if (retval == READ_FAIL)
-      error("Could not read file; perhaps it doesn't exist?");
-  }
+  ret = file_sampler_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
+  CHKRET(ret);
   
   COUNTS(NCHARS) = chars ? (double) nchars : -1.;
   COUNTS(NWORDS) = words ? (double) nwords : -1.;

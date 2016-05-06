@@ -52,18 +52,6 @@ sample_file_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=te
   
   ret <- .Call(R_file_sampler, verbose, header, as.integer(nskip), as.integer(nmax), as.double(p), infile, outfile)
   
-  if (ret < 0)
-  {
-    unlink(outfile)
-    
-    if (ret == -2)
-      stop("Invalid argument 'infile'; perhaps it doesn't exist?")
-    else if (ret == -3)
-      stop("Could not generate tempfile for writing for some reason?")
-    else
-      stop("what?")
-  }
-  
   invisible()
 }
 
@@ -118,18 +106,6 @@ sample_file_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
   infile <- tools::file_path_as_absolute(infile)
   
   ret <- .Call(R_file_sampler_exact, header, as.integer(nskip), as.integer(nlines), infile, outfile)
-  
-  if (ret < 0)
-  {
-    unlink(outfile)
-    
-    if (ret == -2)
-      stop("Invalid argument 'infile'; perhaps it doesn't exist?")
-    else if (ret == -3)
-      stop("Could not generate tempfile for writing for some reason?")
-    else
-      stop("what?")
-  }
   
   invisible()
 }

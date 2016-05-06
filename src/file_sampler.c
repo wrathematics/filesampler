@@ -124,17 +124,24 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
   }
   
   
-  
   fp_read = fopen(input, "r");
   if (!fp_read)
     return READ_FAIL;
   
   fp_write = fopen(output, "w");
   if (!fp_write)
+  {
+    fclose(fp_read);
     return WRITE_FAIL;
+  }
   
   buf = malloc(BUFLEN * sizeof(char));
-  
+  if (buf == NULL)
+  {
+    fclose(fp_read);
+    fclose(fp_write);
+    return MALLOC_FAIL;
+  }
   
   
   if (header)
@@ -189,10 +196,9 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
       PRINTFUN("Read %llu lines (%.3f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
   }
   
-  cleanup:
-    fclose(fp_read);
-    fclose(fp_write);
-    free(buf);
+  fclose(fp_read);
+  fclose(fp_write);
+  free(buf);
   
   return 0;
 }
@@ -293,17 +299,31 @@ int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, con
     return INVALID_NSKIP;
   
   fp_read = fopen(input, "r");
-  if (!fp_read) return READ_FAIL;
+  if (!fp_read) 
+    return READ_FAIL;
+  
   fp_write = fopen(output, "w");
+  if (!fp_write)
+  {
+    fclose(fp_read);
+    return WRITE_FAIL;
+  }
   
   buf = malloc(BUFLEN * sizeof(char));
+  if (buf == NULL)
+  {
+    fclose(fp_read);
+    fclose(fp_write);
+    return MALLOC_FAIL;
+  }
   
   
   if (header)
     read_header(buf, fp_read, fp_write, &nlines_in, &nlines_out);
   
   ret = res_sampler(nskip, nlines_in, nlines_out, &samp);
-  if (ret) goto cleanup;
+  if (ret) 
+    goto cleanup;
   
   qsort(samp, nlines_out, sizeof(uint64_t), comp);
   
