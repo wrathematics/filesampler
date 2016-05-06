@@ -7,7 +7,7 @@ Description: A collection of utilities for reading subsamples of flat text files
     as the input file is scanned and randomly choosing whether or not to
     dump the current line to an external temporary file.  This 
     temporary file is then read back into R.  For (aggressive) 
-    downsampling, this is a very effective strategy; for resampling,
+    'downsampling', this is a very effective strategy; for resampling,
     you are much better off reading the full dataset into memory.
 License: BSD 2-clause License + file LICENSE
 Depends:
