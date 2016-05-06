@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define BUFLEN 4096
+#define BUFLEN 8192
 
 #define INVALID_PROB  -1
 #define INVALID_NSKIP -2
