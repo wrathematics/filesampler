@@ -2,6 +2,7 @@
 // to use outside of R, write appropriate check_interrupt() function
 // or just set to always false if you're lazy.
 
+#include <Rinternals.h>
 #include <R_ext/Utils.h>
 #include <stdbool.h>
 
