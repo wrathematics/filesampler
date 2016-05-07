@@ -4,23 +4,30 @@
 \alias{sample_csv}
 \title{Read Sample of CSV}
 \usage{
-sample_csv(file, p = 0.05, header = TRUE, nskip = 0, nmax = 0,
-  verbose = FALSE, ...)
+sample_csv(file, param, method = "proportional", header = TRUE, nskip = 0,
+  nmax = 0, verbose = FALSE, ...)
 }
 \arguments{
 \item{file}{Location of the file (as a string) to be subsampled.}
 
-\item{p}{Proportion to retain; should be a numeric value between 0 and 1.}
+\item{param}{The downsampling parameter. For the "proportional" method,
+this is the proportion to retain and should be a numeric value
+between 0 and 1. For the exact method, this is the total number
+of lines to read in.}
+
+\item{method}{A string indicating the type of read method to use. Options are
+"proportional" and "exact".}
 
 \item{header}{As in \code{read.csv()}.}
 
 \item{nskip}{Number of lines to skip.  If \code{header=TRUE}, then this only
 applies to lines after the header.}
 
-\item{nmax}{Max number of lines to read.  If nmax==0, then there is no read cap.}
+\item{nmax}{Max number of lines to read.  If nmax==0, then there is no read cap.
+Ignored if \code{method="exact"}.}
 
 \item{verbose}{Logical; indicates whether or not linecounts of the input file and the number
-of lines sampled should be printed.}
+of lines sampled should be printed. Ignored if \code{method="exact"}.}
 
 \item{...}{Additional arguments passed to \code{read.csv()}.}
 }
@@ -53,7 +60,12 @@ as one of the lines read and as one of the lines possible.
 \dontrun{
 library(lineSampler)
 file <- "/path/to/my/big.csv"
-data  <- sample_csv(file=file, sep=",")
+
+# Read in a 0.1\% random subsample of the rows.
+data  <- sample_csv(file=file, param=.001)
+
+# Read in 500 randomly sampled rows.
+data  <- sample_csv(file=file, param=500, method="exact")
 }
 
 }

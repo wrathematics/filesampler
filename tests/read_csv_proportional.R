@@ -6,15 +6,15 @@ file <- tools::file_path_as_absolute(system.file("rawdata/small.csv", package="l
 
 # p
 badp <- "<simpleError in sample_file_prob(verbose = verbose, header = header, nskip = nskip,     nmax = nmax, p = p, infile = file, outfile = outfile): Argument 'p' must be between 0 and 1>"
-badval <- tryCatch(sampled <- sample_csv(file, p=-1), error=capture.output)
+badval <- tryCatch(sampled <- sample_csv(file, param=-1), error=capture.output)
 stopifnot(all.equal(badp, badval))
-badval <- tryCatch(sampled <- sample_csv(file, p=1.1), error=capture.output)
+badval <- tryCatch(sampled <- sample_csv(file, param=1.1), error=capture.output)
 stopifnot(all.equal(badp, badval))
 
 
 # nmax
 set.seed(1234)
-sampled <- sample_csv(file, p=.05, nmax=1)
+sampled <- sample_csv(file, param=.05, nmax=1)
 
 sampled_actual <-
 structure(list(A = 30L, B = structure(1L, .Label = "m", class = "factor"), 
@@ -28,7 +28,7 @@ stopifnot(all.equal(sampled, sampled_actual))
 
 ### general functionality
 set.seed(1234)
-sampled <- sample_csv(file, p=.05)
+sampled <- sample_csv(file, param=.05)
 
 sampled_actual <-
 structure(list(A = c(30L, 92L, 6L, 49L, 77L, 54L, 67L), B = structure(c(2L, 
@@ -48,6 +48,6 @@ stopifnot(all.equal(sampled, sampled_actual))
 
 
 ### verbose
-verb <- capture.output(invisible(sample_csv(file, p=.05, verbose=TRUE)))
+verb <- capture.output(invisible(sample_csv(file, param=.05, verbose=TRUE)))
 verb_actual <- "Read 4 lines (0.040%) of 101 line file."
 stopifnot(all.equal(verb, verb_actual))

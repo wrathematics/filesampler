@@ -45,6 +45,8 @@ sample_file_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=te
   assert_that(is.scalar(p))
   assert_that(is.string(infile))
   
+  if (p == 0)
+    stop("no lines available for input")
   if (p < 0 || p > 1)
     stop("Argument 'p' must be between 0 and 1")
   
@@ -99,13 +101,13 @@ sample_file_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=te
 sample_file_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
 {
   assert_that(is.flag(header))
-  assert_that(is.count(nskip))
+  assert_that(nskip == 0 || is.count(nskip))
   assert_that(is.count(nlines))
   assert_that(is.string(infile))
   
   infile <- tools::file_path_as_absolute(infile)
   
-  ret <- .Call(R_file_sampler_exact, header, as.integer(nskip), as.integer(nlines), infile, outfile)
+  ret <- .Call(R_file_sampler_exact, header, as.integer(nskip), as.integer(nlines)-1L, infile, outfile)
   
   invisible()
 }

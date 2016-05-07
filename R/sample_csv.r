@@ -24,8 +24,14 @@
 #' 
 #' @param file
 #' Location of the file (as a string) to be subsampled.
-#' @param p
-#' Proportion to retain; should be a numeric value between 0 and 1.
+#' @param param
+#' The downsampling parameter. For the "proportional" method,
+#' this is the proportion to retain and should be a numeric value
+#' between 0 and 1. For the exact method, this is the total number
+#' of lines to read in.
+#' @param method
+#' A string indicating the type of read method to use. Options are
+#' "proportional" and "exact".
 #' @param header
 #' As in \code{read.csv()}.
 #' @param nskip
@@ -33,9 +39,10 @@
 #' applies to lines after the header.
 #' @param nmax
 #' Max number of lines to read.  If nmax==0, then there is no read cap.
+#' Ignored if \code{method="exact"}.
 #' @param verbose
 #' Logical; indicates whether or not linecounts of the input file and the number
-#' of lines sampled should be printed.
+#' of lines sampled should be printed. Ignored if \code{method="exact"}.
 #' @param ...
 #' Additional arguments passed to \code{read.csv()}.
 #' 
@@ -47,17 +54,31 @@
 #' @examples \dontrun{
 #' library(lineSampler)
 #' file <- "/path/to/my/big.csv"
-#' data  <- sample_csv(file=file, sep=",")
+#' 
+#' # Read in a 0.1% random subsample of the rows.
+#' data  <- sample_csv(file=file, param=.001)
+#' 
+#' # Read in 500 randomly sampled rows.
+#' data  <- sample_csv(file=file, param=500, method="exact")
 #' }
 #'
 #' @export
-sample_csv <- function(file, p=.05, header=TRUE, nskip=0, nmax=0, verbose=FALSE, ...)
+sample_csv <- function(file, param, method="proportional", header=TRUE, nskip=0, nmax=0, verbose=FALSE, ...)
 {
-  if (p == 0)
-    stop("no lines available for input")
+  method <- match.arg(tolower(method), c("proportional", "exact"))
   
   outfile <- tempfile()
-  sample_file_prob(verbose=verbose, header=header, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
+  
+  if (method == "proportional")
+  {
+    p <- param
+    sample_file_prob(verbose=verbose, header=header, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
+  }
+  else if (method == "exact")
+  {
+    nlines <- param
+    sample_file_exact(header=header, nskip=nskip, nlines=nlines, infile=file, outfile=outfile)
+  }
   
   data <- read.csv(file=outfile, header=header, ...)
   unlink(outfile)
