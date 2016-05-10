@@ -40,7 +40,7 @@ static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_
   {
     fprintf(fp_write, "%s", buf);
     
-    readlen = strlen(buf);
+    readlen = strnlen(buf, BUFLEN);
     
     if (HAS_NEWLINE)
     {
@@ -172,7 +172,7 @@ int file_sampler(const bool verbose, const bool header, uint32_t nskip, uint32_t
       }
     }
     
-    readlen = strlen(buf);
+    readlen = strnlen(buf, BUFLEN);
     
     if (HAS_NEWLINE)
     {
@@ -359,7 +359,7 @@ int file_sampler_exact(const bool header, uint64_t nlines_in, uint64_t nlines_ou
       fprintf(fp_write, "%s", buf);
     }
     
-    readlen = strlen(buf);
+    readlen = strnlen(buf, BUFLEN);
     
     if (HAS_NEWLINE)
     {
