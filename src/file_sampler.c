@@ -31,7 +31,6 @@
 
 #define HAS_NEWLINE ((readlen > 0) && (buf[readlen-1] == '\n'))
 
-
 static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_t *nlines_in, uint64_t *nlines_out)
 {
   size_t readlen;
@@ -101,7 +100,7 @@ int file_sampler(const bool verbose, const bool header, uint32_t nskip, uint32_t
   size_t readlen;
   // Have to track cases where buffer is too small for fgets()
   bool should_write = false;
-  bool firstread = true;
+  bool singleread = true;
   bool checkmax = nmax ? true : false;
   uint64_t nlines_in = 0, nlines_out = 0;
   
@@ -150,7 +149,7 @@ int file_sampler(const bool verbose, const bool header, uint32_t nskip, uint32_t
       goto cleanup;
     }
     
-    if (firstread)
+    if (singleread)
     {
       if (RUNIF() < p)
         should_write = true;
@@ -174,14 +173,15 @@ int file_sampler(const bool verbose, const bool header, uint32_t nskip, uint32_t
     
     readlen = strnlen(buf, BUFLEN);
     
+    // check if multiple reads for this one line are needed (i.e., line longer than buffer)
     if (HAS_NEWLINE)
     {
       nlines_in++;
       should_write = false;
-      firstread = true;
+      singleread = true;
     }
     else
-      firstread = false;
+      singleread = false;
   }
   
   if (verbose)
@@ -296,7 +296,7 @@ int file_sampler_exact(const bool header, uint64_t nlines_in, uint64_t nlines_ou
   size_t readlen;
   // Have to track cases where buffer is too small for fgets()
   bool should_write = false;
-  bool firstread = true;
+  bool singleread = true;
   uint64_t *samp;
   
   
@@ -345,7 +345,7 @@ int file_sampler_exact(const bool header, uint64_t nlines_in, uint64_t nlines_ou
       goto fullcleanup;
     }
     
-    if (firstread)
+    if (singleread)
     {
       if (samp[nlines_out] == nlines_in)
         should_write = true;
@@ -365,10 +365,10 @@ int file_sampler_exact(const bool header, uint64_t nlines_in, uint64_t nlines_ou
     {
       nlines_in++;
       should_write = false;
-      firstread = true;
+      singleread = true;
     }
     else
-      firstread = false;
+      singleread = false;
     
   }
   
