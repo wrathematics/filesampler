@@ -49,5 +49,5 @@ stopifnot(all.equal(sampled, sampled_actual))
 
 ### verbose
 verb <- capture.output(invisible(sample_csv(file, param=.05, verbose=TRUE)))
-verb_actual <- "Read 4 lines (0.040%) of 101 line file."
+verb_actual <- "Read 4 lines (0.03960%) of 101 line file."
 stopifnot(all.equal(verb, verb_actual))
