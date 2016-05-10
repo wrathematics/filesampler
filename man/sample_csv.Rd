@@ -4,8 +4,8 @@
 \alias{sample_csv}
 \title{Read Sample of CSV}
 \usage{
-sample_csv(file, param, method = "proportional", header = TRUE, nskip = 0,
-  nmax = 0, verbose = FALSE, ...)
+sample_csv(file, param, method = "proportional", reader = utils::read.csv,
+  header = TRUE, nskip = 0, nmax = 0, verbose = FALSE, ...)
 }
 \arguments{
 \item{file}{Location of the file (as a string) to be subsampled.}
@@ -18,7 +18,15 @@ of lines to read in.}
 \item{method}{A string indicating the type of read method to use. Options are
 "proportional" and "exact".}
 
-\item{header}{As in \code{read.csv()}.}
+\item{reader}{A function specifying the reader to use. The default is 
+\code{utils::read.csv}. Other options include
+\code{data.table::fread()} and \code{readr::read_csv()}.  Note
+the first argument of the reader should be the file to read in
+and the second should be the the \code{header}/\code{col_names}
+argument.  This would require writing a small wrapper for 
+\code{fread()}.}
+
+\item{header}{As in \code{utils::read.csv()}.}
 
 \item{nskip}{Number of lines to skip.  If \code{header=TRUE}, then this only
 applies to lines after the header.}

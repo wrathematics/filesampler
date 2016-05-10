@@ -66,7 +66,9 @@ Optionally, you can control the proportion at which lines are randomly selected 
 
 
 ## Other Readers
-To keep external dependencies to a minimum, only the base R `read.csv()` and `readLines()` are directly supported.  If you wish to use other readers like `fread()` from **data.table** [[@datatable]] or `read_csv()` from **readr** [[@readr]], you can use the `sample_file_prob()` and `sample_file_exact()` functions.  See the `sample_csv()` source code for inspiration.
+To keep external dependencies to a minimum, only the base R `read.csv()` and `readLines()` are directly supported.  If you wish to use other readers like `fread()` from **data.table** [[@datatable]] or `read_csv()` from **readr** [[@readr]], you can pass one of these as the argument `reader` to the \code{sample_csv()} function.  However, this support has not been extensively tested, and enforces some strict rules about arguments.  See the help for details.
+
+Note that if the downsampling was sufficiently aggressive, you will not notice any performance improvement using these better readers over `read.csv()`.
 
 
 

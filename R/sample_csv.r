@@ -32,8 +32,16 @@
 #' @param method
 #' A string indicating the type of read method to use. Options are
 #' "proportional" and "exact".
+#' @param reader
+#' A function specifying the reader to use. The default is 
+#' \code{utils::read.csv}. Other options include
+#' \code{data.table::fread()} and \code{readr::read_csv()}.  Note
+#' the first argument of the reader should be the file to read in
+#' and the second should be the the \code{header}/\code{col_names}
+#' argument.  This would require writing a small wrapper for 
+#' \code{fread()}.
 #' @param header
-#' As in \code{read.csv()}.
+#' As in \code{utils::read.csv()}.
 #' @param nskip
 #' Number of lines to skip.  If \code{header=TRUE}, then this only
 #' applies to lines after the header.
@@ -63,8 +71,9 @@
 #' }
 #'
 #' @export
-sample_csv <- function(file, param, method="proportional", header=TRUE, nskip=0, nmax=0, verbose=FALSE, ...)
+sample_csv <- function(file, param, method="proportional", reader=utils::read.csv, header=TRUE, nskip=0, nmax=0, verbose=FALSE, ...)
 {
+  assert_that(is.function(reader))
   method <- match.arg(tolower(method), c("proportional", "exact"))
   
   outfile <- tempfile()
@@ -80,7 +89,7 @@ sample_csv <- function(file, param, method="proportional", header=TRUE, nskip=0,
     sample_file_exact(header=header, nskip=nskip, nlines=nlines, infile=file, outfile=outfile)
   }
   
-  data <- read.csv(file=outfile, header=header, ...)
+  data <- reader(outfile, header, ...)
   unlink(outfile)
   
   return(data)
