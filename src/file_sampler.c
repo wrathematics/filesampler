@@ -144,7 +144,7 @@ int file_sampler(const bool verbose, const bool header, uint32_t nskip, uint32_t
   
   while (fgets(buf, BUFLEN, fp_read) != NULL)
   {
-    if (check_interrupt())
+    if ((nlines_out % 1000 == 0) && check_interrupt())
     {
       ret = USER_INTERRUPT;
       goto cleanup;
@@ -339,7 +339,7 @@ int file_sampler_exact(const bool header, uint64_t nlines_in, uint64_t nlines_ou
   nlines_out = 0;
   while (fgets(buf, BUFLEN, fp_read) != NULL)
   {
-    if (check_interrupt())
+    if ((nlines_out % 1000 == 0) && check_interrupt())
     {
       ret = USER_INTERRUPT;
       goto fullcleanup;
