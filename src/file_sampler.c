@@ -93,7 +93,7 @@ static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_
  * @return
  * The return value indicates the status of the function.
  */
-int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output)
+int file_sampler(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output)
 {
   int ret = 0;
   FILE *fp_read, *fp_write;
@@ -189,7 +189,7 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
     if (checkmax && !nmax)
       PRINTFUN("Read nmax=%llu lines.\n", nmax);
     else
-      PRINTFUN("Read %llu lines (%.3f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
+      PRINTFUN("Read %llu lines (%.5f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
   }
   
   
@@ -204,9 +204,11 @@ int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const
 
 
 
+
+
 // ------------------------------------------------------
 // exact reader
-
+// ------------------------------------------------------
 
 static inline int unif_rand_int(const int low, const int high)
 {
@@ -286,7 +288,7 @@ static int comp(const void *a, const void *b)
  * @return
  * The return value indicates the status of the function.
  */
-int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, const uint32_t nskip, const char *input, const char *output)
+int file_sampler_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, const uint32_t nskip, const char *input, const char *output)
 {
   int ret = 0;
   FILE *fp_read, *fp_write;

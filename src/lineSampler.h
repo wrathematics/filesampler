@@ -19,8 +19,8 @@
 
 
 // file_sampler.c
-int file_sampler(bool verbose, bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output);
-int file_sampler_exact(bool header, uint64_t nlines_in, uint64_t nlines_out, const uint32_t nskip, const char *input, const char *output);
+int file_sampler(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output);
+int file_sampler_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, const uint32_t nskip, const char *input, const char *output);
 
 // interrupt.c
 bool check_interrupt();
