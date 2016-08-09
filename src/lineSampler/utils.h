@@ -34,7 +34,7 @@
 #define PRINTFUN Rprintf
 
 // ----------------------------------------------------------------------------
-// RNG
+// Interrupt checker
 // ----------------------------------------------------------------------------
 
 // Write an appropriate check_interrupt() function (or just set to always return
@@ -54,6 +54,17 @@ static inline void check_interrupt_fun(void *ignored)
 static inline bool check_interrupt()
 {
   return (R_ToplevelExec(check_interrupt_fun, NULL) == FALSE);
+}
+
+
+// ----------------------------------------------------------------------------
+// Error handler
+// ----------------------------------------------------------------------------
+
+// Print to stderr and exit
+static inline void LS_error_fun(const char *err_msg)
+{
+  error(err_msg);
 }
 
 

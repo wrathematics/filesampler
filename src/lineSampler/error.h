@@ -25,23 +25,54 @@
 */
 
 
-#ifndef LINESAMPLER_H_
-#define LINESAMPLER_H_
+#ifndef LINESAMPLER_ERROR_H_
+#define LINESAMPLER_ERROR_H_
 
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "utils.h"
 
-#include "error.h"
+// Parameter checks
+#define INVALID_PROB    -1
+#define INVALID_NSKIP   -2
 
-#define BUFLEN 8192
+#define INVALID_PROB_MSG  "Invalid `p` specified. Must be between 0 and 1."
+#define INVALID_NSKIP_MSG "Invalid `nskip` specified; "
 
-// file_sampler.c
-int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output);
-int LS_sample_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, const uint32_t nskip, const char *input, const char *output);
 
-// wc.c
-int LS_wc(const char *file, const bool chars, uint64_t *nchars, const bool words, uint64_t *nwords, const bool lines, uint64_t *nlines);
+// Things that went wrong
+#define READ_FAIL       -3
+#define WRITE_FAIL      -4
+#define MALLOC_FAIL     -5
+#define USER_INTERRUPT  -6
+
+#define READ_FAIL_MSG       "Could not read infile; perhaps it doesn't exist?"
+#define WRITE_FAIL_MSG      "Could not generate tempfile for writing for some reason?"
+#define MALLOC_FAIL_MSG     "Out of memory."
+#define USER_INTERRUPT_MSG  "Process killed by user interrupt."
+
+
+static inline void LS_checkret(const int ret)
+{
+  switch (ret)
+  {
+    case INVALID_PROB:
+      LS_error_fun(INVALID_PROB_MSG);
+    case INVALID_NSKIP:
+      LS_error_fun(INVALID_NSKIP_MSG);
+    case READ_FAIL:
+      LS_error_fun(READ_FAIL_MSG);
+    case WRITE_FAIL:
+      LS_error_fun(WRITE_FAIL_MSG);
+    case MALLOC_FAIL:
+      LS_error_fun(MALLOC_FAIL_MSG);
+    case USER_INTERRUPT:
+      LS_error_fun(USER_INTERRUPT_MSG);
+    default:
+      LS_error_fun("Unknown error code; please report this to the developers.");
+  }
+  
+  return;
+}
 
 
 #endif

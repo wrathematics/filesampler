@@ -34,27 +34,12 @@
 #define DBL(x) REAL(x)[0]
 
 
-#define READ_FAIL_MSG "Could not read infile; perhaps it doesn't exist?"
-#define WRITE_FAIL_MSG "Could not generate tempfile for writing for some reason?"
-#define MALLOC_FAIL_MSG "Out of memory"
-#define USER_INTERRUPT_MSG "process killed by user interrupt"
-
-#define CHKRET(ret) \
-  if (ret == READ_FAIL) \
-    error(READ_FAIL_MSG); \
-  else if (ret == WRITE_FAIL) \
-    error(WRITE_FAIL_MSG); \
-  else if (ret == MALLOC_FAIL) \
-    error(MALLOC_FAIL_MSG); \
-  else if (ret == USER_INTERRUPT) \
-    error(USER_INTERRUPT_MSG);
-
 SEXP R_LS_sample_prob(SEXP verbose, SEXP header, SEXP nskip, SEXP nmax, SEXP p, SEXP input, SEXP output)
 {
   int ret;
   
   ret = LS_sample_prob(INT(verbose), INT(header), (uint32_t)INT(nskip), (uint32_t)INT(nmax), DBL(p), CHARPT(input, 0), CHARPT(output, 0));
-  CHKRET(ret);
+  LS_checkret(ret);
   
   return R_NilValue;
 }
@@ -67,10 +52,10 @@ SEXP R_LS_sample_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, SEX
   uint64_t nlines_in;
   
   ret = LS_wc(CHARPT(input, 0), false, NULL, false, NULL, true, &nlines_in);
-  CHKRET(ret);
+  LS_checkret(ret);
   
   ret = LS_sample_exact(INT(header), nlines_in, INT(nlines_out), (uint32_t)INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
-  CHKRET(ret);
+  LS_checkret(ret);
   
   return R_NilValue;
 }
@@ -94,7 +79,7 @@ SEXP R_LS_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
   PROTECT(counts = allocVector(REALSXP, 3));
   
   ret = LS_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
-  CHKRET(ret);
+  LS_checkret(ret);
   
   COUNTS(NCHARS) = chars ? (double) nchars : -1.;
   COUNTS(NWORDS) = words ? (double) nwords : -1.;
