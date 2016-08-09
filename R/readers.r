@@ -52,7 +52,7 @@ sample_file_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=te
   
   infile <- tools::file_path_as_absolute(infile)
   
-  ret <- .Call(R_file_sampler, verbose, header, as.integer(nskip), as.integer(nmax), as.double(p), infile, outfile)
+  ret <- .Call(R_LS_sample_prob, verbose, header, as.integer(nskip), as.integer(nmax), as.double(p), infile, outfile)
   
   invisible()
 }
@@ -107,7 +107,7 @@ sample_file_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
   
   infile <- tools::file_path_as_absolute(infile)
   
-  ret <- .Call(R_file_sampler_exact, header, as.integer(nskip), as.integer(nlines)-1L, infile, outfile)
+  ret <- .Call(R_LS_sample_exact, header, as.integer(nskip), as.integer(nlines)-1L, infile, outfile)
   
   invisible()
 }

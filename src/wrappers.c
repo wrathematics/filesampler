@@ -27,7 +27,7 @@
 
 #include <R.h>
 #include <Rinternals.h>
-#include "lineSampler.h"
+#include "lineSampler/lineSampler.h"
 
 #define CHARPT(x,i) ((char*)CHAR(STRING_ELT(x,i)))
 #define INT(x) INTEGER(x)[0]
@@ -49,11 +49,11 @@
   else if (ret == USER_INTERRUPT) \
     error(USER_INTERRUPT_MSG);
 
-SEXP R_file_sampler(SEXP verbose, SEXP header, SEXP nskip, SEXP nmax, SEXP p, SEXP input, SEXP output)
+SEXP R_LS_sample_prob(SEXP verbose, SEXP header, SEXP nskip, SEXP nmax, SEXP p, SEXP input, SEXP output)
 {
   int ret;
   
-  ret = file_sampler(INT(verbose), INT(header), (uint32_t)INT(nskip), (uint32_t)INT(nmax), DBL(p), CHARPT(input, 0), CHARPT(output, 0));
+  ret = LS_sample_prob(INT(verbose), INT(header), (uint32_t)INT(nskip), (uint32_t)INT(nmax), DBL(p), CHARPT(input, 0), CHARPT(output, 0));
   CHKRET(ret);
   
   return R_NilValue;
@@ -61,15 +61,15 @@ SEXP R_file_sampler(SEXP verbose, SEXP header, SEXP nskip, SEXP nmax, SEXP p, SE
 
 
 
-SEXP R_file_sampler_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, SEXP output)
+SEXP R_LS_sample_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, SEXP output)
 {
   int ret;
   uint64_t nlines_in;
   
-  ret = file_sampler_wc(CHARPT(input, 0), false, NULL, false, NULL, true, &nlines_in);
+  ret = LS_wc(CHARPT(input, 0), false, NULL, false, NULL, true, &nlines_in);
   CHKRET(ret);
   
-  ret = file_sampler_exact(INT(header), nlines_in, INT(nlines_out), (uint32_t)INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
+  ret = LS_sample_exact(INT(header), nlines_in, INT(nlines_out), (uint32_t)INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
   CHKRET(ret);
   
   return R_NilValue;
@@ -82,7 +82,7 @@ SEXP R_file_sampler_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, 
 #define NWORDS  1
 #define NLINES  2
 
-SEXP R_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
+SEXP R_LS_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
 {
   int ret;
   uint64_t nchars, nwords, nlines;
@@ -93,7 +93,7 @@ SEXP R_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
   // REALSXP because R is too stupid to have 64-bit ints already
   PROTECT(counts = allocVector(REALSXP, 3));
   
-  ret = file_sampler_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
+  ret = LS_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
   CHKRET(ret);
   
   COUNTS(NCHARS) = chars ? (double) nchars : -1.;

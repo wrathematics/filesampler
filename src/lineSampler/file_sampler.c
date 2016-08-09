@@ -25,9 +25,13 @@
 */
 
 
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "lineSampler.h"
-#include "omputils.h"
-#include "rand.h"
+#include "safeomp.h"
+#include "utils.h"
 
 #define HAS_NEWLINE ((readlen > 0) && (buf[readlen-1] == '\n'))
 
@@ -92,7 +96,7 @@ static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_
  * @return
  * The return value indicates the status of the function.
  */
-int file_sampler(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output)
+int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output)
 {
   int ret = 0;
   FILE *fp_read, *fp_write;
@@ -288,7 +292,7 @@ static int comp(const void *a, const void *b)
  * @return
  * The return value indicates the status of the function.
  */
-int file_sampler_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, const uint32_t nskip, const char *input, const char *output)
+int LS_sample_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, const uint32_t nskip, const char *input, const char *output)
 {
   int ret = 0;
   FILE *fp_read, *fp_write;

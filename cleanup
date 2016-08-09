@@ -1,4 +1,7 @@
 #! /bin/sh
-rm -rf ./src/*.so*
+
 rm -rf ./src/*.o
+rm -rf ./src/lineSampler/*.o
+
+rm -rf ./src/*.so*
 rm -rf ./src/*.dll

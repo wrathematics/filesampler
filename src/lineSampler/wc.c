@@ -25,9 +25,11 @@
 */
 
 
-#include <ctype.h>
+#include <ctype.h> // isspace()
+
 #include "lineSampler.h"
-#include "omputils.h"
+#include "safeomp.h"
+#include "utils.h"
 
 
 static inline bool isnewline(const char c)
@@ -183,7 +185,7 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
  * @return
  * The return value indicates the status of the function.
  */
-int file_sampler_wc(const char *file, const bool chars, uint64_t *nchars, 
+int LS_wc(const char *file, const bool chars, uint64_t *nchars, 
   const bool words, uint64_t *nwords, const bool lines, uint64_t *nlines)
 {
   int ret = 0;

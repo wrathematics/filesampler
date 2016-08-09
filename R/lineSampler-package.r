@@ -19,7 +19,7 @@
 #' @author Drew Schmidt \email{wrathematics@@gmail.com}
 #' @references Project URL: \url{https://github.com/wrathematics/lineSampler}
 #'
-#' @useDynLib lineSampler, R_file_sampler, R_file_sampler_exact, R_wc
+#' @useDynLib lineSampler, R_LS_sample_prob, R_LS_sample_exact, R_LS_wc
 #'
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_as_absolute
