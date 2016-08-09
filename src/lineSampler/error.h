@@ -55,6 +55,8 @@ static inline void LS_checkret(const int ret)
 {
   switch (ret)
   {
+    case 0:
+      break;
     case INVALID_PROB:
       LS_error_fun(INVALID_PROB_MSG);
     case INVALID_NSKIP:
