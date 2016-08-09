@@ -17,7 +17,7 @@ Idea inspired by Eduardo Arino de la Rubia's [fast_sample](https://github.com/ea
 From CRAN:
 
 ```r
-devtools::install_github("wrathematics/lineSampler")
+install.packages("lineSampler")
 ```
 
 The development version is maintained on GitHub, and can easily be installed by any of the packages that offer installations from GitHub:
@@ -40,15 +40,22 @@ ret <- sample_csv(file, p=.001)
 
 There is also a `sample_lines()` function for reading in (line) subsamples of unstructured text akin to `readLines()`.  See package vignette for more details.
 
+You can find more information in the package vignette:
+
+```r
+vignette("lineSampler", package="lineSampler")
+```
+
 
 
 ## Code Re-Use
 
-The C code in the `src/` tree of this package can easily be re-purposed for use outside of R.  The utilities of interest are in:
+The C code in the `src/lineSampler` tree of this package can easily be re-purposed for use outside of R with some minor modifications.  The components that need to be edited can be found in the file:
 
-  * file_sampler.c
-  * wc.c
+  * `src/lineSampler/utils.h`
 
-A uniform random number generator must be set. Set `RUNIF` to the appropriate function in `rand.h`.  You will also need to set `PRINTFUN` to something, probably `printf()`.  You will also need to set `STARTRNG` and `ENDRNG` appropriately (with the latter probably being an empty define).
+Detailed explanations are contained there, but you will need:
 
-Finally, to handle interrupts, you will need to create an appropriate `check_interrupt()` as in interrupt.c. Or if you're lazy and don't care, just set it to always return `false`.
+* a uniform random number generator
+* a print function (probably `printf()`)
+* an interrupt checker
