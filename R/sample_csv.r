@@ -73,7 +73,7 @@
 #' @export
 sample_csv <- function(file, param, method="proportional", reader=utils::read.csv, header=TRUE, nskip=0, nmax=0, verbose=FALSE, ...)
 {
-  assert_that(is.function(reader))
+  check.is.function(reader)
   method <- match.arg(tolower(method), c("proportional", "exact"))
   
   outfile <- tempfile()

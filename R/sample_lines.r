@@ -52,7 +52,7 @@
 #' @export
 sample_lines <- function(file, n=-1L, p=.1, nskip=0, nmax=0, verbose=FALSE, ...)
 {
-  assert_that(is.number(n) && is.count(abs(n)))
+  check.is.int(n)
   
   if (p == 0)
     return(character(0))

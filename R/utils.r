@@ -67,6 +67,19 @@ check.is.string <- function(x)
 
 
 
+check.is.int <- function(x)
+{
+  if (!is.numeric(x) || is.annoying(x) || !is.inty(x))
+  {
+    nm <- deparse(substitute(x))
+    stop(paste0("argument '", nm, "' must be an integer"))
+  }
+  
+  invisible(TRUE)
+}
+
+
+
 check.is.natnum <- function(x)
 {
   if (!is.numeric(x) || is.annoying(x) || !is.inty(x) || is.negative(x))
@@ -86,6 +99,19 @@ check.is.posint <- function(x)
   {
     nm <- deparse(substitute(x))
     stop(paste0("argument '", nm, "' must be a positive integer"))
+  }
+  
+  invisible(TRUE)
+}
+
+
+
+check.is.function <- function(x)
+{
+  if (!is.function(x))
+  {
+    nm <- deparse(substitute(x))
+    stop(paste0("argument '", nm, "' must be a function"))
   }
   
   invisible(TRUE)
