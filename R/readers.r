@@ -36,7 +36,7 @@
 #' @seealso \code{\link{sample_file_exact}}
 #' 
 #' @export
-sample_file_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
+LS_sample_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
 {
   check.is.flag(verbose)
   check.is.flag(header)
@@ -66,6 +66,9 @@ sample_file_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=te
 #' Randomly sample exactly \code{nlines} lines from an input text 
 #' file.
 #' 
+#' @param verbose
+#' Logical; indicates whether or not linecounts of the input file and the number
+#' of lines sampled should be printed.
 #' @param header
 #' Logical; indicates whether or not there is a header on the csv file.
 #' @param nskip
@@ -98,8 +101,9 @@ sample_file_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=te
 #' @seealso \code{\link{sample_file_prob}}
 #' 
 #' @export
-sample_file_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
+LS_sample_exact <- function(verbose, header, nskip, nlines, infile, outfile=tempfile())
 {
+  check.is.flag(verbose)
   check.is.flag(header)
   check.is.natnum(nskip)
   check.is.posint(nlines)
@@ -109,7 +113,7 @@ sample_file_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
   
   infile <- tools::file_path_as_absolute(infile)
   
-  ret <- .Call(R_LS_sample_exact, header, as.integer(nskip), as.integer(nlines)-1L, infile, outfile)
+  ret <- .Call(R_LS_sample_exact, as.integer(verbose), as.integer(header), as.integer(nskip), as.integer(nlines)-1L, infile, outfile)
   
   invisible()
 }

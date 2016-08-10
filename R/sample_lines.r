@@ -61,7 +61,7 @@ sample_lines <- function(file, n=-1L, p=.1, nskip=0, nmax=0, verbose=FALSE, ...)
     return(character(0))
   
   outfile <- tempfile()
-  sample_file_prob(verbose=verbose, header=FALSE, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
+  LS_sample_prob(verbose=verbose, header=FALSE, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   
   data <- readLines(outfile, n=n, ...)
   unlink(outfile)

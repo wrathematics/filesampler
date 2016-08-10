@@ -34,11 +34,13 @@
 #define DBL(x) REAL(x)[0]
 
 
-SEXP R_LS_sample_prob(SEXP verbose, SEXP header, SEXP nskip, SEXP nmax, SEXP p, SEXP input, SEXP output)
+SEXP R_LS_sample_prob(SEXP verbose, SEXP header, SEXP nskip_, SEXP nmax_, SEXP p, SEXP input, SEXP output)
 {
   int ret;
+  uint32_t nskip = (uint32_t) INT(nskip_);
+  uint32_t nmax = (uint32_t) INT(nmax_);
   
-  ret = LS_sample_prob(INT(verbose), INT(header), (uint32_t)INT(nskip), (uint32_t)INT(nmax), DBL(p), CHARPT(input, 0), CHARPT(output, 0));
+  ret = LS_sample_prob(INT(verbose), INT(header), nskip, nmax, DBL(p), CHARPT(input, 0), CHARPT(output, 0));
   LS_checkret(ret);
   
   return R_NilValue;
@@ -46,15 +48,13 @@ SEXP R_LS_sample_prob(SEXP verbose, SEXP header, SEXP nskip, SEXP nmax, SEXP p, 
 
 
 
-SEXP R_LS_sample_exact(SEXP header, SEXP nskip, SEXP nlines_out, SEXP input, SEXP output)
+SEXP R_LS_sample_exact(SEXP verbose, SEXP header, SEXP nskip_, SEXP nlines_out_, SEXP input, SEXP output)
 {
   int ret;
-  uint64_t nlines_in;
+  uint32_t nskip = (uint32_t) INT(nskip_);
+  uint64_t nlines_out = (uint64_t) INT(nlines_out_);
   
-  ret = LS_wc(CHARPT(input, 0), false, NULL, false, NULL, true, &nlines_in);
-  LS_checkret(ret);
-  
-  ret = LS_sample_exact(INT(header), nlines_in, INT(nlines_out), (uint32_t)INT(nskip), CHARPT(input, 0), CHARPT(output, 0));
+  ret = LS_sample_exact(INT(verbose), INT(header), nskip, nlines_out, CHARPT(input, 0), CHARPT(output, 0));
   LS_checkret(ret);
   
   return R_NilValue;

@@ -190,6 +190,8 @@ int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32
   
   if (verbose)
   {
+    nlines_in -= header;
+    
     if (checkmax && !nmax)
       PRINTFUN("Read nmax=%llu lines.\n", nmax);
     else
@@ -292,9 +294,9 @@ static int comp(const void *a, const void *b)
  * @return
  * The return value indicates the status of the function.
  */
-int LS_sample_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, const uint32_t nskip, const char *input, const char *output)
+int LS_sample_exact(const bool verbose, const bool header, const uint32_t nskip, uint64_t nlines_out, const char *input, const char *output)
 {
-  int ret = 0;
+  int ret;
   FILE *fp_read, *fp_write;
   char *buf;
   size_t readlen;
@@ -302,6 +304,14 @@ int LS_sample_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, 
   bool should_write = false;
   bool singleread = true;
   uint64_t *samp;
+  uint64_t nlines_in;
+  uint64_t current_line = 0;
+  uint64_t lines_read = 0;
+  
+  
+  ret = LS_wc(input, false, NULL, false, NULL, true, &nlines_in);
+  if (ret)
+    return ret;
   
   
   if (nskip > nlines_in)
@@ -339,11 +349,12 @@ int LS_sample_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, 
   STARTRNG();
   
   
-  nlines_in = 0;
-  nlines_out = 0;
   while (fgets(buf, BUFLEN, fp_read) != NULL)
   {
-    if ((nlines_out % 1000 == 0) && check_interrupt())
+    if (lines_read == nlines_out)
+      break;
+    
+    if ((lines_read % 1000 == 0) && check_interrupt())
     {
       ret = USER_INTERRUPT;
       goto fullcleanup;
@@ -351,7 +362,7 @@ int LS_sample_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, 
     
     if (singleread)
     {
-      if (samp[nlines_out] == nlines_in)
+      if (samp[lines_read] == current_line)
         should_write = true;
       else
         should_write = false;
@@ -359,7 +370,7 @@ int LS_sample_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, 
     
     if (should_write)
     {
-      nlines_out++;
+      lines_read++;
       fprintf(fp_write, "%s", buf);
     }
     
@@ -367,13 +378,19 @@ int LS_sample_exact(const bool header, uint64_t nlines_in, uint64_t nlines_out, 
     
     if (HAS_NEWLINE)
     {
-      nlines_in++;
+      current_line++;
       should_write = false;
       singleread = true;
     }
     else
       singleread = false;
-    
+  }
+  
+  
+  if (verbose)
+  {
+    nlines_in -= header;
+    PRINTFUN("Read %llu lines (%.5f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
   }
   
   

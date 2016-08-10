@@ -81,12 +81,12 @@ sample_csv <- function(file, param, method="proportional", reader=utils::read.cs
   if (method == "proportional")
   {
     p <- param
-    sample_file_prob(verbose=verbose, header=header, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
+    LS_sample_prob(verbose=verbose, header=header, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   }
   else if (method == "exact")
   {
     nlines <- param
-    sample_file_exact(header=header, nskip=nskip, nlines=nlines, infile=file, outfile=outfile)
+    LS_sample_exact(verbose=verbose, header=header, nskip=nskip, nlines=nlines, infile=file, outfile=outfile)
   }
   
   data <- reader(outfile, header, ...)
