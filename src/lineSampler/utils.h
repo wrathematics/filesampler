@@ -21,8 +21,8 @@
 #include <Rmath.h>  // delete me
 
 // rng initializer and ender; probably sufficient to set the second def to a blank
-#define STARTRNG GetRNGstate
-#define ENDRNG PutRNGstate
+#define STARTRNG GetRNGstate()
+#define ENDRNG PutRNGstate()
 
 // uniform random number generator
 #define RUNIF unif_rand

@@ -143,7 +143,7 @@ int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32
     read_header(buf, fp_read, fp_write, &nlines_in, &nlines_out);
   
   
-  STARTRNG();
+  STARTRNG;
   
   while (fgets(buf, BUFLEN, fp_read) != NULL)
   {
@@ -200,7 +200,7 @@ int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32
   
   
   cleanup:
-    ENDRNG();
+    ENDRNG;
     fclose(fp_read);
     fclose(fp_write);
     free(buf);
@@ -234,7 +234,7 @@ static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uin
   for (i=0; i<nlines_out; i++)
     (*samp)[i] = nskip + i+1;
   
-  STARTRNG();
+  STARTRNG;
   
   SAFE_FOR_SIMD
   for (i=nlines_out; i<nlines_in; i++)
@@ -244,7 +244,7 @@ static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uin
       (*samp)[j] = nskip + i+1;
   }
   
-  ENDRNG();
+  ENDRNG;
   
   return 0;
 }
@@ -346,7 +346,7 @@ int LS_sample_exact(const bool verbose, const bool header, const uint32_t nskip,
   
   qsort(samp, nlines_out, sizeof(uint64_t), comp);
   
-  STARTRNG();
+  STARTRNG;
   
   
   while (fgets(buf, BUFLEN, fp_read) != NULL)
@@ -395,7 +395,7 @@ int LS_sample_exact(const bool verbose, const bool header, const uint32_t nskip,
   
   
   fullcleanup:
-    ENDRNG();
+    ENDRNG;
     free(samp);
   
   cleanup:
