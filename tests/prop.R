@@ -5,7 +5,7 @@ file <- tools::file_path_as_absolute(system.file("rawdata/small.csv", package="l
 ### Argument checks
 
 # p
-badp <- "<simpleError in sample_file_prob(verbose = verbose, header = header, nskip = nskip,     nmax = nmax, p = p, infile = file, outfile = outfile): Argument 'p' must be between 0 and 1>"
+badp <- "<simpleError in LS_sample_prob(verbose = verbose, header = header, nskip = nskip,     nmax = nmax, p = p, infile = file, outfile = outfile): Argument 'p' must be between 0 and 1>"
 badval <- tryCatch(sampled <- sample_csv(file, param=-1), error=capture.output)
 stopifnot(all.equal(badp, badval))
 badval <- tryCatch(sampled <- sample_csv(file, param=1.1), error=capture.output)
@@ -49,5 +49,5 @@ stopifnot(all.equal(sampled, sampled_actual))
 
 ### verbose
 verb <- capture.output(invisible(sample_csv(file, param=.05, verbose=TRUE)))
-verb_actual <- "Read 4 lines (0.03960%) of 101 line file."
+verb_actual <- "Read 4 lines (0.04000%) of 100 line file."
 stopifnot(all.equal(verb, verb_actual))
