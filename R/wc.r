@@ -4,6 +4,9 @@
 #' @description 
 #' See title.
 #' 
+#' \code{wc_l()} is a shorthand for counting only lines, similar to \code{wc -l}
+#' in the terminal.
+#' 
 #' @details
 #' The summary statistics of the input file are determined by
 #' scanning through the file as quickly as possible (i.e., it
@@ -26,6 +29,12 @@
 #' data  <- wc(file=file)
 #' }
 #'
+#' @name wc
+#' @rdname wc
+NULL
+
+
+#' @rdname wc
 #' @export
 wc <- function(file, chars=TRUE, words=TRUE, lines=TRUE)
 {
@@ -45,6 +54,14 @@ wc <- function(file, chars=TRUE, words=TRUE, lines=TRUE)
   attr(counts, "file") <- file
   
   return(counts)
+}
+
+
+#' @rdname wc
+#' @export
+wc_l <- function(file)
+{
+  wc(file=file, chars=FALSE, words=FALSE, lines=TRUE)
 }
 
 
