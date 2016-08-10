@@ -89,7 +89,13 @@ sample_csv <- function(file, param, method="proportional", reader=utils::read.cs
     LS_sample_exact(verbose=verbose, header=header, nskip=nskip, nlines=nlines, infile=file, outfile=outfile)
   }
   
-  data <- reader(outfile, header, ...)
+  
+  reader_nm <- deparse(substitute(reader))
+  if (grepl(reader_nm, pattern="read_csv"))
+    data <- reader(outfile, col_names=header)
+  else
+    data <- reader(outfile, header=header, ...)
+  
   unlink(outfile)
   
   return(data)
