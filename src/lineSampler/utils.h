@@ -25,7 +25,7 @@
 #define ENDRNG PutRNGstate()
 
 // uniform random number generator
-#define RUNIF unif_rand
+#define RUNIF unif_rand()
 
 
 // ----------------------------------------------------------------------------

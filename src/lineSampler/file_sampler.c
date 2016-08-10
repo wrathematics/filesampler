@@ -155,7 +155,7 @@ int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32
     
     if (singleread)
     {
-      if (RUNIF() < p)
+      if (RUNIF < p)
         should_write = true;
       else
         should_write = false;
@@ -218,7 +218,7 @@ int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32
 
 static inline int unif_rand_int(const int low, const int high)
 {
-  return (int) low + (high + 1 - low)*RUNIF() ;
+  return (int) low + (high + 1 - low)*RUNIF ;
 }
 
 
