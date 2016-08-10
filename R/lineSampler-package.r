@@ -23,7 +23,6 @@
 #'
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_as_absolute
-#' @import assertthat
 #' 
 #' @name lineSampler
 #' @docType package

@@ -38,12 +38,12 @@
 #' @export
 sample_file_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
 {
-  assert_that(is.flag(verbose))
-  assert_that(is.flag(header))
-  assert_that(nskip == 0 || is.count(nskip))
-  assert_that(nmax == 0 || is.count(nmax))
-  assert_that(is.scalar(p))
-  assert_that(is.string(infile))
+  check.is.flag(verbose)
+  check.is.flag(header)
+  check.is.natnum(nskip)
+  check.is.natnum(nmax)
+  check.is.scalar(p)
+  check.is.string(infile)
   
   if (p == 0)
     stop("no lines available for input")
@@ -100,10 +100,12 @@ sample_file_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=te
 #' @export
 sample_file_exact <- function(header, nskip, nlines, infile, outfile=tempfile())
 {
-  assert_that(is.flag(header))
-  assert_that(nskip == 0 || is.count(nskip))
-  assert_that(is.count(nlines))
-  assert_that(is.string(infile))
+  check.is.flag(header)
+  check.is.natnum(nskip)
+  check.is.posint(nlines)
+  check.is.natnum(nskip)
+  check.is.posint(nlines)
+  check.is.string(infile)
   
   infile <- tools::file_path_as_absolute(infile)
   

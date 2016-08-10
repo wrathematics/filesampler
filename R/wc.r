@@ -29,10 +29,10 @@
 #' @export
 wc <- function(file, chars=TRUE, words=TRUE, lines=TRUE)
 {
-  assert_that(is.string(file))
-  assert_that(is.flag(chars))
-  assert_that(is.flag(words))
-  assert_that(is.flag(lines))
+  check.is.string(file)
+  check.is.flag(chars)
+  check.is.flag(words)
+  check.is.flag(lines)
   
   if (!chars && !words && !lines)
     stop("at least one of the arguments 'chars', 'words', or 'lines' must be TRUE")
