@@ -85,11 +85,16 @@ Note that if the downsampling was sufficiently aggressive, you will probably not
 ## Benchmark Setup
 All benchmarks were performed using:
 
-* R 3.3.1
 * A Core i5-2500K CPU @ 3.30GHz with a platter HDD
-* Version 1.0.0 of **readr**, 1.9.6 of **data.table**
+* R 3.3.1
+* Package versions:
+    - 0.4-0 of **lineSampler**
+    - 1.0.0 of **readr**
+    - 1.9.6 of **data.table**
 
-Each number shown is the result of running each test twice and taking the best (lowest) time.  This is to hopefully ensure that there's no file caching or bad RNG behavior making one reader look unreasonably slow compared to the others.  For each of the tests, there was no major difference in run times between the two runs.
+Each timing shown is the result of running each test twice and taking the best (lowest) time.  This is to hopefully ensure that there's no file caching or bad RNG behavior making one reader look unreasonably slow compared to the others.  For each of the tests, there was no major difference in run times between the two runs.
+
+The file `big.csv` referred to below was generated with the included `makebig` script found in `inst/benchmarks/` tree of the source for this package..
 
 
 ## The Benchmarks
