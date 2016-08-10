@@ -1,0 +1,2 @@
+These benchmarks require the use of a reasonably large csv file. You
+can generate one by running the script `makebig` found in this directory.

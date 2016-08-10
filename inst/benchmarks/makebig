@@ -1,0 +1,27 @@
+#!/bin/bash
+
+startfile=../rawdata/small.csv
+
+rm -rf med.csv
+rm -rf big.csv
+
+len=`wc -l < $startfile`
+
+head -n 1 $startfile >> med.csv
+
+for ((i=0; i<160; i++)); do
+  tail -n $(( $len - 1 )) $startfile >> med.csv
+done
+
+
+
+len=`wc -l < med.csv`
+
+head -n 1 med.csv >> big.csv
+
+for ((i=0; i<1000; i++)); do
+  tail -n $(( $len - 1 )) med.csv >> big.csv
+done
+
+
+rm -rf med.csv
