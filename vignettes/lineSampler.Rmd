@@ -21,10 +21,10 @@ vignette: >
 
 # Introduction
 
-**lineSampler** [[@lineSampler]] is a simple R package for reading random subsamples of flat text files by line in a reasonably efficient manner.  We do so by sampling as the input file is scanned and randomly choosing whether or not to dump the current line to an external temporary file.  This temporary file is then read back into R.  For (aggressive)  downsampling, this is a very effective strategy; for resampling, you are much better off reading the full dataset into memory.
- 
-The basic function performs the sampling/reading in a single pass. There is an alternative version which allows for an exact amount to be subsampled via reservoir sampling, but this version requires 2 passes through the data.  The heavy lifting is done entirely in C. 
+**lineSampler** [[@lineSampler]] is a simple R package for reading random subsamples of flat text files by line in a reasonably efficient manner.  This is useful if you have a very large file (too big to comfortably handle in memory) and you want to prototype something on an unbiased subset.
 
+Basically, each reader works by sampling as the input file is scanned and randomly choosing whether or not to dump the current line to an external temporary file.  This temporary file is then read back into R.  For (aggressive)  downsampling, this is a very effective strategy; for resampling, you are much better off reading the full dataset into memory.
+ 
 This package, including the underlying C library, is licensed under the permissive 2-clause BSD license.  The original idea was inspired by Eduardo Arino de la Rubia's **fast_sample** [[@fast_sample]].
 
 
@@ -50,23 +50,29 @@ remotes::install_github("wrathematics/lineSampler")
 
 # Using the Package
 
-At its most basic, you can use just the `sample_csv()` for csv files:
+At its most basic, you can use just the `sample_csv()` for csv files.  Say you want to read in 0.1% of the data.  Then you would call:
 
 ```r
-lineSampler::sample_csv(file)
+sample_csv(file, 0.001)
 ```
 
 and `sample_lines()` for reading unstructured lines (as `readLines()`):
 
 ```r
-lineSampler::sample_lines(file)
+sample_lines(file, 0.001)
 ```
 
-Optionally, you can control the proportion at which lines are randomly selected to be read in.
+By default, each of these file samplers will sample proportionally.  This is done in a single pass of the input file.  However, you can also use an "exact" sampler, which uses a reservoir sampler to draw an exact number of lines at random.  Say you wanted to read in 1000 lines of a csv.  Then you would call:
+
+```r
+sample_csv(file, 1000, method="exact")
+```
+
+This makes two passes through the file.  Implementation details are discussed in a later section of this vignette.
 
 
 ## Other Readers
-To keep external dependencies to a minimum, only the base R `read.csv()` and `readLines()` are directly supported.  If you wish to use other readers like `fread()` from **data.table** [[@datatable]] or `read_csv()` from **readr** [[@readr]], you can pass one of these as the argument `reader` to the \code{sample_csv()} function.  However, this support has not been extensively tested, and enforces some strict rules about arguments.  See the help for details.
+To keep external dependencies to a minimum, only the base R `read.csv()` and `readLines()` are directly supported.  If you wish to use other readers like `fread()` from **data.table** [[@datatable]] or `read_csv()` from **readr** [[@readr]], you can pass one of these as the argument `reader` to the \code{sample_csv()} function.  Examples of this can be found in the Benchmarks section below.
 
 Note that if the downsampling was sufficiently aggressive, you will probably not notice any performance improvement using these better readers over `read.csv()`.
 
@@ -76,67 +82,144 @@ Note that if the downsampling was sufficiently aggressive, you will probably not
 
 # Benchmarks
 
-The package should perform very well, provided the total number of lines sampled is fairly small.  For a small (in absolute, not relative terms) number of lines, the total time spent should be dominated by R reading in the downsampled file, not the downsampling itself.
+## Benchmark Setup
+All benchmarks were performed using:
 
-For example, consider the file:
+* R 3.3.1
+* A Core i5-2500K CPU @ 3.30GHz with a platter HDD
+* Version 1.0.0 of **readr**, 1.9.6 of **data.table**
+
+Each number shown is the result of running each test twice and taking the best (lowest) time.  This is to hopefully ensure that there's no file caching or bad RNG behavior making one reader look unreasonably slow compared to the others.  For each of the tests, there was no major difference in run times between the two runs.
+
+
+## The Benchmarks
+The package should perform very well, provided the total number of lines sampled is fairly small.  For example, consider the file:
 
 ```r
 file <- "/tmp/big.csv"
 
 library(memuse)
 Sys.filesize(file)
-## 742.736 MiB
+## 976.868 MiB
 
 library(lineSampler)
-wc(file)
-# file:   /tmp/big.csv 
-# Nletters: 778814622
-# Nwords:   12174948
-# Nlines:   12174948 
+wc_l(file)
+## file:   /tmp/big.csv 
+## Lines: 16000001 
 ```
 
 We can read in approximately 0.1% of the input file quite quickly:
 
 ```r
-system.time({
-  small <- sample_csv(file, .001)
-})
+system.time(small <- sample_csv(file, .001))
 ##  user  system elapsed 
-## 1.412   0.160   1.573 
+## 1.044   0.128   1.172 
 ```
 
 Compare this to the time spent reading the entire file:
 
 ```r
-system.time({
-  full <- read.csv(file)
-})
+system.time(full <- read.csv(file))
 ##    user  system elapsed 
-## 206.124   3.872 210.128 
+##  72.988   0.500  73.491
+
+system.time(full <- read_csv(file, progress=FALSE))
+##   user  system elapsed 
+## 27.316   0.276  27.595 
+
+system.time(full <- fread(file))
+##    user  system elapsed 
+##  12.328   0.100  12.430 
 ```
 
-Note the difference in file sizes:
+Note the difference in memory usage:
 
 ```r
 dim(small)
-## 12174     6
+## 16036     6
 memuse(small)
-## 432.703 KiB
+## 568.477 KiB
 
 dim(full)
-## 12174947  6
+## [1] 16000000        6
 memuse(full)
-## 417.998 MiB
+## 549.321 MiB
 ```
 
 Also notice that the in-memory file size of the full file times the proportion of lines read in is roughly the size of the downsampled file:
 
 ```r
-memuse(ret)*.001
-## 428.030 KiB
+memuse(full) * .001
+## 562.505 KiB
 ```
 
-Obviously the **lineSampler** strategy is valuable only for aggressive downsampling, and not resampling.  Finally, we note that these benchmarks were performed on a machine with an ssd.  We would expect the overall timings to be larger for a platter disk, but the relative performance should be fairly similar.
+Obviously the **lineSampler** strategy is valuable only for aggressive downsampling, and not resampling.
+
+
+## Combining lineSaqmpler with Other Readers
+The bulk of the time spent in `sample_csv()` is not in the csv reading/parsing itself, but rather in the downsampling.  Consider:
+
+```r
+# the default reader
+system.time(small <- sample_csv(file, .001, reader=read.csv))
+##   user  system elapsed 
+##  1.004   0.172   1.180 
+
+# readr
+system.time(small <- sample_csv(file, .001, reader=read_csv))
+##   user  system elapsed 
+##  1.024   0.108   1.130 
+
+# data.table
+system.time(small <- sample_csv(file, .001, reader=fread))
+##   user  system elapsed 
+##  0.928   0.184   1.112 
+```
+
+The read times do indeed go down, but not incredibly; the difference is probably unnoticeable to a human.  For larger reads, the times are more significant.  We can quickly see this by reading in 1% of the data:
+
+```r
+system.time(small <- sample_csv(file, .01, reader=read.csv))
+##   user  system elapsed 
+##  1.712   0.136   1.855 
+
+system.time(small <- sample_csv(file, .01, reader=read_csv))
+##   user  system elapsed 
+##  1.236   0.160   1.397 
+
+system.time(small <- sample_csv(file, .01, reader=fread))
+##   user  system elapsed 
+##  1.100   0.148   1.246 
+```
+
+
+## Exact Sampling
+Recall that we can sample an exact number of lines using a reservoir sampler, rather than drawing lines proportionally.  We can enable this behavior by setting `method="exact"` in `sample_csv()`.
+
+Before we were sampling about 16,000 and 160,000 lines (for `p=0.001` and `p=0.01` respectively), so we'll use that value for the exact sampler:
+
+```r
+system.time(small <- sample_csv(file, 16000, method="exact"))
+##   user  system elapsed 
+##  1.144   0.292   1.437 
+
+system.time(small <- sample_csv(file, 160000, method="exact"))
+##   user  system elapsed 
+##  1.892   0.232   2.124 
+```
+
+In each case, the times are a bit slower, reflecting some extra work needed in concocting the reservoir (for example, getting line counts for the file).
+
+
+## Conclusions and Summary
+Based on the benchmarks, we find:
+
+* If you want to very quickly read in a small amount of data, **lineSampler** is very effective.  The canonical use cases for this are if you:
+    - want to take a quick, unbiased peek at the data
+    - don't have enough memory to read in/operate on the full data set
+* If your data isn't very big, you can probably comfortably read it in very quickly with **data.table**'s `fread()`.
+
+Finally, if your csv is very large, say greater than 10GiB, I would strongly encourage you to choose another (preferably binary) format.  I have seen terabyte sized csv's, but it's not a good idea!
 
 
 
@@ -144,13 +227,9 @@ Obviously the **lineSampler** strategy is valuable only for aggressive downsampl
 
 # Implementation Details
 
-Here we describe the implementation details for the file sampler functions.  The other package export, `wc()`, has been aggressively optimized; but its implementation is not very interesting, so we do not belabor it here.
+Here we describe the implementation details for the file sampling functions.  The other package export, `wc()`, has been aggressively optimized; but its implementation is not very interesting, so we do not belabor it here.  We will also only focus on the csv samplers, as in fact the raw text and csv schemes are almost identical.
 
-For `sample_file_prob()` which samples lines at a given proportion, the input file is scanned, line-by-line, and lines are randomly placed into a temporary file at the given proportion. This requires one pass through the file. In the "exact" version, a reservoir sampler is used to determine which lines will be read, and then pass through the input file and dumping lines to the temporary file as necessary (i.e., if that line number was chosen by the sampler). In each case, R's `read.csv()` or `readLines()` is used to read the temp file into R.  
-
-The package attempts to be reasonably efficient, with the underlying I/O handled by very ad hoc C code via `fgets()`. The exact reader requires 2 passes through the file: one to get the line counts, then one to sample.  The proportion version only requires one pass through the file. 
-
-On Linux (and possibly other OS's), your file may get cached on the first read, so the second read might be comparatively cheap. But for very large files (which shouldn't be csv anyway!), downsampling with the inexact version and a `p` of .001 or smaller should be more than sufficient.
+The proportional sampling is handled by the function `LS_sample_prob()`, which samples lines at a given proportion.  As the input file is scanned line-by-line,  lines are randomly selected to be placed into a temporary file at the given proportion.  This requires only one pass through the file.  On the other hand, the exact sampling is handled by `LS_sample_exact()`.  Here we use a reservoir sampler to determine ahead of time which lines will be read, and then pass through the input file, dumping the pre-selected lines to the temporary file.  This requires two passes through the file, since we need to know the total number of lines.  In each case, after the downsampling takes place we read the temporary file into R using one of its csv readers.
 
 
 
