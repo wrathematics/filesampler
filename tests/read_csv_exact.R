@@ -5,7 +5,7 @@ file <- tools::file_path_as_absolute(system.file("rawdata/small.csv", package="l
 ### Argument checks
 
 # nlines
-badp <- "<assertError: nlines is not a count (a single positive integer)>"
+badp <- "<simpleError: argument 'nlines' must be a positive integer>"
 badval <- tryCatch(sampled <- sample_csv(file, param=-1, method="exact"), error=capture.output)
 stopifnot(all.equal(badp, badval))
 

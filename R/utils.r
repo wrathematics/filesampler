@@ -33,7 +33,7 @@ check.is.flag <- function(x)
   if (!is.logical(x) || is.annoying(x))
   {
     nm <- deparse(substitute(x))
-    stop(paste0("argument '", nm, "' must be TRUE or FALSE"))
+    stop(paste0("argument '", nm, "' must be TRUE or FALSE"), call.=FALSE)
   }
   
   invisible(TRUE)
@@ -46,7 +46,7 @@ check.is.scalar <- function(x)
   if (!is.numeric(x) || is.annoying(x))
   {
     nm <- deparse(substitute(x))
-    stop(paste0("argument '", nm, "' must be a single number (not NA, Inf, NaN)"))
+    stop(paste0("argument '", nm, "' must be a single number (not NA, Inf, NaN)"), call.=FALSE)
   }
   
   invisible(TRUE)
@@ -59,7 +59,7 @@ check.is.string <- function(x)
   if (!is.character(x) || is.annoying(x))
   {
     nm <- deparse(substitute(x))
-    stop(paste0("argument '", nm, "' must be a single string"))
+    stop(paste0("argument '", nm, "' must be a single string"), call.=FALSE)
   }
   
   invisible(TRUE)
@@ -72,7 +72,7 @@ check.is.int <- function(x)
   if (!is.numeric(x) || is.annoying(x) || !is.inty(x))
   {
     nm <- deparse(substitute(x))
-    stop(paste0("argument '", nm, "' must be an integer"))
+    stop(paste0("argument '", nm, "' must be an integer"), call.=FALSE)
   }
   
   invisible(TRUE)
@@ -85,7 +85,7 @@ check.is.natnum <- function(x)
   if (!is.numeric(x) || is.annoying(x) || !is.inty(x) || is.negative(x))
   {
     nm <- deparse(substitute(x))
-    stop(paste0("argument '", nm, "' must be a natural number (0 or positive integer)"))
+    stop(paste0("argument '", nm, "' must be a natural number (0 or positive integer)"), call.=FALSE)
   }
   
   invisible(TRUE)
@@ -98,7 +98,7 @@ check.is.posint <- function(x)
   if (!is.numeric(x) || is.annoying(x) || !is.inty(x) || is.negative(x) || is.zero(x))
   {
     nm <- deparse(substitute(x))
-    stop(paste0("argument '", nm, "' must be a positive integer"))
+    stop(paste0("argument '", nm, "' must be a positive integer"), call.=FALSE)
   }
   
   invisible(TRUE)
@@ -111,7 +111,7 @@ check.is.function <- function(x)
   if (!is.function(x))
   {
     nm <- deparse(substitute(x))
-    stop(paste0("argument '", nm, "' must be a function"))
+    stop(paste0("argument '", nm, "' must be a function"), call.=FALSE)
   }
   
   invisible(TRUE)
