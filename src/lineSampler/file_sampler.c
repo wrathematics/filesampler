@@ -33,6 +33,9 @@
 #include "safeomp.h"
 #include "utils.h"
 
+
+#define INTERRUPT_CHECK_NUM 1024
+
 #define HAS_NEWLINE ((readlen > 0) && (buf[readlen-1] == '\n'))
 
 static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_t *nlines_in, uint64_t *nlines_out)
@@ -147,7 +150,7 @@ int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32
   
   while (fgets(buf, BUFLEN, fp_read) != NULL)
   {
-    if ((nlines_out % 1000 == 0) && check_interrupt())
+    if ((nlines_out % INTERRUPT_CHECK_NUM == 0) && check_interrupt())
     {
       ret = USER_INTERRUPT;
       goto cleanup;
@@ -190,10 +193,8 @@ int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32
   
   if (verbose)
   {
-    nlines_in -= header;
-    
     if (checkmax && !nmax)
-      PRINTFUN("Read nmax=%llu lines.\n", nmax);
+      PRINTFUN("Read nmax=%llu lines of unknown length file.\n", nmax);
     else
       PRINTFUN("Read %llu lines (%.5f%%) of %llu line file.\n", nlines_out, (double) nlines_out/nlines_in, nlines_in);
   }
@@ -207,8 +208,6 @@ int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32
   
   return ret;
 }
-
-
 
 
 
@@ -354,7 +353,7 @@ int LS_sample_exact(const bool verbose, const bool header, const uint32_t nskip,
     if (lines_read == nlines_out)
       break;
     
-    if ((lines_read % 1000 == 0) && check_interrupt())
+    if ((lines_read % INTERRUPT_CHECK_NUM == 0) && check_interrupt())
     {
       ret = USER_INTERRUPT;
       goto fullcleanup;
