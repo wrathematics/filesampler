@@ -14,6 +14,10 @@ truth = c(-1, -1, nlines)
 test = as.integer(wc(file, FALSE, FALSE))
 stopifnot(all.equal(truth, test))
 
+truth = c(nchars, -1, nlines)
+test = as.integer(wc(file, TRUE, FALSE, TRUE))
+stopifnot(all.equal(truth, test))
+
 truth = c(nchars, nwords, -1)
 test = as.integer(wc(file, lines=FALSE))
 stopifnot(all.equal(truth, test))

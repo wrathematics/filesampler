@@ -64,19 +64,20 @@ static int wc_linesonly(FILE *restrict fp, char *restrict buf, uint64_t *restric
 {
   size_t readlen = BUFLEN;
   uint64_t nl = 0;
+  char *ptr;
   
   while (readlen == BUFLEN)
   {
     if (check_interrupt())
       return USER_INTERRUPT;
     
-    readlen = fread(buf, sizeof(char), BUFLEN, fp);
+    readlen = fread(buf, sizeof(*buf), BUFLEN, fp);
     
-    SAFE_FOR_SIMD
-    for (int i=0; i<readlen; i++)
+    ptr = buf;
+    while ((ptr = memchr(ptr, '\n', buf + readlen - ptr)))
     {
-      if (isnewline(buf[i]))
-        nl++;
+      ptr++;
+      nl++;
     }
   }
   
@@ -87,11 +88,42 @@ static int wc_linesonly(FILE *restrict fp, char *restrict buf, uint64_t *restric
 
 
 
+static int wc_nowords(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nlines)
+{
+  size_t readlen = BUFLEN;
+  uint64_t nc = 0;
+  uint64_t nl = 0;
+  char *ptr;
+  
+  while (readlen == BUFLEN)
+  {
+    if (check_interrupt())
+      return USER_INTERRUPT;
+    
+    readlen = fread(buf, sizeof(*buf), BUFLEN, fp);
+    
+    ptr = buf;
+    while ((ptr = memchr(ptr, '\n', buf + readlen - ptr)))
+    {
+      ptr++;
+      nl++;
+    }
+    nc += readlen;
+  }
+  
+  *nchars = nc;
+  *nlines = nl;
+  
+  return 0;
+}
+
+
+
 static int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nwords)
 {
+  size_t readlen = BUFLEN;
   uint64_t nc = 0;
   uint64_t nw = 0;
-  size_t readlen = BUFLEN;
   
   while (readlen == BUFLEN)
   {
@@ -196,12 +228,17 @@ int LS_wc(const char *file, const bool chars, uint64_t *nchars,
   if (!fp)
     return READ_FAIL;
   
-  buf = malloc(BUFLEN * sizeof(char));
+  buf = malloc(BUFLEN * sizeof(*buf));
   if (buf == NULL)
+  {
+    fclose(fp);
     return MALLOC_FAIL;
+  }
   
   if (!chars && !words && lines)
     ret = wc_linesonly(fp, buf, nlines);
+  else if (chars && !words && lines)
+    ret = wc_nowords(fp, buf, nchars, nlines);
   else if (chars && words && !lines)
     ret = wc_nolines(fp, buf, nchars, nwords);
   else if (chars && !words && !lines)
