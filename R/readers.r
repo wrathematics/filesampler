@@ -33,7 +33,7 @@
 #' @return
 #' \code{NULL}
 #' 
-#' @seealso \code{\link{sample_file_exact}}
+#' @seealso \code{\link{LS_sample_exact}}
 #' 
 #' @export
 LS_sample_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
@@ -98,7 +98,7 @@ LS_sample_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=temp
 #' @return
 #' \code{NULL}
 #' 
-#' @seealso \code{\link{sample_file_prob}}
+#' @seealso \code{\link{LS_sample_prob}}
 #' 
 #' @export
 LS_sample_exact <- function(verbose, header, nskip, nlines, infile, outfile=tempfile())

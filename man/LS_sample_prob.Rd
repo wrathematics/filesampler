@@ -39,6 +39,6 @@ really appropriate for text files in the first place!), then
 this strategy is probably not appropriate.
 }
 \seealso{
-\code{\link{sample_file_exact}}
+\code{\link{LS_sample_exact}}
 }
 
