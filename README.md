@@ -6,11 +6,9 @@
 * **Author:** Drew Schmidt
 
 
-This is a simple R package to reasonably quickly read a random sample of lines of a flat text file (such as a csv) into R. This allows you to get a subsample into R without having to read the (possibly large) file into memory first.
+This is a simple R package to quickly read a random sample of lines of a flat text file (such as a csv) into R.  This allows you to get a subsample into R without having to read the (possibly large) file into memory first.
 
-If you would like to contribute to this project, please see the `CONTRIBUTING.md` file.
-
-Idea inspired by Eduardo Arino de la Rubia's [fast_sample](https://github.com/earino/fast_sample).
+If you would like to contribute to this project, please see the `CONTRIBUTING.md` file.  Idea inspired by Eduardo Arino de la Rubia's [fast_sample](https://github.com/earino/fast_sample).
 
 
 
@@ -42,7 +40,7 @@ ret <- sample_csv(file, p=.001)
 
 There is also a `sample_lines()` function for reading in (line) subsamples of unstructured text akin to `readLines()`.  See package vignette for more details.
 
-You can find more information in the package vignette:
+For more information, including benchmarks and implementation details, please see the package vignette:
 
 ```r
 vignette("lineSampler", package="lineSampler")
