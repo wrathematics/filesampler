@@ -24,7 +24,7 @@
 #define STARTRNG GetRNGstate()
 #define ENDRNG PutRNGstate()
 
-// uniform random number generator
+// generate a single random uniform number
 #define RUNIF unif_rand()
 
 
