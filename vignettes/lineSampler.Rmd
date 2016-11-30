@@ -161,7 +161,7 @@ memuse(full) * .001
 Obviously the **lineSampler** strategy is valuable only for aggressive downsampling, and not resampling.
 
 
-## Combining lineSaqmpler with Other Readers
+## Combining lineSampler with Other Readers
 The bulk of the time spent in `sample_csv()` is not in the csv reading/parsing itself, but rather in the downsampling.  Consider:
 
 ```r
