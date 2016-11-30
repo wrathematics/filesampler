@@ -3,6 +3,7 @@ Release 0.4-0:
   * Refactored internals for better code-reuse.
   * Drop assertthat dependency.
   * Re-wrote vignette.
+  * Switch to LaTeX vignette.
 
 Release 0.3-1:
   * Internal reorganization.

@@ -1,4 +1,0 @@
-#!/bin/sh
-
-rm -f *.html *.pdf
-Rscript -e "rmarkdown::render('lineSampler.Rmd')"

@@ -16,10 +16,7 @@ Imports:
     tools,
     utils
 Suggests:
-    knitr,
-    rmarkdown,
     memuse (>= 3.0.0)
-VignetteBuilder: knitr
 NeedsCompilation: yes
 ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role = c("aut", "cre"), email =

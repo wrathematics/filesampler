@@ -6,4 +6,12 @@
 *~
 *.swp
 
-*.html
+*.pdf
+
+*.aux
+*.bbl
+*.blg
+*.out
+*.toc
+
+inst/doc
