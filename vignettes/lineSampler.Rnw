@@ -10,8 +10,8 @@
 \myversion{0.4-0}
 \myauthor{
 \centering
-Drew Schmidt \\
-University of Tennessee
+Drew Schmidt \\ 
+\texttt{wrathematics@gmail.com} 
 }
 
 
@@ -320,7 +320,8 @@ its csv readers.
 
 
 
-\bibliography{include/lineSampler.bib}
-\bibliographystyle{IEEEtran}
+\addcontentsline{toc}{section}{References}
+\bibliography{./include/lineSampler}
+\bibliographystyle{plain}
 
 \end{document}
