@@ -54,8 +54,7 @@ static inline bool isnewline(const char c)
 static size_t linefeedcount(char * buffer, size_t size) {
     size_t answer = 0;
     __m256i cnt = _mm256_setzero_si256();
-:    __m256i newline = _mm256_set1_epi8('\n');
-    __m256i mask1 = _mm256_set1_epi8(1);
+    __m256i newline = _mm256_set1_epi8('\n');
     size_t i = 0;
     uint8_t tmpbuffer[sizeof(__m256i)];
     while( i + 32 <= size ) {
@@ -73,10 +72,6 @@ static size_t linefeedcount(char * buffer, size_t size) {
             __m256i cmp2 = _mm256_cmpeq_epi8(newline,newdata2);
             __m256i cmp3 = _mm256_cmpeq_epi8(newline,newdata3);
             __m256i cmp4 = _mm256_cmpeq_epi8(newline,newdata4);
-            cmp1 = _mm256_and_si256(mask1, cmp1);
-            cmp2 = _mm256_and_si256(mask1, cmp2);
-            cmp3 = _mm256_and_si256(mask1, cmp3);
-            cmp4 = _mm256_and_si256(mask1, cmp4);
             __m256i cnt1 = _mm256_add_epi8(cmp1,cmp2);
             __m256i cnt2 = _mm256_add_epi8(cmp3,cmp4);
             cnt = _mm256_add_epi8(cnt,cnt1);
@@ -85,10 +80,10 @@ static size_t linefeedcount(char * buffer, size_t size) {
         for (; j <  howmanytimes; j++) {
             __m256i newdata = _mm256_lddqu_si256(buf + j);
             __m256i cmp = _mm256_cmpeq_epi8(newline,newdata);
-            cmp = _mm256_and_si256(mask1, cmp);
             cnt = _mm256_add_epi8(cnt,cmp);
         }
         i += howmanytimes * 32;
+        cnt = _mm256_subs_epi8(_mm256_setzero_si256(),cnt);
         _mm256_storeu_si256((__m256i *) tmpbuffer,cnt);
         for(int k = 0; k < sizeof(__m256i); ++k) answer += tmpbuffer[k];
         cnt = _mm256_setzero_si256();
