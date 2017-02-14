@@ -39,22 +39,97 @@ static inline bool isnewline(const char c)
 
 
 
+#ifdef __AVX2__
+// we have AVX2 support
+
+#ifndef _MSC_VER
+/* Non-Microsoft C/C++-compatible compiler */
+#include <x86intrin.h> // on some recent GCC, this will declare posix_memalign
+#else
+/* Microsoft C/C++-compatible compiler */
+#include <intrin.h>
+#endif
+
+// http://lemire.me/blog/2017/02/14/how-fast-can-you-count-lines/
+static size_t linefeedcount(char * buffer, size_t size) {
+    size_t answer = 0;
+    __m256i cnt = _mm256_setzero_si256();
+:    __m256i newline = _mm256_set1_epi8('\n');
+    __m256i mask1 = _mm256_set1_epi8(1);
+    size_t i = 0;
+    uint8_t tmpbuffer[sizeof(__m256i)];
+    while( i + 32 <= size ) {
+        size_t remaining = size - i;
+        size_t howmanytimes =  remaining / 32;
+        if(howmanytimes > 256) howmanytimes = 256;
+        const __m256i * buf = (const __m256i *) (buffer + i);
+        size_t j = 0;
+        for (; j + 3 <  howmanytimes; j+= 4) {
+            __m256i newdata1 = _mm256_lddqu_si256(buf + j);
+            __m256i newdata2 = _mm256_lddqu_si256(buf + j + 1);
+            __m256i newdata3 = _mm256_lddqu_si256(buf + j + 2);
+            __m256i newdata4 = _mm256_lddqu_si256(buf + j + 3);
+            __m256i cmp1 = _mm256_cmpeq_epi8(newline,newdata1);
+            __m256i cmp2 = _mm256_cmpeq_epi8(newline,newdata2);
+            __m256i cmp3 = _mm256_cmpeq_epi8(newline,newdata3);
+            __m256i cmp4 = _mm256_cmpeq_epi8(newline,newdata4);
+            cmp1 = _mm256_and_si256(mask1, cmp1);
+            cmp2 = _mm256_and_si256(mask1, cmp2);
+            cmp3 = _mm256_and_si256(mask1, cmp3);
+            cmp4 = _mm256_and_si256(mask1, cmp4);
+            __m256i cnt1 = _mm256_add_epi8(cmp1,cmp2);
+            __m256i cnt2 = _mm256_add_epi8(cmp3,cmp4);
+            cnt = _mm256_add_epi8(cnt,cnt1);
+            cnt = _mm256_add_epi8(cnt,cnt2);
+        }
+        for (; j <  howmanytimes; j++) {
+            __m256i newdata = _mm256_lddqu_si256(buf + j);
+            __m256i cmp = _mm256_cmpeq_epi8(newline,newdata);
+            cmp = _mm256_and_si256(mask1, cmp);
+            cnt = _mm256_add_epi8(cnt,cmp);
+        }
+        i += howmanytimes * 32;
+        _mm256_storeu_si256((__m256i *) tmpbuffer,cnt);
+        for(int k = 0; k < sizeof(__m256i); ++k) answer += tmpbuffer[k];
+        cnt = _mm256_setzero_si256();
+    }
+    for(; i < size; i++)
+        if(buffer[i] == '\n') answer ++;
+    return answer;
+}
+
+
+#else
+
+// we do not have AVX2 support
+static size_t linefeedcount(char * buffer, size_t size) {
+    size_t cnt = 0;
+    char * ptr = buffer;
+    char * last = buffer + size;
+    while((ptr = memchr(ptr,'\n', last - ptr))) {
+      cnt ++;
+      ptr ++;
+    }
+    return cnt;
+}
+#endif
+
 static int wc_charsonly(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars)
 {
   size_t readlen = BUFLEN;
   uint64_t nc = 0;
-  
+
   while (readlen == BUFLEN)
   {
     if (check_interrupt())
       return USER_INTERRUPT;
-    
+
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     nc += readlen;
   }
-  
+
   *nchars = nc;
-  
+
   return 0;
 }
 
@@ -64,25 +139,18 @@ static int wc_linesonly(FILE *restrict fp, char *restrict buf, uint64_t *restric
 {
   size_t readlen = BUFLEN;
   uint64_t nl = 0;
-  char *ptr;
-  
+
   while (readlen == BUFLEN)
   {
     if (check_interrupt())
       return USER_INTERRUPT;
-    
+
     readlen = fread(buf, sizeof(*buf), BUFLEN, fp);
-    
-    ptr = buf;
-    while ((ptr = memchr(ptr, '\n', buf + readlen - ptr)))
-    {
-      ptr++;
-      nl++;
-    }
+    nl += linefeedcount(buf, readlen);
   }
-  
+
   *nlines = nl;
-  
+
   return 0;
 }
 
@@ -93,27 +161,20 @@ static int wc_nowords(FILE *restrict fp, char *restrict buf, uint64_t *restrict 
   size_t readlen = BUFLEN;
   uint64_t nc = 0;
   uint64_t nl = 0;
-  char *ptr;
-  
+
   while (readlen == BUFLEN)
   {
     if (check_interrupt())
       return USER_INTERRUPT;
-    
+
     readlen = fread(buf, sizeof(*buf), BUFLEN, fp);
-    
-    ptr = buf;
-    while ((ptr = memchr(ptr, '\n', buf + readlen - ptr)))
-    {
-      ptr++;
-      nl++;
-    }
+    nl += linefeedcount(buf, readlen);
     nc += readlen;
   }
-  
+
   *nchars = nc;
   *nlines = nl;
-  
+
   return 0;
 }
 
@@ -124,27 +185,27 @@ static int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict 
   size_t readlen = BUFLEN;
   uint64_t nc = 0;
   uint64_t nw = 0;
-  
+
   while (readlen == BUFLEN)
   {
     if (check_interrupt())
       return USER_INTERRUPT;
-    
+
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
-    
+
     SAFE_FOR_SIMD
     for (int i=0; i<readlen; i++)
     {
       if (isspace(buf[i]))
         nw++;
-      
+
       nc++;
     }
   }
-  
+
   *nchars = nc;
   *nwords = nw;
-  
+
   return 0;
 }
 
@@ -156,15 +217,15 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
   uint64_t nw = 0;
   uint64_t nl = 0;
   size_t readlen = BUFLEN;
-  
+
   while (readlen == BUFLEN)
   {
     if (check_interrupt())
       return USER_INTERRUPT;
-    
+
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     nc += readlen;
-    
+
     SAFE_FOR_SIMD
     for (int i=0; i<readlen; i++)
     {
@@ -180,11 +241,11 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
       }
     }
   }
-  
+
   *nchars = nc;
   *nwords = nw;
   *nlines = nl;
-  
+
   return 0;
 }
 
@@ -192,7 +253,7 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
 
 /**
  * @file
- * @brief 
+ * @brief
  * Wordcounts
  *
  * @details
@@ -202,7 +263,7 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
  * @param file
  * Input.  Absolute path to output file.
  * @param chars
- * 
+ *
  * @param nchars
  * Output, passed by reference.  On successful return, the value
  * is set to the number of "letters" (character) in the file.
@@ -213,28 +274,28 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
  * @param nlines
  * Output, passed by reference.  On successful return, the value
  * is set to the number of lines in the file.
- * 
+ *
  * @return
  * The return value indicates the status of the function.
  */
-int LS_wc(const char *file, const bool chars, uint64_t *nchars, 
+int LS_wc(const char *file, const bool chars, uint64_t *nchars,
   const bool words, uint64_t *nwords, const bool lines, uint64_t *nlines)
 {
   int ret = 0;
   FILE *fp;
   char *buf;
-  
+
   fp = fopen(file, "r");
   if (!fp)
     return READ_FAIL;
-  
+
   buf = malloc(BUFLEN * sizeof(*buf));
   if (buf == NULL)
   {
     fclose(fp);
     return MALLOC_FAIL;
   }
-  
+
   if (!chars && !words && lines)
     ret = wc_linesonly(fp, buf, nlines);
   else if (chars && !words && lines)
@@ -245,9 +306,9 @@ int LS_wc(const char *file, const bool chars, uint64_t *nchars,
     ret = wc_charsonly(fp, buf, nchars);
   else
     ret = wc_full(fp, buf, nchars, nwords, nlines);
-  
+
   fclose(fp);
   free(buf);
-  
+
   return ret;
 }
