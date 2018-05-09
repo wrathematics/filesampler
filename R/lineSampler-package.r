@@ -24,6 +24,8 @@
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_as_absolute
 #' 
+#' @seealso \code{\link{sample_csv}, \link{sample_lines}, \link{wc}}
+#' 
 #' @name lineSampler
 #' @docType package
 #' @title File Line Sampler

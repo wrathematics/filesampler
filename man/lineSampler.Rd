@@ -31,5 +31,8 @@ Drew Schmidt \email{wrathematics@gmail.com}
 \references{
 Project URL: \url{https://github.com/wrathematics/lineSampler}
 }
+\seealso{
+\code{\link{sample_csv}, \link{sample_lines}, \link{wc}}
+}
 \keyword{package}
 
