@@ -1,3 +1,5 @@
+src/Makevars
+
 *.o
 *.lo
 *.so

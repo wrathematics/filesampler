@@ -1,8 +1,0 @@
-PKG_CFLAGS = $(SHLIB_OPENMP_CFLAGS)
-PKG_LIBS = $(SHLIB_OPENMP_CFLAGS)
-
-OBJECTS = lineSampler_native.o wrappers.o lineSampler/file_sampler.o lineSampler/wc.o
-
-all: $(SHLIB)
-
-$(SHLIB): $(OBJECTS)
