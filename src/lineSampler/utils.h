@@ -13,6 +13,8 @@
 #ifndef LINESAMPLER_UTILS_H_
 #define LINESAMPLER_UTILS_H_
 
+#define UNUSED(x) (void)(x)
+
 // ----------------------------------------------------------------------------
 // RNG
 // ----------------------------------------------------------------------------
@@ -28,12 +30,15 @@
 #define RUNIF unif_rand()
 
 
+
 // ----------------------------------------------------------------------------
 // Printing
 // ----------------------------------------------------------------------------
 
 // replace with regular printf() (probably)
 #define PRINTFUN Rprintf
+
+
 
 // ----------------------------------------------------------------------------
 // Interrupt checker
@@ -49,6 +54,7 @@
 
 static void check_interrupt_fun(void *ignored)
 {
+  UNUSED(ignored);
   R_CheckUserInterrupt();
 }
 
@@ -59,6 +65,7 @@ static inline bool check_interrupt()
 }
 
 
+
 // ----------------------------------------------------------------------------
 // Error handler
 // ----------------------------------------------------------------------------
@@ -66,6 +73,7 @@ static inline bool check_interrupt()
 // Print to stderr and exit
 static inline void LS_error_fun(const int err_num, const char *err_msg)
 {
+  UNUSED(err_num);
   error(err_msg);
 }
 
