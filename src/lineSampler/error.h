@@ -59,18 +59,25 @@ static inline void LS_checkret(const int ret)
       break;
     case INVALID_PROB:
       LS_error_fun(ret, INVALID_PROB_MSG);
+      break;
     case INVALID_NSKIP:
       LS_error_fun(ret, INVALID_NSKIP_MSG);
+      break;
     case READ_FAIL:
       LS_error_fun(ret, READ_FAIL_MSG);
+      break;
     case WRITE_FAIL:
       LS_error_fun(ret, WRITE_FAIL_MSG);
+      break;
     case MALLOC_FAIL:
       LS_error_fun(ret, MALLOC_FAIL_MSG);
+      break;
     case USER_INTERRUPT:
       LS_error_fun(ret, USER_INTERRUPT_MSG);
+      break;
     default:
       LS_error_fun(ret, "Unknown error code; please report this to the developers.");
+      break;
   }
   
   return;
