@@ -133,7 +133,7 @@ static int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict 
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     
     SAFE_FOR_SIMD
-    for (int i=0; i<readlen; i++)
+    for (size_t i=0; i<readlen; i++)
     {
       if (isspace(buf[i]))
         nw++;
@@ -166,7 +166,7 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
     nc += readlen;
     
     SAFE_FOR_SIMD
-    for (int i=0; i<readlen; i++)
+    for (size_t i=0; i<readlen; i++)
     {
       if (isnewline(buf[i]))
       {
