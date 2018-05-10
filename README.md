@@ -2,8 +2,11 @@
 
 * **Version:** 0.4-0
 * **Status:** [![Build Status](https://travis-ci.org/wrathematics/lineSampler.png)](https://travis-ci.org/wrathematics/lineSampler)
-* **License:** [![License](http://img.shields.io/badge/license-BSD%202--Clause-orange.svg?style=flat)](http://opensource.org/licenses/BSD-2-Clause)
+* **License:** [BSD 2-Clause](http://opensource.org/licenses/BSD-2-Clause)
 * **Author:** Drew Schmidt
+* **Project home**: https://github.com/wrathematics/lineSampler
+* **Bug reports**: https://github.com/wrathematics/lineSampler/issues
+
 
 
 This is a simple R package to quickly read a random sample of lines of a flat text file (such as a csv) into R.  This allows you to get a subsample into R without having to read the (possibly large) file into memory first.
