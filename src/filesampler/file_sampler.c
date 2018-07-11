@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "lineSampler.h"
+#include "filesampler.h"
 #include "safeomp.h"
 #include "utils.h"
 
@@ -99,7 +99,7 @@ static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_
  * @return
  * The return value indicates the status of the function.
  */
-int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output)
+int fs_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output)
 {
   int ret = 0;
   FILE *fp_read, *fp_write;
@@ -293,7 +293,7 @@ static int comp(const void *a, const void *b)
  * @return
  * The return value indicates the status of the function.
  */
-int LS_sample_exact(const bool verbose, const bool header, const uint32_t nskip, uint64_t nlines_out, const char *input, const char *output)
+int fs_sample_exact(const bool verbose, const bool header, const uint32_t nskip, uint64_t nlines_out, const char *input, const char *output)
 {
   int ret;
   FILE *fp_read, *fp_write;
@@ -308,7 +308,7 @@ int LS_sample_exact(const bool verbose, const bool header, const uint32_t nskip,
   uint64_t lines_read = 0;
   
   
-  ret = LS_wc(input, false, NULL, false, NULL, true, &nlines_in);
+  ret = fs_wc(input, false, NULL, false, NULL, true, &nlines_in);
   if (ret)
     return ret;
   

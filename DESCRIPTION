@@ -1,6 +1,6 @@
-Package: lineSampler
+Package: filesampler
 Type: Package
-Title: File Line Sampler
+Title: File Sampler
 Version: 0.4-0
 Description: A collection of utilities for reading subsamples of flat text files
     by line in a reasonably efficient manner.  We do so by sampling 
@@ -22,6 +22,6 @@ ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role = c("aut", "cre"), email =
     "wrathematics@gmail.com"))
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
-URL: https://github.com/wrathematics/lineSampler
-BugReports: https://github.com/wrathematics/lineSampler/issues
-RoxygenNote: 5.0.1
+URL: https://github.com/wrathematics/filesampler
+BugReports: https://github.com/wrathematics/filesampler/issues
+RoxygenNote: 6.0.1

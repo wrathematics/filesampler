@@ -10,8 +10,8 @@
 // See utils_sample.h for an example.
 
 
-#ifndef LINESAMPLER_UTILS_H_
-#define LINESAMPLER_UTILS_H_
+#ifndef FILESAMPLER_UTILS_H_
+#define FILESAMPLER_UTILS_H_
 
 // ----------------------------------------------------------------------------
 // RNG
@@ -64,7 +64,7 @@ static inline bool check_interrupt()
 // ----------------------------------------------------------------------------
 
 // Print to stderr and exit
-static inline void LS_error_fun(const int err_num, const char *err_msg)
+static inline void fs_error_fun(const int err_num, const char *err_msg)
 {
   error(err_msg);
 }

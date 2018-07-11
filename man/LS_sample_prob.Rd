@@ -41,4 +41,3 @@ this strategy is probably not appropriate.
 \seealso{
 \code{\link{LS_sample_exact}}
 }
-

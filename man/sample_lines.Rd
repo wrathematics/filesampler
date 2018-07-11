@@ -59,4 +59,3 @@ data  <- sample_lines(file=file)
 \seealso{
 \code{\link{sample_csv}, \link{wc}}
 }
-

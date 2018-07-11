@@ -1,7 +1,9 @@
 PKG_CFLAGS = @ADDITIONAL_FLAGS@
 PKG_LIBS = @ADDITIONAL_FLAGS@
 
-OBJECTS = lineSampler_native.o wrappers.o lineSampler/file_sampler.o lineSampler/wc.o
+FS_OBJECTS = filesampler/file_sampler.o filesampler/wc.o
+R_OBJECTS = filesampler_native.o wrappers.o
+OBJECTS = $(FS_OBJECTS) $(R_OBJECTS)
 
 all: $(SHLIB)
 

@@ -2,6 +2,7 @@
 % Please edit documentation in R/wc.r
 \name{wc}
 \alias{wc}
+\alias{wc}
 \alias{wc_l}
 \title{Count Letters, Words, and Lines of a File}
 \usage{
@@ -40,4 +41,3 @@ data  <- wc(file=file)
 \seealso{
 \code{\link{sample_csv}, \link{sample_lines}}
 }
-

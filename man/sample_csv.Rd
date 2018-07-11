@@ -80,4 +80,3 @@ data  <- sample_csv(file=file, param=500, method="exact")
 \seealso{
 \code{\link{sample_lines}, \link{wc}}
 }
-
