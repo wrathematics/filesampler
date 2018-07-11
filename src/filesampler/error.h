@@ -59,16 +59,22 @@ static inline void fs_checkret(const int ret)
       break;
     case INVALID_PROB:
       fs_error_fun(ret, INVALID_PROB_MSG);
+      break;
     case INVALID_NSKIP:
       fs_error_fun(ret, INVALID_NSKIP_MSG);
+      break;
     case READ_FAIL:
       fs_error_fun(ret, READ_FAIL_MSG);
+      break;
     case WRITE_FAIL:
       fs_error_fun(ret, WRITE_FAIL_MSG);
+      break;
     case MALLOC_FAIL:
       fs_error_fun(ret, MALLOC_FAIL_MSG);
+      break;
     case USER_INTERRUPT:
       fs_error_fun(ret, USER_INTERRUPT_MSG);
+      break;
     default:
       fs_error_fun(ret, "Unknown error code; please report this to the developers.");
   }

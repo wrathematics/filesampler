@@ -47,8 +47,11 @@
 
 #include <stdbool.h>
 
+#define UNUSED(x) (void)(x)
+
 static void check_interrupt_fun(void *ignored)
 {
+  UNUSED(ignored);
   R_CheckUserInterrupt();
 }
 
@@ -66,6 +69,7 @@ static inline bool check_interrupt()
 // Print to stderr and exit
 static inline void fs_error_fun(const int err_num, const char *err_msg)
 {
+  UNUSED(err_num);
   error(err_msg);
 }
 
