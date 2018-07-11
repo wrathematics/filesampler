@@ -44,7 +44,7 @@
 #' @seealso \code{\link{sample_csv}, \link{wc}}
 #' 
 #' @examples \dontrun{
-#' library(lineSampler)
+#' library(filesampler)
 #' file <- "/path/to/my/big.txt"
 #' data  <- sample_lines(file=file)
 #' }

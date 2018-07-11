@@ -32,7 +32,7 @@ should be completely I/O bound).
 }
 \examples{
 \dontrun{
-library(lineSampler)
+library(filesampler)
 file <- "/path/to/my/big.txt"
 data  <- wc(file=file)
 }

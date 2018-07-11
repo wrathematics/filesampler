@@ -1,11 +1,11 @@
-%\VignetteIndexEntry{Introduction to the lineSampler Package}
+%\VignetteIndexEntry{Introduction to the filesampler Package}
 \documentclass[]{article}
 
 
 \input{./include/settings}
 
 
-\mytitle{Introduction to the lineSampler Package}
+\mytitle{Introduction to the filesampler Package}
 \mysubtitle{}
 \myversion{0.4-0}
 \myauthor{
@@ -22,7 +22,7 @@ Drew Schmidt \\
 
 \section{Introduction}\label{introduction}
 
-\textbf{lineSampler}~\cite{lineSampler} is a simple R package for
+\textbf{filesampler}~\cite{filesampler} is a simple R package for
 reading random subsamples of flat text files by line in a reasonably
 efficient manner. This is useful if you have a very large file (too big
 to comfortably handle in memory) and you want to prototype something on
@@ -46,7 +46,7 @@ You can install the stable version from CRAN using the usual
 \texttt{install.packages()}:
 
 \begin{lstlisting}[language=rr]
-install.packages("lineSampler")
+install.packages("filesampler")
 \end{lstlisting}
 
 The development version is maintained on GitHub, and can easily be
@@ -54,9 +54,9 @@ installed by any of the packages that offer installations from GitHub:
 
 \begin{lstlisting}[language=rr]
 ### Pick your preference
-devtools::install_github("wrathematics/lineSampler")
-ghit::install_github("wrathematics/lineSampler")
-remotes::install_github("wrathematics/lineSampler")
+devtools::install_github("wrathematics/filesampler")
+ghit::install_github("wrathematics/filesampler")
+remotes::install_github("wrathematics/filesampler")
 \end{lstlisting}
 
 \section{Using the Package}\label{using-the-package}
@@ -120,7 +120,7 @@ All benchmarks were performed using:
 
   \begin{itemize}
   \item
-    0.4-0 of \textbf{lineSampler}
+    0.4-0 of \textbf{filesampler}
   \item
     1.0.0 of \textbf{readr}
   \item
@@ -150,7 +150,7 @@ library(memuse)
 Sys.filesize(file)
 ## 976.868 MiB
 
-library(lineSampler)
+library(filesampler)
 wc_l(file)
 ## file:   /tmp/big.csv 
 ## Lines: 16000001 
@@ -202,11 +202,11 @@ memuse(full) * .001
 ## 562.505 KiB
 \end{lstlisting}
 
-Obviously the \textbf{lineSampler} strategy is valuable only for
+Obviously the \textbf{filesampler} strategy is valuable only for
 aggressive downsampling, and not resampling.
 
-\subsection{Combining lineSampler with Other
-Readers}\label{combining-linesampler-with-other-readers}
+\subsection{Combining filesampler with Other
+Readers}\label{combining-filesampler-with-other-readers}
 
 The bulk of the time spent in \texttt{sample\_csv()} is not in the csv
 reading/parsing itself, but rather in the downsampling. Consider:
@@ -277,7 +277,7 @@ Based on the benchmarks, we find:
 \begin{itemize}
 \item
   If you want to very quickly read in a small amount of data,
-  \textbf{lineSampler} is very effective. The canonical use cases for
+  \textbf{filesampler} is very effective. The canonical use cases for
   this are if you:
 
   \begin{itemize}
@@ -321,7 +321,7 @@ its csv readers.
 
 
 \addcontentsline{toc}{section}{References}
-\bibliography{./include/lineSampler}
+\bibliography{./include/filesampler}
 \bibliographystyle{plain}
 
 \end{document}

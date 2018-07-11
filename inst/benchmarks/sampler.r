@@ -1,4 +1,4 @@
-library(lineSampler)
+library(filesampler)
 
 
 system.time({
@@ -9,4 +9,3 @@ system.time({
 system.time({
     x <- sample_csv("big.csv", param=.001, verbose=TRUE)
 })
-

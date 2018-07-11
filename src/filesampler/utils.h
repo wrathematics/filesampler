@@ -2,7 +2,7 @@
 // You may modify it for any purpose with or without attribution.
 // See the Unlicense specification for full details http://unlicense.org/
 
-// To make the lineSampler library useable outside of R, you need to modify
+// To make the filesampler library useable outside of R, you need to modify
 // every definition in this file appropriately, and delete the R header files.
 // Comments in this file are to help someone porting this to another (non-R)
 // system.

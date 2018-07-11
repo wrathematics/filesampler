@@ -15,7 +15,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"R_fs_wc", (DL_FUNC) &R_fs_wc, 4},
   {NULL, NULL, 0}
 };
-void R_init_lineSampler(DllInfo *dll)
+void R_init_filesampler(DllInfo *dll)
 {
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);

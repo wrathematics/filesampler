@@ -60,7 +60,7 @@
 #' @seealso \code{\link{sample_lines}, \link{wc}}
 #' 
 #' @examples \dontrun{
-#' library(lineSampler)
+#' library(filesampler)
 #' file <- "/path/to/my/big.csv"
 #' 
 #' # Read in a 0.1% random subsample of the rows.

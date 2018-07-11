@@ -3,22 +3,22 @@ note <- sprintf("{R} package version %s", meta$Version)
 
 citEntry(
   entry = "Misc",
-  title = "{lineSampler}: File Line Sampler",
+  title = "{filesampler}: File Line Sampler",
   author = personList(as.person("Drew Schmidt")),
   year = year,
   note = note,
-  url = "https://cran.r-project.org/package=lineSampler",
+  url = "https://cran.r-project.org/package=filesampler",
   textVersion = NULL,
-  key = "lineSamplerPackage"
+  key = "filesamplerPackage"
 )
 
 citEntry(
   entry = "Manual",
-  title = "Introduction to the {lineSampler} Package",
+  title = "Introduction to the {filesampler} Package",
   author = personList(as.person("Drew Schmidt")),
   year = "2016",
   note = "{R} Vignette",
-  url = "https://cran.r-project.org/package=lineSampler",
+  url = "https://cran.r-project.org/package=filesampler",
   textVersion = NULL,
-  key = "lineSamplerVignette"
+  key = "filesamplerVignette"
 )
