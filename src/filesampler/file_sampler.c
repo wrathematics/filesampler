@@ -34,8 +34,6 @@
 #include "utils.h"
 
 
-#define INTERRUPT_CHECK_NUM 1024
-
 #define HAS_NEWLINE ((readlen > 0) && (buf[readlen-1] == '\n'))
 
 static inline void read_header(char *buf, FILE *fp_read, FILE *fp_write, uint64_t *nlines_in, uint64_t *nlines_out)

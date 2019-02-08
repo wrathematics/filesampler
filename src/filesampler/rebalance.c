@@ -30,18 +30,64 @@
 #include <stdlib.h>
 
 #include "filesampler.h"
-#include "safeomp.h"
 #include "utils.h"
 
-// file rebalancer (m in n out)
-int fs_rebalance(const uint32_t m, const uint32_t n, const int inheader, const int outheader, const char **infiles, const char *outdir)
+
+#define HEADER_ALL 0
+#define HEADER_FIRST 1
+#define HEADER_NONE 2
+
+
+int fs_rebalance(const uint32_t num_outfiles, const uint32_t num_infiles, const char **infiles, const int inheader, const int outheader, const char *outdir)
 {
   int ret = 0;
+  FILE *fp_read, *fp_write;
+  uint64_t total_lines;
+  uint64_t outfile_lines;
+  uint64_t rem;
   
-  if (m == n)
+  if (num_infiles == num_outfiles)
     return ret;
   
   
+  buf = malloc(BUFLEN * sizeof(char));
+  if (buf == NULL)
+    return MALLOC_FAIL;
   
-  return 0;
+  for (uint32_t i=0; i<num_infiles; i++)
+  {
+    uint64_t nlines;
+    int wcret = fs_wc(infiles[i], false, NULL, false, NULL, true, &nlines)
+    total_lines += nlines;
+  }
+  
+  
+  outfile_lines = total_lines / num_outfiles;
+  rem = total_lines - outfile_lines*num_outfiles;
+  
+  
+  
+  
+  for (uint32_t i=0; i<num_infiles; i++)
+  {
+    fp_read = fopen(infiles[i], "r");
+    if (!fp_read)
+    {
+      ret = READ_FAIL;
+      goto cleanup;
+    }
+    
+    fp_write = fopen(output, "w");
+    if (!fp_write)
+    {
+      fclose(fp_read);
+      ret = WRITE_FAIL;
+      goto cleanup;
+    }
+  }
+  
+  
+cleanup:
+  free(buf);
+  return ret;
 }

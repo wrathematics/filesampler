@@ -35,6 +35,7 @@
 #include "error.h"
 
 #define BUFLEN 8192
+#define INTERRUPT_CHECK_NUM 1024
 
 // file_sampler.c
 int fs_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output);
