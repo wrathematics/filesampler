@@ -222,7 +222,7 @@ static inline int unif_rand_int(const int low, const int high)
 
 
 
-static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uint64_t nlines_out, uint64_t **samp)
+static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uint32_t nlines_out, uint64_t **samp)
 {
   int i, j;
   *samp = malloc(nlines_out * sizeof(**samp));
@@ -293,7 +293,7 @@ static int comp(const void *a, const void *b)
  * @return
  * The return value indicates the status of the function.
  */
-int LS_sample_exact(const bool verbose, const bool header, const uint32_t nskip, uint64_t nlines_out, const char *input, const char *output)
+int LS_sample_exact(const bool verbose, const bool header, const uint32_t nskip, uint32_t nlines_out, const char *input, const char *output)
 {
   int ret;
   FILE *fp_read, *fp_write;

@@ -19,8 +19,10 @@ Suggests:
     memuse (>= 3.0.0)
 NeedsCompilation: yes
 ByteCompile: yes
-Authors@R: c(person("Drew", "Schmidt", role = c("aut", "cre"), email =
-    "wrathematics@gmail.com"))
+Authors@R: c(
+    person("Drew", "Schmidt", role = c("aut", "cre"), email="wrathematics@gmail.com"),
+    person("Daniel", "Lemire", role="ctb", comment="vectorized line counter")
+    )
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
 URL: https://github.com/wrathematics/lineSampler
 BugReports: https://github.com/wrathematics/lineSampler/issues

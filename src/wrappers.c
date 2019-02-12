@@ -34,6 +34,10 @@
 #define DBL(x) REAL(x)[0]
 
 
+// -----------------------------------------------------------------------------
+// file samplers
+// -----------------------------------------------------------------------------
+
 SEXP R_LS_sample_prob(SEXP verbose, SEXP header, SEXP nskip_, SEXP nmax_, SEXP p, SEXP input, SEXP output)
 {
   int ret;
@@ -52,7 +56,7 @@ SEXP R_LS_sample_exact(SEXP verbose, SEXP header, SEXP nskip_, SEXP nlines_out_,
 {
   int ret;
   uint32_t nskip = (uint32_t) INT(nskip_);
-  uint64_t nlines_out = (uint64_t) INT(nlines_out_);
+  uint32_t nlines_out = (uint32_t) INT(nlines_out_);
   
   ret = LS_sample_exact(INT(verbose), INT(header), nskip, nlines_out, CHARPT(input, 0), CHARPT(output, 0));
   LS_checkret(ret);
@@ -61,6 +65,10 @@ SEXP R_LS_sample_exact(SEXP verbose, SEXP header, SEXP nskip_, SEXP nlines_out_,
 }
 
 
+
+// -----------------------------------------------------------------------------
+// counters
+// -----------------------------------------------------------------------------
 
 #define COUNTS(n) REAL(counts)[n]
 #define NCHARS  0
@@ -81,9 +89,9 @@ SEXP R_LS_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
   ret = LS_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
   LS_checkret(ret);
   
-  COUNTS(NCHARS) = chars ? (double) nchars : -1.;
-  COUNTS(NWORDS) = words ? (double) nwords : -1.;
-  COUNTS(NLINES) = lines ? (double) nlines : -1.;
+  COUNTS(NCHARS) = chars ? (double) nchars : -1.0;
+  COUNTS(NWORDS) = words ? (double) nwords : -1.0;
+  COUNTS(NLINES) = lines ? (double) nlines : -1.0;
   
   UNPROTECT(1);
   return counts;
