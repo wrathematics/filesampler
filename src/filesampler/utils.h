@@ -2,7 +2,7 @@
 // You may modify it for any purpose with or without attribution.
 // See the Unlicense specification for full details http://unlicense.org/
 
-// To make the lineSampler library useable outside of R, you need to modify
+// To make the filesampler library useable outside of R, you need to modify
 // every definition in this file appropriately, and delete the R header files.
 // Comments in this file are to help someone porting this to another (non-R)
 // system.
@@ -10,8 +10,8 @@
 // See utils_sample.h for an example.
 
 
-#ifndef LINESAMPLER_UTILS_H_
-#define LINESAMPLER_UTILS_H_
+#ifndef FILESAMPLER_UTILS_H_
+#define FILESAMPLER_UTILS_H_
 
 #define UNUSED(x) (void)(x)
 
@@ -52,6 +52,8 @@
 
 #include <stdbool.h>
 
+#define UNUSED(x) (void)(x)
+
 static void check_interrupt_fun(void *ignored)
 {
   UNUSED(ignored);
@@ -71,7 +73,7 @@ static inline bool check_interrupt()
 // ----------------------------------------------------------------------------
 
 // Print to stderr and exit
-static inline void LS_error_fun(const int err_num, const char *err_msg)
+static inline void fs_error_fun(const int err_num, const char *err_msg)
 {
   UNUSED(err_num);
   error(err_msg);

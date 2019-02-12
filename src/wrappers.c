@@ -27,7 +27,7 @@
 
 #include <R.h>
 #include <Rinternals.h>
-#include "lineSampler/lineSampler.h"
+#include "filesampler/filesampler.h"
 
 #define CHARPT(x,i) ((char*)CHAR(STRING_ELT(x,i)))
 #define INT(x) INTEGER(x)[0]
@@ -38,28 +38,28 @@
 // file samplers
 // -----------------------------------------------------------------------------
 
-SEXP R_LS_sample_prob(SEXP verbose, SEXP header, SEXP nskip_, SEXP nmax_, SEXP p, SEXP input, SEXP output)
+SEXP R_fs_sample_prob(SEXP verbose, SEXP header, SEXP nskip_, SEXP nmax_, SEXP p, SEXP input, SEXP output)
 {
   int ret;
   uint32_t nskip = (uint32_t) INT(nskip_);
   uint32_t nmax = (uint32_t) INT(nmax_);
   
-  ret = LS_sample_prob(INT(verbose), INT(header), nskip, nmax, DBL(p), CHARPT(input, 0), CHARPT(output, 0));
-  LS_checkret(ret);
+  ret = fs_sample_prob(INT(verbose), INT(header), nskip, nmax, DBL(p), CHARPT(input, 0), CHARPT(output, 0));
+  fs_checkret(ret);
   
   return R_NilValue;
 }
 
 
 
-SEXP R_LS_sample_exact(SEXP verbose, SEXP header, SEXP nskip_, SEXP nlines_out_, SEXP input, SEXP output)
+SEXP R_fs_sample_exact(SEXP verbose, SEXP header, SEXP nskip_, SEXP nlines_out_, SEXP input, SEXP output)
 {
   int ret;
   uint32_t nskip = (uint32_t) INT(nskip_);
   uint32_t nlines_out = (uint32_t) INT(nlines_out_);
   
-  ret = LS_sample_exact(INT(verbose), INT(header), nskip, nlines_out, CHARPT(input, 0), CHARPT(output, 0));
-  LS_checkret(ret);
+  ret = fs_sample_exact(INT(verbose), INT(header), nskip, nlines_out, CHARPT(input, 0), CHARPT(output, 0));
+  fs_checkret(ret);
   
   return R_NilValue;
 }
@@ -75,7 +75,7 @@ SEXP R_LS_sample_exact(SEXP verbose, SEXP header, SEXP nskip_, SEXP nlines_out_,
 #define NWORDS  1
 #define NLINES  2
 
-SEXP R_LS_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
+SEXP R_fs_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
 {
   int ret;
   uint64_t nchars, nwords, nlines;
@@ -86,8 +86,8 @@ SEXP R_LS_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
   // REALSXP because R is too stupid to have 64-bit ints already
   PROTECT(counts = allocVector(REALSXP, 3));
   
-  ret = LS_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
-  LS_checkret(ret);
+  ret = fs_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
+  fs_checkret(ret);
   
   COUNTS(NCHARS) = chars ? (double) nchars : -1.0;
   COUNTS(NWORDS) = words ? (double) nwords : -1.0;

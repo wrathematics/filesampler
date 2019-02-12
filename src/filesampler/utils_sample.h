@@ -4,8 +4,8 @@
 
 // A sample, modified version of utils.h
 
-#ifndef LINESAMPLER_UTILS_H_
-#define LINESAMPLER_UTILS_H_
+#ifndef FILESAMPLER_UTILS_H_
+#define FILESAMPLER_UTILS_H_
 
 // ----------------------------------------------------------------------------
 // RNG
@@ -45,7 +45,7 @@ static inline bool check_interrupt()
 
 #include <stdio.h>
 
-static inline void LS_error_fun(const int err_num, const char *err_msg)
+static inline void fs_error_fun(const int err_num, const char *err_msg)
 {
   fputs(stderr, err_msg);
   exit(err_num)

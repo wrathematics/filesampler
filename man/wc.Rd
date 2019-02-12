@@ -2,6 +2,7 @@
 % Please edit documentation in R/wc.r
 \name{wc}
 \alias{wc}
+\alias{wc}
 \alias{wc_l}
 \title{Count Letters, Words, and Lines of a File}
 \usage{
@@ -31,7 +32,7 @@ should be completely I/O bound).
 }
 \examples{
 \dontrun{
-library(lineSampler)
+library(filesampler)
 file <- "/path/to/my/big.txt"
 data  <- wc(file=file)
 }
@@ -40,4 +41,3 @@ data  <- wc(file=file)
 \seealso{
 \code{\link{sample_csv}, \link{sample_lines}}
 }
-

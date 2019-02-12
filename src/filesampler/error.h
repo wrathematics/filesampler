@@ -25,8 +25,8 @@
 */
 
 
-#ifndef LINESAMPLER_ERROR_H_
-#define LINESAMPLER_ERROR_H_
+#ifndef FILESAMPLER_ERROR_H_
+#define FILESAMPLER_ERROR_H_
 
 
 #include "utils.h"
@@ -51,33 +51,32 @@
 #define USER_INTERRUPT_MSG  "Process killed by user interrupt."
 
 
-static inline void LS_checkret(const int ret)
+static inline void fs_checkret(const int ret)
 {
   switch (ret)
   {
     case 0:
       break;
     case INVALID_PROB:
-      LS_error_fun(ret, INVALID_PROB_MSG);
+      fs_error_fun(ret, INVALID_PROB_MSG);
       break;
     case INVALID_NSKIP:
-      LS_error_fun(ret, INVALID_NSKIP_MSG);
+      fs_error_fun(ret, INVALID_NSKIP_MSG);
       break;
     case READ_FAIL:
-      LS_error_fun(ret, READ_FAIL_MSG);
+      fs_error_fun(ret, READ_FAIL_MSG);
       break;
     case WRITE_FAIL:
-      LS_error_fun(ret, WRITE_FAIL_MSG);
+      fs_error_fun(ret, WRITE_FAIL_MSG);
       break;
     case MALLOC_FAIL:
-      LS_error_fun(ret, MALLOC_FAIL_MSG);
+      fs_error_fun(ret, MALLOC_FAIL_MSG);
       break;
     case USER_INTERRUPT:
-      LS_error_fun(ret, USER_INTERRUPT_MSG);
+      fs_error_fun(ret, USER_INTERRUPT_MSG);
       break;
     default:
-      LS_error_fun(ret, "Unknown error code; please report this to the developers.");
-      break;
+      fs_error_fun(ret, "Unknown error code; please report this to the developers.");
   }
   
   return;

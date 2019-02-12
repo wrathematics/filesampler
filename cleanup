@@ -3,7 +3,7 @@
 rm -rf ./src/Makevars
 
 rm -rf ./src/*.o
-rm -rf ./src/lineSampler/*.o
+rm -rf ./src/filesampler/*.o
 
 rm -rf ./src/*.so*
 rm -rf ./src/*.dll

@@ -6,7 +6,7 @@ OBJECTS = file_sampler.o wc.o
 all: shlib
 
 shlib: clean
-	$(CC) $(CFLAGS) -shared -o liblineSampler.so $(OBJECTS)
+	$(CC) $(CFLAGS) -shared -o libfilesampler.so $(OBJECTS)
 
 clean:
-	rm -f ./liblineSampler.so
+	rm -f ./libfilesampler.so

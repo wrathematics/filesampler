@@ -1,4 +1,4 @@
-#' File Line Sampler
+#' File Sampler
 #' 
 #' A simple package for reading subsamples of flat text files
 #' by line in a reasonably efficient manner.  We do so by sampling as the
@@ -17,17 +17,17 @@
 #' the permissive 2-clause BSD license.
 #' 
 #' @author Drew Schmidt \email{wrathematics@@gmail.com}
-#' @references Project URL: \url{https://github.com/wrathematics/lineSampler}
+#' @references Project URL: \url{https://github.com/wrathematics/filesampler}
 #'
-#' @useDynLib lineSampler, R_LS_sample_prob, R_LS_sample_exact, R_LS_wc
+#' @useDynLib filesampler R_fs_sample_prob R_fs_sample_exact R_fs_wc
 #'
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_as_absolute
 #' 
 #' @seealso \code{\link{sample_csv}, \link{sample_lines}, \link{wc}}
 #' 
-#' @name lineSampler
+#' @name filesampler
 #' @docType package
-#' @title File Line Sampler
+#' @title File Sampler
 #' @keywords package
 NULL

@@ -25,8 +25,8 @@
 */
 
 
-#ifndef LINESAMPLER_H_
-#define LINESAMPLER_H_
+#ifndef FILESAMPLER_H_
+#define FILESAMPLER_H_
 
 
 #include <stdbool.h>
@@ -35,13 +35,14 @@
 #include "error.h"
 
 #define BUFLEN 8192
+#define INTERRUPT_CHECK_NUM 1024
 
 // file_sampler.c
-int LS_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output);
-int LS_sample_exact(const bool verbose, const bool header, const uint32_t nskip, uint32_t nlines_out, const char *input, const char *output);
+int fs_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output);
+int fs_sample_exact(const bool verbose, const bool header, const uint32_t nskip, uint64_t nlines_out, const char *input, const char *output);
 
 // wc.c
-int LS_wc(const char *file, const bool chars, uint64_t *nchars, const bool words, uint64_t *nwords, const bool lines, uint64_t *nlines);
+int fs_wc(const char *file, const bool chars, uint64_t *nchars, const bool words, uint64_t *nwords, const bool lines, uint64_t *nlines);
 
 
 #endif

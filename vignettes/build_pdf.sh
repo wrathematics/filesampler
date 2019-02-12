@@ -21,7 +21,7 @@ buildVignette(){
 
 
 cleanVignette
-buildVignette lineSampler.Rnw
+buildVignette filesampler.Rnw
 cleanVignette
 
 
