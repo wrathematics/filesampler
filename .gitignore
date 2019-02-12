@@ -1,4 +1,5 @@
 src/Makevars
+aclocal.m4
 
 *.o
 *.lo

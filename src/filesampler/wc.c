@@ -27,16 +27,10 @@
 
 #include <ctype.h> // isspace()
 
+#include "check_avx.h"
 #include "filesampler.h"
 #include "safeomp.h"
 #include "utils.h"
-
-
-static inline bool isnewline(const char c)
-{
-  return (c=='\n') ? true : false;
-}
-
 
 
 #ifdef __AVX2__
@@ -50,7 +44,7 @@ static inline bool isnewline(const char c)
   #endif
 
   // http://lemire.me/blog/2017/02/14/how-fast-can-you-count-lines/
-  static inline size_t linefeedcount(char *const restrict buffer, const size_t size)
+  static inline size_t linefeedcount_avx2(char *const restrict buffer, const size_t size)
   {
     size_t answer = 0;
     __m256i cnt = _mm256_setzero_si256();
@@ -110,117 +104,132 @@ static inline bool isnewline(const char c)
     
     return answer;
   }
-
-#else
-
-  // we do not have AVX2 support
-  static inline size_t linefeedcount(char *const restrict buffer, const size_t size)
-  {
-    uint64_t nl = 0;
-    char *ptr = buffer;
-    char *last = buffer + size;
-    
-    while ((ptr = memchr(ptr, '\n', last - ptr)))
-    {
-      ptr++;
-      nl++;
-    }
-    
-    return nl;
-  }
 #endif
 
 
 
-static int wc_charsonly(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars)
+static inline size_t linefeedcount_fallback(char *const restrict buffer, const size_t size)
+{
+  uint64_t nl = 0;
+  char *ptr = buffer;
+  char *last = buffer + size;
+  
+  while ((ptr = memchr(ptr, '\n', last - ptr)))
+  {
+    ptr++;
+    nl++;
+  }
+  
+  return nl;
+}
+
+
+
+static inline size_t linefeedcount(char *const restrict buffer, const size_t size)
+{
+#ifdef __AVX2__
+  if (has_avx2())
+    return linefeedcount_avx2(buffer, size);
+  else
+#endif
+    return linefeedcount_fallback(buffer, size);
+}
+
+
+
+// -----------------------------------------------------------------------------
+// wrappers
+// -----------------------------------------------------------------------------
+
+static inline int wc_charsonly(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars)
 {
   size_t readlen = BUFLEN;
   uint64_t nc = 0;
-
+  
   while (readlen == BUFLEN)
   {
     if (check_interrupt())
       return USER_INTERRUPT;
-
+    
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     nc += readlen;
   }
-
+  
   *nchars = nc;
-
+  
   return 0;
 }
 
 
 
-static int wc_linesonly(FILE *restrict fp, char *restrict buf, uint64_t *restrict nlines)
+static inline int wc_linesonly(FILE *restrict fp, char *restrict buf, uint64_t *restrict nlines)
 {
   size_t readlen = BUFLEN;
   uint64_t nl = 0;
-
+  
   while (readlen == BUFLEN)
   {
     if (check_interrupt())
       return USER_INTERRUPT;
-
+    
     readlen = fread(buf, sizeof(*buf), BUFLEN, fp);
     nl += linefeedcount(buf, readlen);
   }
-
+  
   *nlines = nl;
-
+  
   return 0;
 }
 
 
 
-static int wc_nowords(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nlines)
+static inline int wc_nowords(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nlines)
 {
   size_t readlen = BUFLEN;
   uint64_t nc = 0;
   uint64_t nl = 0;
-
+  
   while (readlen == BUFLEN)
   {
     if (check_interrupt())
       return USER_INTERRUPT;
-
+    
     readlen = fread(buf, sizeof(*buf), BUFLEN, fp);
     nl += linefeedcount(buf, readlen);
     nc += readlen;
   }
-
+  
   *nchars = nc;
   *nlines = nl;
-
+  
   return 0;
 }
 
 
 
-static int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nwords)
+static inline int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nwords)
 {
   size_t readlen = BUFLEN;
   uint64_t nc = 0;
   uint64_t nw = 0;
-
+  
   while (readlen == BUFLEN)
   {
     if (check_interrupt())
       return USER_INTERRUPT;
-
+    
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
-
+    
     SAFE_FOR_SIMD
     for (size_t i=0; i<readlen; i++)
     {
       if (isspace(buf[i]))
         nw++;
-
+      
       nc++;
     }
   }
-
+  
   *nchars = nc;
   *nwords = nw;
 
@@ -229,7 +238,12 @@ static int wc_nolines(FILE *restrict fp, char *restrict buf, uint64_t *restrict 
 
 
 
-static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nwords, uint64_t *restrict nlines)
+static inline bool isnewline(const char c)
+{
+  return (c=='\n') ? true : false;
+}
+
+static inline int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nchars, uint64_t *restrict nwords, uint64_t *restrict nlines)
 {
   uint64_t nc = 0;
   uint64_t nw = 0;
@@ -240,10 +254,10 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
   {
     if (check_interrupt())
       return USER_INTERRUPT;
-
+    
     readlen = fread(buf, sizeof(char), BUFLEN, fp);
     nc += readlen;
-
+    
     SAFE_FOR_SIMD
     for (size_t i=0; i<readlen; i++)
     {
@@ -259,11 +273,11 @@ static int wc_full(FILE *restrict fp, char *restrict buf, uint64_t *restrict nch
       }
     }
   }
-
+  
   *nchars = nc;
   *nwords = nw;
   *nlines = nl;
-
+  
   return 0;
 }
 
@@ -302,18 +316,18 @@ int fs_wc(const char *file, const bool chars, uint64_t *nchars,
   int ret = 0;
   FILE *fp;
   char *buf;
-
+  
   fp = fopen(file, "r");
   if (!fp)
     return READ_FAIL;
-
+  
   buf = malloc(BUFLEN * sizeof(*buf));
   if (buf == NULL)
   {
     fclose(fp);
     return MALLOC_FAIL;
   }
-
+  
   if (!chars && !words && lines)
     ret = wc_linesonly(fp, buf, nlines);
   else if (chars && !words && lines)
@@ -324,9 +338,9 @@ int fs_wc(const char *file, const bool chars, uint64_t *nchars,
     ret = wc_charsonly(fp, buf, nchars);
   else
     ret = wc_full(fp, buf, nchars, nwords, nlines);
-
+  
   fclose(fp);
   free(buf);
-
+  
   return ret;
 }

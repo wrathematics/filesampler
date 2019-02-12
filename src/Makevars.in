@@ -1,5 +1,6 @@
-PKG_CFLAGS = @ADDITIONAL_FLAGS@
-PKG_LIBS = @ADDITIONAL_FLAGS@
+PKG_CPPFLAGS = @AVX2_FLAGS@
+PKG_CFLAGS = @OMP_FLAGS@
+PKG_LIBS = @OMP_FLAGS@
 
 FS_OBJECTS = filesampler/file_sampler.o filesampler/wc.o
 R_OBJECTS = filesampler_native.o wrappers.o
