@@ -222,21 +222,20 @@ static inline int unif_rand_int(const int low, const int high)
 
 static int res_sampler(const uint32_t nskip, const uint64_t nlines_in, const uint32_t nlines_out, uint64_t **samp)
 {
-  int i, j;
   *samp = malloc(nlines_out * sizeof(**samp));
   if (samp == NULL)
     return MALLOC_FAIL;
   
   SAFE_FOR_SIMD
-  for (i=0; i<nlines_out; i++)
+  for (uint32_t i=0; i<nlines_out; i++)
     (*samp)[i] = nskip + i+1;
   
   STARTRNG;
   
   SAFE_FOR_SIMD
-  for (i=nlines_out; i<nlines_in; i++)
+  for (uint64_t i=nlines_out; i<nlines_in; i++)
   {
-    j = unif_rand_int(0, i-1);
+    uint32_t j = unif_rand_int(0, i-1);
     if (j < nlines_out)
       (*samp)[j] = nskip + i+1;
   }
