@@ -96,7 +96,7 @@ static inline bool isnewline(const char c)
       cnt = _mm256_subs_epi8(_mm256_setzero_si256(), cnt);
       _mm256_storeu_si256((__m256i *) tmpbuffer, cnt);
       
-      for (int k = 0; k < sizeof(__m256i); ++k)
+      for (unsigned int k = 0; k < sizeof(__m256i); ++k)
         answer += tmpbuffer[k];
       
       cnt = _mm256_setzero_si256();
