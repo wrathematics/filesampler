@@ -1,4 +1,3 @@
-#' @title 
 #' Proportional File Sampler
 #' 
 #' @description 
@@ -37,7 +36,7 @@
 #' 
 #' @useDynLib filesampler R_fs_sample_prob
 #' @export
-LS_sample_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
+LS_sample_prob = function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
 {
   check.is.flag(verbose)
   check.is.flag(header)
@@ -51,9 +50,8 @@ LS_sample_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=temp
   if (p < 0 || p > 1)
     stop("Argument 'p' must be between 0 and 1")
   
-  infile <- tools::file_path_as_absolute(infile)
-  
-  ret <- .Call(R_fs_sample_prob, verbose, header, as.integer(nskip), as.integer(nmax), as.double(p), infile, outfile)
+  infile = tools::file_path_as_absolute(infile)
+  .Call(R_fs_sample_prob, verbose, header, as.integer(nskip), as.integer(nmax), as.double(p), infile, outfile)
   
   invisible()
 }
@@ -103,7 +101,7 @@ LS_sample_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=temp
 #' 
 #' @useDynLib filesampler R_fs_sample_exact
 #' @export
-LS_sample_exact <- function(verbose, header, nskip, nlines, infile, outfile=tempfile())
+LS_sample_exact = function(verbose, header, nskip, nlines, infile, outfile=tempfile())
 {
   check.is.flag(verbose)
   check.is.flag(header)
@@ -113,9 +111,8 @@ LS_sample_exact <- function(verbose, header, nskip, nlines, infile, outfile=temp
   check.is.posint(nlines)
   check.is.string(infile)
   
-  infile <- tools::file_path_as_absolute(infile)
-  
-  ret <- .Call(R_fs_sample_exact, as.integer(verbose), as.integer(header), as.integer(nskip), as.integer(nlines)-1L, infile, outfile)
+  infile = tools::file_path_as_absolute(infile)
+  .Call(R_fs_sample_exact, as.integer(verbose), as.integer(header), as.integer(nskip), as.integer(nlines)-1L, infile, outfile)
   
   invisible()
 }

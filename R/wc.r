@@ -1,4 +1,3 @@
-#' @title 
 #' Count Letters, Words, and Lines of a File
 #' 
 #' @description 
@@ -25,8 +24,8 @@
 #' 
 #' @examples \dontrun{
 #' library(filesampler)
-#' file <- "/path/to/my/big.txt"
-#' data  <- wc(file=file)
+#' file = "/path/to/my/big.txt"
+#' data  = wc(file=file)
 #' }
 #'
 #' @name wc
@@ -37,7 +36,7 @@ NULL
 #' @useDynLib filesampler R_fs_wc
 #' @rdname wc
 #' @export
-wc <- function(file, chars=TRUE, words=TRUE, lines=TRUE)
+wc = function(file, chars=TRUE, words=TRUE, lines=TRUE)
 {
   check.is.string(file)
   check.is.flag(chars)
@@ -47,20 +46,20 @@ wc <- function(file, chars=TRUE, words=TRUE, lines=TRUE)
   if (!chars && !words && !lines)
     stop("at least one of the arguments 'chars', 'words', or 'lines' must be TRUE")
   
-  file <- tools::file_path_as_absolute(file)
-  ret <- .Call(R_fs_wc, file, chars, words, lines)
+  file = tools::file_path_as_absolute(file)
+  ret = .Call(R_fs_wc, file, chars, words, lines)
   
-  counts <- list(chars=ret[1L], words=ret[2L], lines=ret[3L])
-  class(counts) <- "wc"
-  attr(counts, "file") <- file
+  counts = list(chars=ret[1L], words=ret[2L], lines=ret[3L])
+  class(counts) = "wc"
+  attr(counts, "file") = file
   
-  return(counts)
+  counts
 }
 
 
 #' @rdname wc
 #' @export
-wc_l <- function(file)
+wc_l = function(file)
 {
   wc(file=file, chars=FALSE, words=FALSE, lines=TRUE)
 }
@@ -75,16 +74,16 @@ wc_l <- function(file)
 #' @rdname print-wc
 #' @method print wc
 #' @export
-print.wc <- function(x, ...)
+print.wc = function(x, ...)
 {
   cat("file:  ", attr(x, "file"), "\n")
   
-  x <- x[which(x != -1)]
+  x = x[which(x != -1)]
   
-  maxlen <- max(sapply(names(x), nchar))
-  names <- gsub(names(x), pattern="_", replacement=" ")
-  names <- title_case(x=names)
-  spacenames <- simplify2array(lapply(names, function(str) paste0(str, ":", paste0(rep(" ", maxlen-nchar(str)), collapse=""))))
+  maxlen = max(sapply(names(x), nchar))
+  names = gsub(names(x), pattern="_", replacement=" ")
+  names = title_case(x=names)
+  spacenames = simplify2array(lapply(names, function(str) paste0(str, ":", paste0(rep(" ", maxlen-nchar(str)), collapse=""))))
   
   cat(paste(spacenames, x, sep=" ", collapse="\n"), "\n")
   invisible()

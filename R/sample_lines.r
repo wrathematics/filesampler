@@ -1,4 +1,4 @@
-#' @title Read Sample Lines of Text File
+#' Read Sample Lines of Text File
 #' 
 #' @description 
 #' The function will read approximately p*nlines lines of a flat text
@@ -45,12 +45,12 @@
 #' 
 #' @examples \dontrun{
 #' library(filesampler)
-#' file <- "/path/to/my/big.txt"
-#' data  <- sample_lines(file=file)
+#' file = "/path/to/my/big.txt"
+#' data  = sample_lines(file=file)
 #' }
 #'
 #' @export
-sample_lines <- function(file, n=-1L, p=.1, nskip=0, nmax=0, verbose=FALSE, ...)
+sample_lines = function(file, n=-1L, p=.1, nskip=0, nmax=0, verbose=FALSE, ...)
 {
   check.is.int(n)
   
@@ -60,11 +60,11 @@ sample_lines <- function(file, n=-1L, p=.1, nskip=0, nmax=0, verbose=FALSE, ...)
   if (n > 0 && n < nskip)
     return(character(0))
   
-  outfile <- tempfile()
+  outfile = tempfile()
   LS_sample_prob(verbose=verbose, header=FALSE, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   
-  data <- readLines(outfile, n=n, ...)
-  unlink(outfile)
+  data = readLines(outfile, n=n, ...)
   
-  return(data)
+  unlink(outfile)
+  data
 }

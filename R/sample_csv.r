@@ -1,4 +1,4 @@
-#' @title Read Sample of CSV
+#' Read Sample of CSV
 #' 
 #' @description 
 #' The function will read (as csv) approximately p*nlines lines. So 
@@ -61,42 +61,41 @@
 #' 
 #' @examples \dontrun{
 #' library(filesampler)
-#' file <- "/path/to/my/big.csv"
+#' file = "/path/to/my/big.csv"
 #' 
 #' # Read in a 0.1% random subsample of the rows.
-#' data  <- sample_csv(file=file, param=.001)
+#' data  = sample_csv(file=file, param=.001)
 #' 
 #' # Read in 500 randomly sampled rows.
-#' data  <- sample_csv(file=file, param=500, method="exact")
+#' data  = sample_csv(file=file, param=500, method="exact")
 #' }
 #'
 #' @export
-sample_csv <- function(file, param, method="proportional", reader=utils::read.csv, header=TRUE, nskip=0, nmax=0, verbose=FALSE, ...)
+sample_csv = function(file, param, method="proportional", reader=utils::read.csv, header=TRUE, nskip=0, nmax=0, verbose=FALSE, ...)
 {
   check.is.function(reader)
-  method <- match.arg(tolower(method), c("proportional", "exact"))
+  method = match.arg(tolower(method), c("proportional", "exact"))
   
-  outfile <- tempfile()
+  outfile = tempfile()
   
   if (method == "proportional")
   {
-    p <- param
+    p = param
     LS_sample_prob(verbose=verbose, header=header, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   }
   else if (method == "exact")
   {
-    nlines <- param
+    nlines = param
     LS_sample_exact(verbose=verbose, header=header, nskip=nskip, nlines=nlines, infile=file, outfile=outfile)
   }
   
   
-  reader_nm <- deparse(substitute(reader))
+  reader_nm = deparse(substitute(reader))
   if (grepl(reader_nm, pattern="read_csv"))
-    data <- reader(outfile, col_names=header)
+    data = reader(outfile, col_names=header)
   else
-    data <- reader(outfile, header=header, ...)
+    data = reader(outfile, header=header, ...)
   
   unlink(outfile)
-  
   return(data)
 }
