@@ -35,6 +35,7 @@
 #' 
 #' @seealso \code{\link{LS_sample_exact}}
 #' 
+#' @useDynLib filesampler R_fs_sample_prob
 #' @export
 LS_sample_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=tempfile())
 {
@@ -100,6 +101,7 @@ LS_sample_prob <- function(verbose, header, nskip, nmax, p, infile, outfile=temp
 #' 
 #' @seealso \code{\link{LS_sample_prob}}
 #' 
+#' @useDynLib filesampler R_fs_sample_exact
 #' @export
 LS_sample_exact <- function(verbose, header, nskip, nlines, infile, outfile=tempfile())
 {

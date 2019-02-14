@@ -19,8 +19,6 @@
 #' @author Drew Schmidt \email{wrathematics@@gmail.com}
 #' @references Project URL: \url{https://github.com/wrathematics/filesampler}
 #'
-#' @useDynLib filesampler R_fs_sample_prob R_fs_sample_exact R_fs_wc
-#'
 #' @importFrom utils read.csv
 #' @importFrom tools file_path_as_absolute
 #' 

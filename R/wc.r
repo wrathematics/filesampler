@@ -34,6 +34,7 @@
 NULL
 
 
+#' @useDynLib filesampler R_fs_wc
 #' @rdname wc
 #' @export
 wc <- function(file, chars=TRUE, words=TRUE, lines=TRUE)
