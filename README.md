@@ -23,12 +23,9 @@ If you would like to contribute to this project, please see the `CONTRIBUTING.md
 install.packages("filesampler")
 ``` -->
 
-The development version is maintained on GitHub, and can easily be installed by any of the packages that offer installations from GitHub:
+The development version is maintained on GitHub:
 
 ```r
-### Pick your preference
-devtools::install_github("wrathematics/filesampler")
-ghit::install_github("wrathematics/filesampler")
 remotes::install_github("wrathematics/filesampler")
 ```
 

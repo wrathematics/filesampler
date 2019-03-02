@@ -49,13 +49,9 @@ You can install the stable version from CRAN using the usual
 install.packages("filesampler")
 \end{lstlisting}
 
-The development version is maintained on GitHub, and can easily be
-installed by any of the packages that offer installations from GitHub:
+The development version is maintained on GitHub:
 
 \begin{lstlisting}[language=rr]
-### Pick your preference
-devtools::install_github("wrathematics/filesampler")
-ghit::install_github("wrathematics/filesampler")
 remotes::install_github("wrathematics/filesampler")
 \end{lstlisting}
 
