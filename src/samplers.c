@@ -32,8 +32,9 @@
 SEXP R_fs_sample_prob(SEXP verbose, SEXP header, SEXP nskip_, SEXP nmax_, SEXP p, SEXP input, SEXP output)
 {
   int ret;
-  uint32_t nskip = (uint32_t) INT(nskip_);
-  uint32_t nmax = (uint32_t) INT(nmax_);
+  
+  const uint32_t nskip = (uint32_t) INT(nskip_);
+  const uint32_t nmax = (uint32_t) INT(nmax_);
   
   ret = fs_sample_prob(INT(verbose), INT(header), nskip, nmax, DBL(p), CHARPT(input, 0), CHARPT(output, 0));
   fs_checkret(ret);
@@ -46,8 +47,9 @@ SEXP R_fs_sample_prob(SEXP verbose, SEXP header, SEXP nskip_, SEXP nmax_, SEXP p
 SEXP R_fs_sample_exact(SEXP verbose, SEXP header, SEXP nskip_, SEXP nlines_out_, SEXP input, SEXP output)
 {
   int ret;
-  uint32_t nskip = (uint32_t) INT(nskip_);
-  uint32_t nlines_out = (uint32_t) INT(nlines_out_);
+  
+  const uint32_t nskip = (uint32_t) INT(nskip_);
+  const uint32_t nlines_out = (uint32_t) INT(nlines_out_);
   
   ret = fs_sample_exact(INT(verbose), INT(header), nskip, nlines_out, CHARPT(input, 0), CHARPT(output, 0));
   fs_checkret(ret);

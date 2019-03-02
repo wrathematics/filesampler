@@ -33,24 +33,27 @@
 #define NWORDS  1
 #define NLINES  2
 
+#define BADVAL -1.0
+
 
 SEXP R_fs_wc(SEXP input, SEXP chars_, SEXP words_, SEXP lines_)
 {
+  SEXP counts;
   int ret;
   uint64_t nchars, nwords, nlines;
+  
   const bool chars = INT(chars_);
   const bool words = INT(words_);
   const bool lines = INT(lines_);
-  SEXP counts;
-  // REALSXP because R is too stupid to have 64-bit ints already
+  
   PROTECT(counts = allocVector(REALSXP, 3));
   
   ret = fs_wc(CHARPT(input, 0), chars, &nchars, words, &nwords, lines, &nlines);
   fs_checkret(ret);
   
-  COUNTS(NCHARS) = chars ? (double) nchars : -1.0;
-  COUNTS(NWORDS) = words ? (double) nwords : -1.0;
-  COUNTS(NLINES) = lines ? (double) nlines : -1.0;
+  COUNTS(NCHARS) = chars ? (double) nchars : BADVAL;
+  COUNTS(NWORDS) = words ? (double) nwords : BADVAL;
+  COUNTS(NLINES) = lines ? (double) nlines : BADVAL;
   
   UNPROTECT(1);
   return counts;
