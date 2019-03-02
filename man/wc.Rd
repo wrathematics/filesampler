@@ -15,15 +15,16 @@ wc_l(file)
 \arguments{
 \item{file}{Location of the file (as a string) from which the counts will be generated.}
 
-\item{chars, words, lines}{Logical; show char/word/line counts be shown? At least one of
-the three must be \code{TRUE}.}
+\item{chars, words, lines}{Should char/word/line counts be shown? At least one of the three must be
+\code{TRUE}.}
 }
 \value{
 A list containing the requested counts.
 }
 \description{
 See title.
-
+}
+\details{
 \code{wc_l()} is a shorthand for counting only lines, similar to \code{wc -l}
 in the terminal. Likewise \code{wc_w()} is analogous to \code{wc -w} for
 words.

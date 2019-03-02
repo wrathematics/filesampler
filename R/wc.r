@@ -1,8 +1,8 @@
 #' Count Letters, Words, and Lines of a File
 #' 
-#' @description 
 #' See title.
 #' 
+#' @details
 #' \code{wc_l()} is a shorthand for counting only lines, similar to \code{wc -l}
 #' in the terminal. Likewise \code{wc_w()} is analogous to \code{wc -w} for
 #' words.
@@ -10,8 +10,8 @@
 #' @param file
 #' Location of the file (as a string) from which the counts will be generated.
 #' @param chars,words,lines
-#' Logical; show char/word/line counts be shown? At least one of
-#' the three must be \code{TRUE}.
+#' Should char/word/line counts be shown? At least one of the three must be
+#' \code{TRUE}.
 #' 
 #' @return
 #' A list containing the requested counts.
@@ -50,12 +50,16 @@ wc = function(file, chars=TRUE, words=TRUE, lines=TRUE)
   counts
 }
 
+
+
 #' @rdname wc
 #' @export
 wc_w = function(file)
 {
   wc(file=file, chars=FALSE, words=TRUE, lines=FALSE)
 }
+
+
 
 #' @rdname wc
 #' @export
