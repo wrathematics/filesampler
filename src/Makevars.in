@@ -3,7 +3,7 @@ PKG_CFLAGS = @OMP_FLAGS@
 PKG_LIBS = @OMP_FLAGS@
 
 FS_OBJECTS = filesampler/file_sampler.o filesampler/wc.o
-R_OBJECTS = filesampler_native.o wrappers.o
+R_OBJECTS = filesampler_native.o samplers.o wc.o
 OBJECTS = $(FS_OBJECTS) $(R_OBJECTS)
 
 all: $(SHLIB)
