@@ -49,6 +49,12 @@ wc = function(file, chars=TRUE, words=TRUE, lines=TRUE)
   counts
 }
 
+#' @rdname wc
+#' @export
+wc_w = function(file)
+{
+  wc(file=file, chars=FALSE, words=TRUE, lines=FALSE)
+}
 
 #' @rdname wc
 #' @export
