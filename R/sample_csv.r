@@ -1,6 +1,5 @@
 #' Read Sample of CSV
 #' 
-#' @description 
 #' The function will read (as csv) approximately p*nlines lines. So 
 #' if \code{p=.1}, then we will get roughly (probably not exactly)
 #' 10% of the data.  This is the analogue of the base R function
@@ -56,8 +55,6 @@
 #' 
 #' @return
 #' A dataframe, as with \code{read.csv()}.
-#' 
-#' @seealso \code{\link{sample_lines}, \link{wc}}
 #' 
 #' @examples \dontrun{
 #' library(filesampler)
