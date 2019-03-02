@@ -1,6 +1,6 @@
 library(filesampler)
 
-file <- tools::file_path_as_absolute(system.file("rawdata/small.csv", package="filesampler"))
+file <- system.file("rawdata/small.csv", package="filesampler")
 
 nchars = 6426
 nwords = 101

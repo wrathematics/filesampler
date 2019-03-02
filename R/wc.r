@@ -26,6 +26,7 @@
 NULL
 
 
+
 #' @useDynLib filesampler R_fs_wc
 #' @rdname wc
 #' @export
@@ -39,7 +40,7 @@ wc = function(file, chars=TRUE, words=TRUE, lines=TRUE)
   if (!chars && !words && !lines)
     stop("at least one of the arguments 'chars', 'words', or 'lines' must be TRUE")
   
-  file = tools::file_path_as_absolute(file)
+  file = abspath(file)
   ret = .Call(R_fs_wc, file, chars, words, lines)
   
   counts = list(chars=ret[1L], words=ret[2L], lines=ret[3L])

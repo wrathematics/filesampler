@@ -50,7 +50,7 @@ LS_sample_prob = function(verbose, header, nskip, nmax, p, infile, outfile=tempf
   if (p < 0 || p > 1)
     stop("Argument 'p' must be between 0 and 1")
   
-  infile = tools::file_path_as_absolute(infile)
+  infile = abspath(infile)
   .Call(R_fs_sample_prob, verbose, header, as.integer(nskip), as.integer(nmax), as.double(p), infile, outfile)
   
   invisible()
@@ -111,7 +111,7 @@ LS_sample_exact = function(verbose, header, nskip, nlines, infile, outfile=tempf
   check.is.posint(nlines)
   check.is.string(infile)
   
-  infile = tools::file_path_as_absolute(infile)
+  infile = abspath(infile)
   .Call(R_fs_sample_exact, as.integer(verbose), as.integer(header), as.integer(nskip), as.integer(nlines)-1L, infile, outfile)
   
   invisible()
