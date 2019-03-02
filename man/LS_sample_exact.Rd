@@ -4,7 +4,8 @@
 \alias{LS_sample_exact}
 \title{Exact File Sampler}
 \usage{
-LS_sample_exact(verbose, header, nskip, nlines, infile, outfile = tempfile())
+LS_sample_exact(verbose, header, nskip, nlines, infile,
+  outfile = tempfile())
 }
 \arguments{
 \item{verbose}{Logical; indicates whether or not linecounts of the input file and the number

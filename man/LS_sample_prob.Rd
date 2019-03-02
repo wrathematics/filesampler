@@ -4,7 +4,8 @@
 \alias{LS_sample_prob}
 \title{Proportional File Sampler}
 \usage{
-LS_sample_prob(verbose, header, nskip, nmax, p, infile, outfile = tempfile())
+LS_sample_prob(verbose, header, nskip, nmax, p, infile,
+  outfile = tempfile())
 }
 \arguments{
 \item{verbose}{Logical; indicates whether or not linecounts of the input file and the number

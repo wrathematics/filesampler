@@ -4,8 +4,9 @@
 \alias{sample_csv}
 \title{Read Sample of CSV}
 \usage{
-sample_csv(file, param, method = "proportional", reader = utils::read.csv,
-  header = TRUE, nskip = 0, nmax = 0, verbose = FALSE, ...)
+sample_csv(file, param, method = "proportional",
+  reader = utils::read.csv, header = TRUE, nskip = 0, nmax = 0,
+  verbose = FALSE, ...)
 }
 \arguments{
 \item{file}{Location of the file (as a string) to be subsampled.}
@@ -67,16 +68,13 @@ as one of the lines read and as one of the lines possible.
 \examples{
 \dontrun{
 library(filesampler)
-file <- "/path/to/my/big.csv"
+file = "/path/to/my/big.csv"
 
 # Read in a 0.1\% random subsample of the rows.
-data  <- sample_csv(file=file, param=.001)
+data  = sample_csv(file=file, param=.001)
 
 # Read in 500 randomly sampled rows.
-data  <- sample_csv(file=file, param=500, method="exact")
+data  = sample_csv(file=file, param=500, method="exact")
 }
 
-}
-\seealso{
-\code{\link{sample_lines}, \link{wc}}
 }

@@ -2,11 +2,13 @@
 % Please edit documentation in R/wc.r
 \name{wc}
 \alias{wc}
-\alias{wc}
+\alias{wc_w}
 \alias{wc_l}
 \title{Count Letters, Words, and Lines of a File}
 \usage{
 wc(file, chars = TRUE, words = TRUE, lines = TRUE)
+
+wc_w(file)
 
 wc_l(file)
 }
@@ -23,21 +25,12 @@ A list containing the requested counts.
 See title.
 
 \code{wc_l()} is a shorthand for counting only lines, similar to \code{wc -l}
-in the terminal.
-}
-\details{
-The summary statistics of the input file are determined by
-scanning through the file as quickly as possible (i.e., it
-should be completely I/O bound).
+in the terminal. Likewise \code{wc_w()} is analogous to \code{wc -w} for
+words.
 }
 \examples{
-\dontrun{
 library(filesampler)
-file <- "/path/to/my/big.txt"
-data  <- wc(file=file)
-}
+file = system.file("rawdata/small.csv", package="filesampler")
+data = wc(file=file)
 
-}
-\seealso{
-\code{\link{sample_csv}, \link{sample_lines}}
 }

@@ -51,8 +51,8 @@ as one of the lines read and as one of the lines possible.
 \examples{
 \dontrun{
 library(filesampler)
-file <- "/path/to/my/big.txt"
-data  <- sample_lines(file=file)
+file = "/path/to/my/big.txt"
+data  = sample_lines(file=file)
 }
 
 }
