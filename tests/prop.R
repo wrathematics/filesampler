@@ -1,22 +1,21 @@
 library(filesampler)
+file = system.file("rawdata/small.csv", package="filesampler")
 
-file <- system.file("rawdata/small.csv", package="filesampler")
 
 ### Argument checks
 
 # p
-badp <- "<simpleError in LS_sample_prob(verbose = verbose, header = header, nskip = nskip,     nmax = nmax, p = p, infile = file, outfile = outfile): Argument 'p' must be between 0 and 1>"
-badval <- tryCatch(sampled <- sample_csv(file, param=-1), error=capture.output)
-stopifnot(all.equal(badp, badval))
-badval <- tryCatch(sampled <- sample_csv(file, param=1.1), error=capture.output)
-stopifnot(all.equal(badp, badval))
-
+expect = "Argument 'p' must be between 0 and 1>"
+have = tryCatch(sampled <- sample_csv(file, param=-1), error=capture.output)
+stopifnot(grepl(expect, have))
+have = tryCatch(sampled <- sample_csv(file, param=1.1), error=capture.output)
+stopifnot(grepl(expect, have))
 
 # nmax
 set.seed(1234)
-sampled <- sample_csv(file, param=.05, nmax=1)
+sampled = sample_csv(file, param=.05, nmax=1)
 
-sampled_actual <-
+sampled_actual =
 structure(list(A = 30L, B = structure(1L, .Label = "m", class = "factor"), 
     C = structure(1L, .Label = "U", class = "factor"), D = 0.663265228504315, 
     E = -0.102609033060013, F = 46.2487461487763), .Names = c("A", 
@@ -26,11 +25,14 @@ structure(list(A = 30L, B = structure(1L, .Label = "m", class = "factor"),
 stopifnot(all.equal(sampled, sampled_actual))
 
 
-### general functionality
-set.seed(1234)
-sampled <- sample_csv(file, param=.05)
 
-sampled_actual <-
+### general functionality
+
+# read
+set.seed(1234)
+sampled = sample_csv(file, param=.05)
+
+sampled_actual =
 structure(list(A = c(30L, 92L, 6L, 49L, 77L, 54L, 67L), B = structure(c(2L, 
 1L, 3L, 2L, 4L, 1L, 5L), .Label = c("b", "m", "p", "r", "w"), class = "factor"), 
     C = structure(c(4L, 1L, 1L, 3L, 2L, 2L, 3L), .Label = c("B", 
@@ -46,8 +48,7 @@ structure(list(A = c(30L, 92L, 6L, 49L, 77L, 54L, 67L), B = structure(c(2L,
 
 stopifnot(all.equal(sampled, sampled_actual))
 
-
-### verbose
-verb <- capture.output(invisible(sample_csv(file, param=.05, verbose=TRUE)))
-verb_actual <- "Read 4 lines (0.03960%) of 101 line file."
+# verbose
+verb = capture.output(invisible(sample_csv(file, param=.05, verbose=TRUE)))
+verb_actual = "Read 4 lines (0.03960%) of 101 line file."
 stopifnot(all.equal(verb, verb_actual))
