@@ -38,7 +38,7 @@
 #define INTERRUPT_CHECK_NUM 1024
 
 // file_sampler.c
-int fs_sample_prob(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output);
+int fs_sample_prop(const bool verbose, const bool header, uint32_t nskip, uint32_t nmax, const double p, const char *input, const char *output);
 int fs_sample_exact(const bool verbose, const bool header, const uint32_t nskip, uint64_t nlines_out, const char *input, const char *output);
 
 // wc.c

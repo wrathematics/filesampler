@@ -74,7 +74,7 @@ sample_csv = function(file, param, method="proportional", reader=utils::read.csv
   if (method == "proportional")
   {
     p = param
-    file_sample_prob(p=p, infile=file, outfile=outfile, header=header, nskip=nskip, nmax=nmax, verbose=verbose)
+    file_sample_prop(p=p, infile=file, outfile=outfile, header=header, nskip=nskip, nmax=nmax, verbose=verbose)
   }
   else if (method == "exact")
   {

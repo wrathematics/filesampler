@@ -30,9 +30,9 @@
 #' @return
 #' \code{NULL}
 #' 
-#' @useDynLib filesampler R_fs_sample_prob
+#' @useDynLib filesampler R_fs_sample_prop
 #' @export
-file_sample_prob = function(p, infile, outfile=tempfile(), header=TRUE, nskip=0, nmax=0, verbose=FALSE)
+file_sample_prop = function(p, infile, outfile=tempfile(), header=TRUE, nskip=0, nmax=0, verbose=FALSE)
 {
   check.is.scalar(p)
   check.is.string(infile)
@@ -48,7 +48,7 @@ file_sample_prob = function(p, infile, outfile=tempfile(), header=TRUE, nskip=0,
   if (p < 0 || p > 1)
     stop("Argument 'p' must be between 0 and 1")
   
-  .Call(R_fs_sample_prob, verbose, header, as.integer(nskip), as.integer(nmax), as.double(p), infile, outfile)
+  .Call(R_fs_sample_prop, verbose, header, as.integer(nskip), as.integer(nmax), as.double(p), infile, outfile)
   
   invisible()
 }

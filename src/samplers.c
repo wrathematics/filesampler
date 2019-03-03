@@ -29,14 +29,14 @@
 #include "filesampler/filesampler.h"
 
 
-SEXP R_fs_sample_prob(SEXP verbose, SEXP header, SEXP nskip_, SEXP nmax_, SEXP p, SEXP input, SEXP output)
+SEXP R_fs_sample_prop(SEXP verbose, SEXP header, SEXP nskip_, SEXP nmax_, SEXP p, SEXP input, SEXP output)
 {
   int ret;
   
   const uint32_t nskip = (uint32_t) INT(nskip_);
   const uint32_t nmax = (uint32_t) INT(nmax_);
   
-  ret = fs_sample_prob(INT(verbose), INT(header), nskip, nmax, DBL(p), CHARPT(input, 0), CHARPT(output, 0));
+  ret = fs_sample_prop(INT(verbose), INT(header), nskip, nmax, DBL(p), CHARPT(input, 0), CHARPT(output, 0));
   fs_checkret(ret);
   
   return R_NilValue;
