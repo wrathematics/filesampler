@@ -49,10 +49,8 @@ will be printed to the terminal.  This counts the header (if there is one)
 as one of the lines read and as one of the lines possible.
 }
 \examples{
-\dontrun{
 library(filesampler)
-file = "/path/to/my/big.txt"
-data  = sample_lines(file=file)
-}
+file = system.file("rawdata/small.csv", package="filesampler")
+sample_lines(file, p=.05)
 
 }

@@ -53,16 +53,15 @@
 #' @return
 #' A dataframe, as with \code{read.csv()}.
 #' 
-#' @examples \dontrun{
+#' @examples
 #' library(filesampler)
-#' file = "/path/to/my/big.csv"
+#' file = system.file("rawdata/small.csv", package="filesampler")
 #' 
-#' # Read in a 0.1% random subsample of the rows.
-#' data  = sample_csv(file=file, param=.001)
+#' # Read in a 5% random subsample of the rows.
+#' data = sample_csv(file, param=.05)
 #' 
-#' # Read in 500 randomly sampled rows.
-#' data  = sample_csv(file=file, param=500, method="exact")
-#' }
+#' # Read in 10 randomly sampled rows.
+#' data = sample_csv(file, param=10, method="exact")
 #'
 #' @export
 sample_csv = function(file, param, method="proportional", reader=utils::read.csv, header=TRUE, nskip=0, nmax=0, verbose=FALSE, ...)

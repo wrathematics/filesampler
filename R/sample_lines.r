@@ -40,11 +40,10 @@
 #' @return
 #' A character vector, as with \code{readLines()}.
 #' 
-#' @examples \dontrun{
+#' @examples
 #' library(filesampler)
-#' file = "/path/to/my/big.txt"
-#' data  = sample_lines(file=file)
-#' }
+#' file = system.file("rawdata/small.csv", package="filesampler")
+#' sample_lines(file, p=.05)
 #'
 #' @export
 sample_lines = function(file, n=-1L, p=.1, nskip=0, nmax=0, verbose=FALSE, ...)
