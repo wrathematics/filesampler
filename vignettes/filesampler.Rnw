@@ -302,11 +302,11 @@ so we do not belabor it here. We will also only focus on the csv
 samplers, as in fact the raw text and csv schemes are almost identical.
 
 The proportional sampling is handled by the function
-\texttt{LS\_sample\_prob()}, which samples lines at a given proportion.
+\texttt{file\_sample\_prop()}, which samples lines at a given proportion.
 As the input file is scanned line-by-line, lines are randomly selected
 to be placed into a temporary file at the given proportion. This
 requires only one pass through the file. On the other hand, the exact
-sampling is handled by \texttt{LS\_sample\_exact()}. Here we use a
+sampling is handled by \texttt{file\_sample\_exact()}. Here we use a
 reservoir sampler to determine ahead of time which lines will be read,
 and then pass through the input file, dumping the pre-selected lines to
 the temporary file. This requires two passes through the file, since we
