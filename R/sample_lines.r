@@ -1,6 +1,5 @@
 #' Read Sample Lines of Text File
 #' 
-#' @description 
 #' The function will read approximately p*nlines lines of a flat text
 #' file. So if \code{p=.1}, then we will get roughly (probably not exactly)
 #' 10% of the data.  This is the analogue of the base R function
@@ -41,8 +40,6 @@
 #' @return
 #' A character vector, as with \code{readLines()}.
 #' 
-#' @seealso \code{\link{sample_csv}, \link{wc}}
-#' 
 #' @examples \dontrun{
 #' library(filesampler)
 #' file = "/path/to/my/big.txt"
@@ -61,10 +58,9 @@ sample_lines = function(file, n=-1L, p=.1, nskip=0, nmax=0, verbose=FALSE, ...)
     return(character(0))
   
   outfile = tempfile()
-  LS_sample_prob(verbose=verbose, header=FALSE, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
+  file_sample_prob(verbose=verbose, header=FALSE, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
   
   data = readLines(outfile, n=n, ...)
-  
   unlink(outfile)
   data
 }

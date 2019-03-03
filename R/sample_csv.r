@@ -37,18 +37,18 @@
 #' \code{header}/\code{col_names} argument.  This would require writing a small
 #' wrapper for \code{fread()}.
 #' @param header
-#' As in \code{utils::read.csv()}.
+#' Is a header (line of column names) on the first line of the csv file?
 #' @param nskip
-#' Number of lines to skip.  If \code{header=TRUE}, then this only applies to
+#' Number of lines to skip. If \code{header=TRUE}, then this only applies to
 #' lines after the header.
 #' @param nmax
-#' Max number of lines to read.  If nmax==0, then there is no read cap. Ignored
+#' Max number of lines to read. If nmax==0, then there is no read cap. Ignored
 #' if \code{method="exact"}.
 #' @param verbose
-#' Logical; indicates whether or not linecounts of the input file and the number
-#' of lines sampled should be printed. Ignored if \code{method="exact"}.
+#' Should linecounts of the input file and the number of lines sampled be
+#' printed?
 #' @param ...
-#' Additional arguments passed to \code{read.csv()}.
+#' Additional arguments passed to the csv reader.
 #' 
 #' @return
 #' A dataframe, as with \code{read.csv()}.
@@ -75,18 +75,18 @@ sample_csv = function(file, param, method="proportional", reader=utils::read.csv
   if (method == "proportional")
   {
     p = param
-    LS_sample_prob(verbose=verbose, header=header, nskip=nskip, nmax=nmax, p=p, infile=file, outfile=outfile)
+    file_sample_prob(p=p, infile=file, outfile=outfile, header=header, nskip=nskip, nmax=nmax, verbose=verbose)
   }
   else if (method == "exact")
   {
     nlines = param
-    LS_sample_exact(verbose=verbose, header=header, nskip=nskip, nlines=nlines, infile=file, outfile=outfile)
+    file_sample_exact(nlines=nlines, infile=file, outfile=outfile, header=header, nskip=nskip, verbose=verbose)
   }
   
   
   reader_nm = deparse(substitute(reader))
   if (grepl(reader_nm, pattern="read_csv"))
-    data = reader(outfile, col_names=header)
+    data = reader(outfile, col_names=header, ...)
   else
     data = reader(outfile, header=header, ...)
   

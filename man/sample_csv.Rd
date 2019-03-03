@@ -25,18 +25,18 @@ the file to read in and the second should be the the
 \code{header}/\code{col_names} argument.  This would require writing a small
 wrapper for \code{fread()}.}
 
-\item{header}{As in \code{utils::read.csv()}.}
+\item{header}{Is a header (line of column names) on the first line of the csv file?}
 
-\item{nskip}{Number of lines to skip.  If \code{header=TRUE}, then this only applies to
+\item{nskip}{Number of lines to skip. If \code{header=TRUE}, then this only applies to
 lines after the header.}
 
-\item{nmax}{Max number of lines to read.  If nmax==0, then there is no read cap. Ignored
+\item{nmax}{Max number of lines to read. If nmax==0, then there is no read cap. Ignored
 if \code{method="exact"}.}
 
-\item{verbose}{Logical; indicates whether or not linecounts of the input file and the number
-of lines sampled should be printed. Ignored if \code{method="exact"}.}
+\item{verbose}{Should linecounts of the input file and the number of lines sampled be
+printed?}
 
-\item{...}{Additional arguments passed to \code{read.csv()}.}
+\item{...}{Additional arguments passed to the csv reader.}
 }
 \value{
 A dataframe, as with \code{read.csv()}.
