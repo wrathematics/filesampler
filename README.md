@@ -3,9 +3,9 @@
 * **Version:** 0.4-0
 * **Status:** [![Build Status](https://travis-ci.org/wrathematics/filesampler.png)](https://travis-ci.org/wrathematics/filesampler)
 * **License:** [BSD 2-Clause](http://opensource.org/licenses/BSD-2-Clause)
-* **Author:** Drew Schmidt
 * **Project home**: https://github.com/wrathematics/lineSampler
 * **Bug reports**: https://github.com/wrathematics/lineSampler/issues
+* **Author:** Drew Schmidt
 
 
 
@@ -17,13 +17,14 @@ If you would like to contribute to this project, please see the `CONTRIBUTING.md
 
 ## Installation
 
-<!-- From CRAN:
+You can install the stable version from [the HPCRAN](https://hpcran.org) using the usual `install.packages()`:
 
 ```r
-install.packages("filesampler")
-``` -->
+install.packages("filesampler", repos="https://hpcran.org")
+```
 
 The development version is maintained on GitHub:
+
 
 ```r
 remotes::install_github("wrathematics/filesampler")
