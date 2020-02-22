@@ -4,8 +4,7 @@
 \alias{sample_lines}
 \title{Read Sample Lines of Text File}
 \usage{
-sample_lines(file, n = -1L, p = 0.1, nskip = 0, nmax = 0,
-  verbose = FALSE, ...)
+sample_lines(file, n = -1L, p = 0.1, nskip = 0, nmax = 0, verbose = FALSE, ...)
 }
 \arguments{
 \item{file}{Location of the file (as a string) to be subsampled.}

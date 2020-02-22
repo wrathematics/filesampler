@@ -4,8 +4,15 @@
 \alias{file_sample_prop}
 \title{Proportional File Sampler}
 \usage{
-file_sample_prop(p, infile, outfile = tempfile(), header = TRUE,
-  nskip = 0, nmax = 0, verbose = FALSE)
+file_sample_prop(
+  p,
+  infile,
+  outfile = tempfile(),
+  header = TRUE,
+  nskip = 0,
+  nmax = 0,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{p}{Proportion to retain; should be a numeric value between 0 and 1.}
@@ -19,7 +26,7 @@ file_sample_prop(p, infile, outfile = tempfile(), header = TRUE,
 \item{nskip}{Number of lines to skip. If \code{header=TRUE}, then this only applies to
 lines after the header.}
 
-\item{nmax}{Max number of lines to read.  If nmax==0, then there is no read cap.}
+\item{nmax}{Max number of lines to read.  If \code{nmax==0}, then there is no read cap.}
 
 \item{verbose}{Should linecounts of the input file and the number of lines sampled be
 printed?}
@@ -28,7 +35,7 @@ printed?}
 \code{NULL}
 }
 \description{
-Randomly sample lines from an input text file at proportion p.
+Randomly sample lines from an input text file.
 }
 \details{
 The sampling is done in one pass of the input file, dumping lines to a

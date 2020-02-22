@@ -1,6 +1,6 @@
 #' Proportional File Sampler
 #' 
-#' Randomly sample lines from an input text file at proportion p.
+#' Randomly sample lines from an input text file.
 #' 
 #' @details
 #' The sampling is done in one pass of the input file, dumping lines to a
@@ -22,7 +22,7 @@
 #' Number of lines to skip. If \code{header=TRUE}, then this only applies to
 #' lines after the header.
 #' @param nmax
-#' Max number of lines to read.  If nmax==0, then there is no read cap.
+#' Max number of lines to read.  If \code{nmax==0}, then there is no read cap.
 #' @param verbose
 #' Should linecounts of the input file and the number of lines sampled be
 #' printed?

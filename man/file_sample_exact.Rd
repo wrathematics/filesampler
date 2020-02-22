@@ -4,8 +4,14 @@
 \alias{file_sample_exact}
 \title{Exact File Sampler}
 \usage{
-file_sample_exact(nlines, infile, outfile = tempfile(), header = TRUE,
-  nskip = 0, verbose = FALSE)
+file_sample_exact(
+  nlines,
+  infile,
+  outfile = tempfile(),
+  header = TRUE,
+  nskip = 0,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{nlines}{The (exact) number of lines to sample from the input file.}
@@ -26,7 +32,7 @@ printed?}
 \code{NULL}
 }
 \description{
-Randomly sample exactly \code{nlines} lines from an input text file.
+Randomly sample lines from an input text file.
 }
 \details{
 The sampling is done in two passes of the input file.  First, the number of

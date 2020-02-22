@@ -1,6 +1,6 @@
 #' Exact File Sampler
 #' 
-#' Randomly sample exactly \code{nlines} lines from an input text file.
+#' Randomly sample lines from an input text file.
 #' 
 #' @details
 #' The sampling is done in two passes of the input file.  First, the number of

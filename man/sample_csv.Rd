@@ -4,9 +4,17 @@
 \alias{sample_csv}
 \title{Read Sample of CSV}
 \usage{
-sample_csv(file, param, method = "proportional",
-  reader = utils::read.csv, header = TRUE, nskip = 0, nmax = 0,
-  verbose = FALSE, ...)
+sample_csv(
+  file,
+  param,
+  method = "proportional",
+  reader = utils::read.csv,
+  header = TRUE,
+  nskip = 0,
+  nmax = 0,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
 \item{file}{Location of the file (as a string) to be subsampled.}

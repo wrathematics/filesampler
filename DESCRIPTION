@@ -25,4 +25,4 @@ Authors@R: c(
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
 URL: https://github.com/wrathematics/filesampler
 BugReports: https://github.com/wrathematics/filesampler/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2

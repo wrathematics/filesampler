@@ -3,7 +3,6 @@
 \docType{package}
 \name{filesampler}
 \alias{filesampler}
-\alias{filesampler-package}
 \title{File Sampler}
 \description{
 File Sampler
